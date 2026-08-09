@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PREVIEW: 섹션3 구독플랜확인</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 코드 하이라이팅 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        :root {
+            --primary: #34d399;
+            --primary-rgb: 52, 211, 153;
+            --accent: #F0C850;
+            --accent-rgb: 240, 200, 80;
+            --text-primary: #ffffff;
+            --text-body: #d1d5db;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(39, 39, 42, 0.8);
+            --card-border: rgba(63, 63, 70, 0.5);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --card-shadow-accent: 0 8px 32px rgba(52, 211, 153, 0.15);
+        }
+
+        .reveal { background: #000000; }
+        .reveal .slides { width: 720px !important; text-align: left; }
+        .reveal h1 { font-size: 1.5em; }
+        .reveal h2 { font-size: 1em; }
+        .reveal h3 { font-size: 0.9em; }
+        .reveal p, .reveal li { font-size: 0.75em; line-height: 1.7; }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #ffffff;
+            text-transform: none;
+            letter-spacing: -0.02em;
+        }
+        .reveal p, .reveal li { color: #d1d5db; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-accent {
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a84b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-elevated {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+        }
+        .card-glow {
+            background: var(--card-bg);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow-accent);
+        }
+        .slide-glow { position: relative; }
+        .slide-glow::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(var(--primary-rgb), 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .accent-line-left {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .accent-line-left::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.2) 100%);
+            border-radius: 2px;
+        }
+        .badge-primary {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--primary-rgb), 0.15);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--primary);
+        }
+        .badge-accent {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--accent-rgb), 0.15);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--accent);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+        }
+        .text-glow-accent {
+            text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+        }
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .quote-box {
+            word-break: keep-all;
+            background: var(--card-bg);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+        }
+        .quote-box p {
+            font-size: 0.6em;
+            line-height: 1.6;
+            margin: 0;
+            color: #d1d5db;
+        }
+        .comment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+            padding: 0.875rem 1.125rem;
+        }
+
+        /* 테이블 스타일 */
+        .reveal table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.6em;
+            margin-top: 1rem;
+        }
+        .reveal table th {
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 0.6em 0.8em;
+            color: var(--primary);
+            font-weight: 600;
+            text-align: left;
+        }
+        .reveal table td {
+            border: 1px solid var(--card-border);
+            padding: 0.6em 0.8em;
+            color: #d1d5db;
+        }
+        .reveal table tr:hover td {
+            background: rgba(52, 211, 153, 0.05);
+        }
+
+        .preview-watermark {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 9999;
+            padding: 4px 12px;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: system-ui, sans-serif;
+            color: #34d399;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- SECTION-CONTENT-START -->
+
+            <!-- ── 슬라이드 1/11: [basic] 플랜 확인의 중요성 ── -->
+            <section>
+                <h2>플랜 확인이 먼저</h2>
+                <p>토큰 소진 원인 파악보다 먼저</p>
+                <div class="card-glow p-5 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="shield-check" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff; font-weight:600;">어떤 플랜을 쓰는지 확인이 가장 중요</span>
+                    </div>
+                </div>
+                <p class="text-gray-400 mt-3">같은 Opus, Pro vs Max는 사용량이 완전히 다르다</p>
+            </section>
+
+            <!-- ── 슬라이드 2/11: [basic] 세 가지 플랜 ── -->
+            <section>
+                <h2>세 가지 플랜</h2>
+                <div class="grid grid-cols-3 gap-3 mt-4">
+                    <div class="card-elevated p-5 text-center">
+                        <i data-lucide="circle" class="w-6 h-6 text-gray-400 mx-auto mb-2"></i>
+                        <p style="font-size:0.65em; color:#fff; font-weight:600;">Pro</p>
+                        <p style="font-size:0.5em; color:#6b7280;">$20/월</p>
+                    </div>
+                    <div class="card-elevated p-5 text-center">
+                        <i data-lucide="circle" class="w-6 h-6 text-emerald-400 mx-auto mb-2"></i>
+                        <p style="font-size:0.65em; color:#fff; font-weight:600;">Max 5x</p>
+                        <p style="font-size:0.5em; color:#6b7280;">$100/월</p>
+                    </div>
+                    <div class="card-elevated p-5 text-center">
+                        <i data-lucide="circle" class="w-6 h-6 text-amber-400 mx-auto mb-2"></i>
+                        <p style="font-size:0.65em; color:#fff; font-weight:600;">Max 20x</p>
+                        <p style="font-size:0.5em; color:#6b7280;">$200/월</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 3/11: [table] 플랜 비교 ── -->
+            <section>
+                <h2>플랜 비교</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>플랜</th>
+                            <th>월 가격</th>
+                            <th>Sonnet 사용량</th>
+                            <th>Opus 사용량</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pro</td>
+                            <td>$20</td>
+                            <td>주당 40~80시간</td>
+                            <td>매우 제한적</td>
+                        </tr>
+                        <tr>
+                            <td>Max 5x</td>
+                            <td>$100</td>
+                            <td>주당 140~280시간</td>
+                            <td>주당 15~35시간</td>
+                        </tr>
+                        <tr>
+                            <td>Max 20x</td>
+                            <td>$200</td>
+                            <td>주당 240~480시간</td>
+                            <td>주당 24~40시간</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── 슬라이드 4/11: [basic] 공식 출처 ── -->
+            <section>
+                <h2>공식 수치</h2>
+                <div class="card-elevated p-5 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="file-text" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; font-weight:600; margin:0;">Anthropic 공식 수치</p>
+                            <p style="font-size:0.55em; color:#9ca3af; margin:0.3em 0 0 0;">출처: TechCrunch, 2025.07.28</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 5/11: [basic] 비율을 봐라 ── -->
+            <section>
+                <h2>비율을 봐라</h2>
+                <p>숫자보다 비율이 중요</p>
+                <div class="grid grid-cols-2 gap-4 mt-3">
+                    <div class="card-glow p-5">
+                        <p style="font-size:0.6em; color:#6b7280; margin:0;">Max 구독</p>
+                        <p style="font-size:0.7em; color:#fff; font-weight:600; margin:0.3em 0 0 0;">Opus 주당 수십 시간</p>
+                    </div>
+                    <div class="card-elevated p-5">
+                        <p style="font-size:0.6em; color:#6b7280; margin:0;">Pro 구독</p>
+                        <p style="font-size:0.7em; color:#d1d5db; margin:0.3em 0 0 0;">Opus 매우 제한적</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 6/11: [comment-card] 실제 수강생 댓글 ── -->
+            <section>
+                <h2>경험</h2>
+                <div class="comment-card mt-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center shrink-0">
+                            <i data-lucide="user" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                        <span style="font-size:0.45em; color:#6b7280;">@사용자</span>
+                    </div>
+                    <p style="padding-left:2.75rem; font-size:0.6em; color:#d1d5db;">Opus 쓰다가 2일 만에 주간 한도 80% 참</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 7/11: [basic] Opus 토큰 4~5배 ── -->
+            <section>
+                <h2>Opus 토큰 소모</h2>
+                <div class="card-elevated p-6 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="flame" class="w-10 h-10 text-amber-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.75em; color:#fff; font-weight:700; margin:0;">Sonnet 대비 <span class="text-amber-400">4~5배</span></p>
+                            <p style="font-size:0.6em; color:#9ca3af; margin:0.3em 0 0 0;">Pro 전체 사용량 적은데 Opus만 쓰면 금방 바닥</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 8/11: [basic] 경차 SUV 비유 재정리 ── -->
+            <section>
+                <h2>경차에 SUV 엔진</h2>
+                <p>Pro 플랜 = 경차 연료 탱크</p>
+                <p class="text-emerald-400 mt-2" style="font-weight:600;">Opus(대형 SUV 엔진) 달면?</p>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#d1d5db;">출발하자마자 연료등 점등</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 9/11: [basic] 명확한 결론 ── -->
+            <section>
+                <h2>명확한 결론</h2>
+                <div class="quote-box mt-4">
+                    <p>플랜에 따라 Opus 사용 전략이 완전히 달라진다</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 10/11: [table] 플랜별 전략 ── -->
+            <section>
+                <h2>플랜별 전략</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>플랜</th>
+                            <th>Opus 사용 전략</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pro</td>
+                            <td>Sonnet 위주, Opus는 정말 필요할 때만</td>
+                        </tr>
+                        <tr>
+                            <td>Max 5x</td>
+                            <td>Opus 적당히 활용 가능, 모니터링 필요</td>
+                        </tr>
+                        <tr>
+                            <td>Max 20x</td>
+                            <td>Opus 자유롭게 활용 가능</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── 슬라이드 11/11: [basic] Pro 구독자 경고 ── -->
+            <section>
+                <h2>Pro 플랜</h2>
+                <div class="card-glow p-6 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="alert-circle" class="w-10 h-10 text-amber-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; font-weight:600; margin:0;">Opus가 더 똑똑해도 항상 쓰면 ㅠㅠ</p>
+                            <p style="font-size:0.6em; color:#9ca3af; margin:0.5em 0 0 0;">대부분 코딩 작업 = Sonnet으로 충분</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION-CONTENT-END -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/search/search.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: false,
+            controls: true,
+            progress: true,
+            center: true,
+            fragments: false,
+
+            plugins: [
+                RevealHighlight,
+                RevealNotes,
+                RevealMath.KaTeX,
+                RevealZoom,
+                RevealSearch
+            ]
+        }).then(() => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

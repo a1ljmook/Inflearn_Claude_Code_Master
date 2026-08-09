@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PREVIEW: 섹션6 실전팁-컨텍스트관리</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 코드 하이라이팅 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        :root {
+            --primary: #34d399;
+            --primary-rgb: 52, 211, 153;
+            --accent: #F0C850;
+            --accent-rgb: 240, 200, 80;
+            --text-primary: #ffffff;
+            --text-body: #d1d5db;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(39, 39, 42, 0.8);
+            --card-border: rgba(63, 63, 70, 0.5);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --card-shadow-accent: 0 8px 32px rgba(52, 211, 153, 0.15);
+        }
+
+        .reveal { background: #000000; }
+        .reveal .slides { width: 720px !important; text-align: left; }
+        .reveal h1 { font-size: 1.5em; }
+        .reveal h2 { font-size: 1em; }
+        .reveal h3 { font-size: 0.9em; }
+        .reveal p, .reveal li { font-size: 0.75em; line-height: 1.7; }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #ffffff;
+            text-transform: none;
+            letter-spacing: -0.02em;
+        }
+        .reveal p, .reveal li { color: #d1d5db; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-accent {
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a84b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-elevated {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+        }
+        .card-glow {
+            background: var(--card-bg);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow-accent);
+        }
+        .slide-glow { position: relative; }
+        .slide-glow::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(var(--primary-rgb), 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .accent-line-left {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .accent-line-left::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.2) 100%);
+            border-radius: 2px;
+        }
+        .badge-primary {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--primary-rgb), 0.15);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--primary);
+        }
+        .badge-accent {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--accent-rgb), 0.15);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--accent);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+        }
+        .text-glow-accent {
+            text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+        }
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .quote-box {
+            word-break: keep-all;
+            background: var(--card-bg);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+        }
+        .quote-box p {
+            font-size: 0.6em;
+            line-height: 1.6;
+            margin: 0;
+            color: #d1d5db;
+        }
+
+        .preview-watermark {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 9999;
+            padding: 4px 12px;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: system-ui, sans-serif;
+            color: #34d399;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- SECTION-CONTENT-START -->
+
+            <!-- ── 슬라이드 1/22: [title] 실전 팁 ── -->
+            <section class="slide-glow">
+                <h1 class="gradient-text text-glow">실전 팁</h1>
+                <p class="mt-4">모델 설정 외에도 토큰을 아끼는 방법</p>
+                <p class="text-gray-500 mt-2" style="font-size:0.55em;">출처: Claude Code 공식 문서 "Reduce token usage"</p>
+            </section>
+
+            <!-- ── 슬라이드 2/22: [basic] /clear — 작업 간 컨텍스트 초기화 ── -->
+            <section>
+                <h2>/clear — 작업 간 초기화</h2>
+                <p>AI는 매 메시지마다 이전 대화를 전부 다시 읽는다</p>
+            </section>
+
+            <!-- ── 슬라이드 3/22: [basic] 컨텍스트 누적 문제 ── -->
+            <section>
+                <h2>컨텍스트 누적</h2>
+                <p>하나의 세션에서 여러 작업 수행 시 이전 대화가 계속 쌓임</p>
+            </section>
+
+            <!-- ── 슬라이드 4/22: [basic] 19번째 요청의 비용 ── -->
+            <section>
+                <h2>19번째 요청의 비용</h2>
+                <p>20번째 프롬프트 전송 시</p>
+                <p class="text-emerald-400" style="font-weight:600;">이전 19개 요청+응답 전부 포함하여 처리</p>
+            </section>
+
+            <!-- ── 슬라이드 5/22: [quote] 컨텍스트 롯 ── -->
+            <section>
+                <h2>컨텍스트 롯</h2>
+                <div class="quote-box mt-4">
+                    <p>이전 작업의 잔해가 쌓여서 썩는 현상 — 바로 여기서 일어난다</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 6/22: [basic] /clear 사용법 ── -->
+            <section>
+                <h2>/clear 사용법</h2>
+                <p>작업 전환 시 /clear로 컨텍스트 초기화</p>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="lightbulb" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff;">비우기 전에 /rename으로 이름 먼저 지정</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 7/22: [code] /rename 시연 ── -->
+            <section>
+                <h2>/rename 시연</h2>
+                <pre><code class="language-bash">/rename 로그인-기능-구현</code></pre>
+                <p class="mt-3">현재 세션에 이름 지정</p>
+                <p class="text-gray-500" style="font-size:0.6em;">나중에 /resume 로그인-기능-구현으로 복귀 가능</p>
+            </section>
+
+            <!-- ── 슬라이드 8/22: [code] 터미널에서 resume ── -->
+            <section>
+                <h2>터미널에서 resume</h2>
+                <pre><code class="language-bash">claude --resume 로그인-기능-구현</code></pre>
+                <pre class="mt-3"><code class="language-bash">/clear</code></pre>
+                <p class="mt-3 text-emerald-400" style="font-weight:600;">이름 붙이고 /clear — 이 두 줄이면 끝</p>
+            </section>
+
+            <!-- ── 슬라이드 9/22: [quote] 깨끗한 시작 ── -->
+            <section>
+                <h2>깨끗한 시작</h2>
+                <div class="quote-box mt-4">
+                    <p>새 작업은 깨끗한 컨텍스트에서 — 이전 잔해를 들고 다니며 토큰 낭비할 이유 없다</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 10/22: [basic] /compact — 맞춤 요약 ── -->
+            <section>
+                <h2>/compact — 맞춤 요약</h2>
+                <p>항상 /clear로 비울 수 있는 건 아니다</p>
+                <p class="text-emerald-400" style="font-weight:600;">하나의 작업이 길어져서 대화가 쌓이는 경우</p>
+            </section>
+
+            <!-- ── 슬라이드 11/22: [basic] 자동 요약의 한계 ── -->
+            <section>
+                <h2>자동 요약의 한계</h2>
+                <p>대화가 길어지면 Claude가 자동으로 요약</p>
+                <p class="text-gray-500" style="font-size:0.6em;">컨텍스트가 일정 수준 차면 자동 압축</p>
+            </section>
+
+            <!-- ── 슬라이드 12/22: [basic] 자동 요약의 문제점 ── -->
+            <section>
+                <h2>자동 요약의 문제점</h2>
+                <p>뭘 남기고 버릴지 Claude가 알아서 판단</p>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="alert-triangle" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#d1d5db;">중요한 내용이 날아갈 수 있음</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 13/22: [code] /compact 시연 ── -->
+            <section>
+                <h2>/compact 시연</h2>
+                <pre><code class="language-bash">/compact 코드 변경사항과 API 사용법 위주로 유지해줘</code></pre>
+                <p class="mt-3">원하는 내용을 중심으로 요약</p>
+            </section>
+
+            <!-- ── 슬라이드 14/22: [checklist] 컨텍스트 관리 기본 ── -->
+            <section>
+                <h2>컨텍스트 관리 기본</h2>
+                <div class="card-elevated p-5 mt-4">
+                    <ul style="list-style:none; padding:0; margin:0;">
+                        <li class="flex items-start gap-3 mb-2">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <span style="font-size:0.7em;">작업이 바뀌면 /clear</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                            <span style="font-size:0.7em;">같은 작업이 길어지면 /compact</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 15/22: [basic] Extended Thinking 소개 ── -->
+            <section>
+                <h2>Extended Thinking</h2>
+                <p>눈에 보이지 않는데 토큰을 꽤 잡아먹는 기능</p>
+                <p class="text-gray-500 mt-2" style="font-size:0.6em;">Claude가 답변 전에 깊이 생각하는 기능 (기본 활성화, 최대 31,999 토큰)</p>
+            </section>
+
+            <!-- ── 슬라이드 16/22: [stat-2col] Thinking 토큰 과금 ── -->
+            <section>
+                <h2>Thinking 토큰 과금</h2>
+                <div class="grid grid-cols-12 gap-4 mt-4">
+                    <div class="col-span-6 card-elevated p-6">
+                        <p class="text-emerald-400 stat-number">출력 토큰</p>
+                        <p class="text-gray-500 mt-2" style="font-size:0.55em;">Thinking 토큰 과금 방식</p>
+                    </div>
+                    <div class="col-span-6 card-elevated p-6">
+                        <p class="text-accent stat-number">~30K</p>
+                        <p class="text-gray-500 mt-2" style="font-size:0.55em;">간단한 수정에도 소비 가능</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 17/22: [code] Extended Thinking 설정 ── -->
+            <section>
+                <h2>Extended Thinking 설정</h2>
+                <pre><code class="language-bash">/config</code></pre>
+                <p class="mt-3">Extended Thinking 항목에서 비활성화 또는</p>
+                <pre class="mt-2"><code class="language-bash">MAX_THINKING_TOKENS=8000</code></pre>
+                <p class="text-gray-500 mt-2" style="font-size:0.6em;">환경변수로 예산 조절</p>
+            </section>
+
+            <!-- ── 슬라이드 18/22: [basic] Extended Thinking 트레이드오프 ── -->
+            <section>
+                <h2>Extended Thinking 트레이드오프</h2>
+                <p>Extended Thinking 비활성화 시</p>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="zap" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <div style="font-size:0.7em;">
+                            <p class="text-white" style="margin:0;">토큰 절약</p>
+                            <p class="text-gray-500" style="margin:0.3em 0 0 0; font-size:0.9em;">복잡한 작업에서 판단력 저하 가능</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 19/22: [compare-2col] 성능 vs 예산 ── -->
+            <section>
+                <h2>성능 vs 예산</h2>
+                <div class="grid grid-cols-12 gap-4 mt-4">
+                    <div class="col-span-6 card-elevated p-6">
+                        <div class="flex items-start gap-4">
+                            <i data-lucide="trending-down" class="w-10 h-10 text-emerald-400 mt-1 shrink-0"></i>
+                            <div class="flex-1">
+                                <h3 class="text-white mb-2">기능 축소</h3>
+                                <p class="text-gray-400" style="font-size:0.55em;">제한된 토큰 안에서 효율적으로</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-6 card-elevated p-6">
+                        <div class="flex items-start gap-4">
+                            <i data-lucide="trending-up" class="w-10 h-10 text-accent mt-1 shrink-0"></i>
+                            <div class="flex-1">
+                                <h3 class="text-white mb-2">플랜 업그레이드</h3>
+                                <p class="text-gray-400" style="font-size:0.55em;">Max 플랜으로 넉넉하게</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 20/22: [quote] 트레이드오프 ── -->
+            <section>
+                <h2>트레이드오프</h2>
+                <div class="quote-box mt-4">
+                    <p>성능을 줄이느냐, 예산을 늘리느냐 — 작업 스타일과 예산에 맞게 선택</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 21/22: [basic] AI 모델의 진화 ── -->
+            <section>
+                <h2>AI 모델의 진화</h2>
+                <p>앞으로 AI 모델은 점점 더 똑똑해지고</p>
+                <p>강력한 기능이 계속 추가됨</p>
+                <p class="text-emerald-400 mt-2" style="font-weight:600;">토큰 사용량도 자연스럽게 증가</p>
+            </section>
+
+            <!-- ── 슬라이드 22/22: [quote] 조절 가능성 ── -->
+            <section>
+                <h2>조절 가능성</h2>
+                <div class="quote-box mt-4">
+                    <p>그걸 우리가 조절할 수 있다는 게 핵심</p>
+                </div>
+            </section>
+
+            <!-- SECTION-CONTENT-END -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/search/search.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: false,
+            controls: true,
+            progress: true,
+            center: true,
+            fragments: false,
+
+            plugins: [
+                RevealHighlight,
+                RevealNotes,
+                RevealMath.KaTeX,
+                RevealZoom,
+                RevealSearch
+            ]
+        }).then(() => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PREVIEW: 섹션8 정리+클로징</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 코드 하이라이팅 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        /* === CSS 변수 시스템 (web-ppt template.html에서 복사) === */
+        :root {
+            --primary: #34d399;
+            --primary-rgb: 52, 211, 153;
+            --accent: #F0C850;
+            --accent-rgb: 240, 200, 80;
+            --text-primary: #ffffff;
+            --text-body: #d1d5db;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(39, 39, 42, 0.8);
+            --card-border: rgba(63, 63, 70, 0.5);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --card-shadow-accent: 0 8px 32px rgba(52, 211, 153, 0.15);
+        }
+
+        /* Reveal.js 필수 오버라이드 */
+        .reveal { background: #000000; }
+        .reveal .slides { width: 720px !important; text-align: left; }
+        .reveal h1 { font-size: 1.5em; }
+        .reveal h2 { font-size: 1em; }
+        .reveal h3 { font-size: 0.9em; }
+        .reveal p, .reveal li { font-size: 0.75em; line-height: 1.7; }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #ffffff;
+            text-transform: none;
+            letter-spacing: -0.02em;
+        }
+        .reveal p, .reveal li { color: #d1d5db; }
+        .reveal table { font-size: 0.6em; }
+        .reveal table th { color: #34d399; }
+        .reveal table td { color: #d1d5db; }
+
+        /* === 유틸리티 클래스 === */
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-accent {
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a84b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-elevated {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+        }
+        .card-glow {
+            background: var(--card-bg);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow-accent);
+        }
+        .slide-glow { position: relative; }
+        .slide-glow::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(var(--primary-rgb), 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .accent-line-left {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .accent-line-left::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.2) 100%);
+            border-radius: 2px;
+        }
+        .badge-primary {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--primary-rgb), 0.15);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--primary);
+        }
+        .badge-accent {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--accent-rgb), 0.15);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--accent);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+        }
+        .text-glow-accent {
+            text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+        }
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .quote-box {
+            word-break: keep-all;
+            background: var(--card-bg);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+        }
+        .quote-box p {
+            font-size: 0.6em;
+            line-height: 1.6;
+            margin: 0;
+            color: #d1d5db;
+        }
+
+        /* 프리뷰 워터마크 */
+        .preview-watermark {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 9999;
+            padding: 4px 12px;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: system-ui, sans-serif;
+            color: #34d399;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- SECTION-CONTENT-START -->
+
+            <!-- ── 슬라이드 1/26: [quote] 6가지 팁, 전부가 아니다 ── -->
+            <section>
+                <h2>6가지 팁, 전부가 아니다</h2>
+                <div class="quote-box mt-4">
+                    <p>오늘 6가지 팁을 알려드렸는데, 이게 전부가 아닙니다</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 2/26: [basic] 다양한 관리 방법 ── -->
+            <section>
+                <h2>다양한 관리 방법</h2>
+                <p>컨텍스트 관리에는 딱 정해진 정답이 없어요</p>
+                <p class="text-gray-400">방법이 정말 많거든요</p>
+            </section>
+
+            <!-- ── 슬라이드 3/26: [basic] 서브에이전트 위임 ── -->
+            <section>
+                <h2>서브에이전트 위임</h2>
+                <div class="card-elevated p-5 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="users" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff;">서브에이전트에 무거운 작업 위임 → 메인 컨텍스트 가볍게 유지</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 4/26: [basic] Hooks 전처리 ── -->
+            <section>
+                <h2>Hooks 전처리</h2>
+                <div class="card-elevated p-5 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="filter" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff;">테스트 로그 전처리 → 에러만 골라서 Claude에 전달</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 5/26: [basic] 공식 문서 안내 ── -->
+            <section>
+                <h2>공식 문서 참고</h2>
+                <p class="text-gray-400" style="font-size:0.65em;">출처: Claude Code 공식 문서 "Reduce token usage"</p>
+            </section>
+
+            <!-- ── 슬라이드 6/26: [quote] 플랜별 전략 필요 ── -->
+            <section>
+                <h2>플랜별 전략 필요</h2>
+                <div class="quote-box mt-4">
+                    <p>컨텍스트 관리 전략은 내 플랜에 따라 달라야 합니다</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 7/26: [table] 플랜별 전략 요약 ── -->
+            <section>
+                <h2>플랜별 전략 요약</h2>
+                <table class="mt-4 w-full">
+                    <thead>
+                        <tr>
+                            <th class="text-left pb-2">플랜</th>
+                            <th class="text-left pb-2">컨텍스트 관리 전략</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="py-2">Pro ($20)</td>
+                            <td class="py-2">엄격하게. Sonnet 고정, Opus 최소, /clear 습관화</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">Max 5x ($100)</td>
+                            <td class="py-2">opusplan 활용, 컨텍스트 모니터링하며 유연하게</td>
+                        </tr>
+                        <tr>
+                            <td class="py-2">Max 20x ($200)</td>
+                            <td class="py-2">자유롭게, 기본 습관은 유지</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- ── 슬라이드 8/26: [basic] Pro 플랜 주의사항 ── -->
+            <section>
+                <h2>Pro 플랜 주의사항</h2>
+                <p>Pro 플랜 쓰시는 분들은</p>
+                <p class="text-emerald-400" style="font-weight:600;">컨텍스트 관리에 조금 더 신경 쓰셔야 해요</p>
+            </section>
+
+            <!-- ── 슬라이드 9/26: [basic] Opus 신중하게 ── -->
+            <section>
+                <h2>Opus 신중하게</h2>
+                <div class="card-elevated p-5 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff;">Opus 모델은 정말 필요한 순간에만</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 10/26: [quote] 업소용 에어컨 비유 ── -->
+            <section>
+                <h2>업소용 에어컨 비유</h2>
+                <div class="quote-box mt-4">
+                    <p>Pro 플랜인데 settings.json 설정도 안 하고 매번 Opus로 돌리면서 토큰 녹는다고 하시면... 원룸에 업소용 에어컨 풀가동하고 전기세 왜 이래? 하는 거랑 똑같아요</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 11/26: [basic] 설정 하나면 된다 ── -->
+            <section>
+                <h2>설정 하나면 된다</h2>
+                <p class="text-emerald-400" style="font-weight:600;">설정 하나만 바꿔도 전기세가 확 줄어든다</p>
+                <p class="text-gray-400">아직 안 바꾸신 거예요</p>
+            </section>
+
+            <!-- ── 슬라이드 12/26: [basic] 처음엔 Pro로 시작 ── -->
+            <section>
+                <h2>처음엔 Pro로 시작</h2>
+                <p>처음에는 Pro 플랜에서</p>
+                <p class="text-emerald-400" style="font-weight:600;">오늘 알려드린 컨텍스트 관리를 충실히 하면서 써보세요</p>
+            </section>
+
+            <!-- ── 슬라이드 13/26: [basic] 기본 습관 먼저 ── -->
+            <section>
+                <h2>기본 습관 먼저</h2>
+                <p>Sonnet 고정하고</p>
+                <p>/clear 습관 들이고</p>
+                <p>프롬프트 구체적으로 쓰고</p>
+            </section>
+
+            <!-- ── 슬라이드 14/26: [basic] 결과 확인 후 업그레이드 ── -->
+            <section>
+                <h2>결과 확인 후 업그레이드</h2>
+                <p>이렇게 해서 <span class="text-emerald-400" style="font-weight:600;">결과물이 나온다</span>고 느껴지시면</p>
+                <p>그때 Max 100, Max 200으로 천천히 올리시면 됩니다</p>
+            </section>
+
+            <!-- ── 슬라이드 15/26: [basic] 안 맞으면 다른 도구 ── -->
+            <section>
+                <h2>안 맞으면 다른 도구</h2>
+                <p>컨텍스트 최적화해서 다 해봤는데도</p>
+                <p class="text-amber-400" style="font-weight:600;">결과는 안 나오고 토큰만 녹는다?</p>
+            </section>
+
+            <!-- ── 슬라이드 16/26: [quote] 도구는 선택하는 것 ── -->
+            <section>
+                <h2>도구는 선택하는 것</h2>
+                <div class="quote-box mt-4">
+                    <p>다른 도구가 더 잘 맞을 수도 있어요 👍</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 17/26: [basic] 결과가 중요 ── -->
+            <section>
+                <h2>결과가 중요</h2>
+                <p>중요한 건 <span class="text-emerald-400" style="font-weight:600;">내가 원하는 결과물을 만들어내는 거</span>지</p>
+                <p class="text-gray-400">특정 도구를 꼭 사용할 필요 없다</p>
+            </section>
+
+            <!-- ── 슬라이드 18/26: [quote] 핵심 정리 ── -->
+            <section>
+                <h2>핵심 정리</h2>
+                <div class="quote-box mt-4">
+                    <p>핵심 정리합니다</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 19/26: [checklist] 최종 체크리스트 ── -->
+            <section>
+                <h2>최종 체크리스트</h2>
+                <div class="mt-4 space-y-2">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">내 플랜 확인 — Pro면 Sonnet 위주, Max면 opusplan</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">settings.json에 기본 모델 고정</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">작업 바꿀 때 /clear로 컨텍스트 정리</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">/compact로 맞춤 요약 지시</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">프롬프트는 파일명, 함수명 포함 구체적으로</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">MCP Tool Search true 설정</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">CLAUDE.md 500줄 이하, 나머지는 Skills로</span>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                        <span style="font-size:0.6em;">Extended Thinking 필요에 따라 조절</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 20/26: [basic] 체감 효과 ── -->
+            <section>
+                <h2>체감 효과</h2>
+                <p class="text-emerald-400" style="font-weight:600; font-size:0.85em;">이것만 해도 체감 비용이 확 달라질 겁니다</p>
+            </section>
+
+            <!-- ── 슬라이드 21/26: [basic] 기본 중의 기본 ── -->
+            <section>
+                <h2>기본 중의 기본</h2>
+                <p>오늘 영상에서 다룬 내용은</p>
+                <p class="text-emerald-400" style="font-weight:600;">사실 기본 중의 기본이에요</p>
+            </section>
+
+            <!-- ── 슬라이드 22/26: [basic] 더 알아야 할 것들 ── -->
+            <section>
+                <h2>더 알아야 할 것들</h2>
+                <p>컨텍스트 엔지니어링, 서브에이전트 활용</p>
+                <p>Hooks, Skills —</p>
+                <p class="text-emerald-400" style="font-weight:600;">Claude Code를 제대로 쓰려면 알아야 할 게 훨씬 많습니다</p>
+            </section>
+
+            <!-- ── 슬라이드 23/26: [basic] 강의 소개 ── -->
+            <section>
+                <h2>클로드 코드 완벽 마스터</h2>
+                <p>인프런에서 운영하고 있는 강의에서는</p>
+                <p>이런 내용을 기초부터 실전 워크플로우까지</p>
+                <p class="text-emerald-400" style="font-weight:600;">체계적으로 다루고 있어요</p>
+            </section>
+
+            <!-- ── 슬라이드 24/26: [basic] 검증된 내용 ── -->
+            <section>
+                <h2>검증된 내용</h2>
+                <p>공식 문서 기반으로 검증된 내용만 담았고</p>
+                <p class="text-emerald-400" style="font-weight:600;">수강생 Q&A도 계속 반영하면서 업데이트</p>
+            </section>
+
+            <!-- ── 슬라이드 25/26: [basic] 강의 링크 ── -->
+            <section>
+                <h2>강의 링크</h2>
+                <p>관심 있으시면</p>
+                <p class="text-emerald-400" style="font-weight:600; font-size:0.85em;">영상 설명란 링크 확인해주세요</p>
+            </section>
+
+            <!-- ── 슬라이드 26/26: [closing] 마무리 ── -->
+            <section class="slide-glow">
+                <h2>마무리</h2>
+                <div class="card-glow p-6 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="heart" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <div style="font-size:0.7em; color:#fff; line-height:1.5;">
+                            <p style="margin:0;">좋아요, Hype, 구독 부탁드려요</p>
+                            <p style="margin:0.5em 0 0 0;" class="text-gray-400">커피 후원도 큰 힘이 됩니다</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-gray-500 mt-6" style="font-size:0.6em;">감사합니다</p>
+            </section>
+
+            <!-- SECTION-CONTENT-END -->
+        </div>
+    </div>
+
+    <!-- Reveal.js JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/search/search.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: false,
+            controls: true,
+            progress: true,
+            center: true,
+            fragments: false,
+
+            plugins: [
+                RevealHighlight,
+                RevealNotes,
+                RevealMath.KaTeX,
+                RevealZoom,
+                RevealSearch
+            ]
+        }).then(() => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

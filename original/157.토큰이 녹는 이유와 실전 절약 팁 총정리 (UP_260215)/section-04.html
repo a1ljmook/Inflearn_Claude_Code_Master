@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PREVIEW: 섹션4 모델특징+고정</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 코드 하이라이팅 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        :root {
+            --primary: #34d399;
+            --primary-rgb: 52, 211, 153;
+            --accent: #F0C850;
+            --accent-rgb: 240, 200, 80;
+            --text-primary: #ffffff;
+            --text-body: #d1d5db;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(39, 39, 42, 0.8);
+            --card-border: rgba(63, 63, 70, 0.5);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --card-shadow-accent: 0 8px 32px rgba(52, 211, 153, 0.15);
+        }
+
+        .reveal { background: #000000; }
+        .reveal .slides { width: 720px !important; text-align: left; }
+        .reveal h1 { font-size: 1.5em; }
+        .reveal h2 { font-size: 1em; }
+        .reveal h3 { font-size: 0.9em; }
+        .reveal p, .reveal li { font-size: 0.75em; line-height: 1.7; }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #ffffff;
+            text-transform: none;
+            letter-spacing: -0.02em;
+        }
+        .reveal p, .reveal li { color: #d1d5db; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-accent {
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a84b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-elevated {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+        }
+        .card-glow {
+            background: var(--card-bg);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow-accent);
+        }
+        .slide-glow { position: relative; }
+        .slide-glow::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(var(--primary-rgb), 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .accent-line-left {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .accent-line-left::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.2) 100%);
+            border-radius: 2px;
+        }
+        .badge-primary {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--primary-rgb), 0.15);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--primary);
+        }
+        .badge-accent {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--accent-rgb), 0.15);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--accent);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+        }
+        .text-glow-accent {
+            text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+        }
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .quote-box {
+            word-break: keep-all;
+            background: var(--card-bg);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+        }
+        .quote-box p {
+            font-size: 0.6em;
+            line-height: 1.6;
+            margin: 0;
+            color: #d1d5db;
+        }
+        .comment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+            padding: 0.875rem 1.125rem;
+        }
+
+        .preview-watermark {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 9999;
+            padding: 4px 12px;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: system-ui, sans-serif;
+            color: #34d399;
+            pointer-events: none;
+        }
+
+        /* 테이블 스타일 */
+        .reveal table {
+            width: 100%;
+            margin: 1rem 0;
+            border-collapse: collapse;
+        }
+        .reveal table th {
+            background: rgba(var(--primary-rgb), 0.1);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.6em;
+            color: var(--primary);
+            text-align: left;
+        }
+        .reveal table td {
+            border: 1px solid var(--card-border);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.55em;
+            color: var(--text-body);
+        }
+        .reveal table td strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- SECTION-CONTENT-START -->
+
+            <!-- ── 슬라이드 1/10: [basic] 모델별 차이 간단히 ── -->
+            <section>
+                <h2>모델별 차이</h2>
+                <p>모델별 차이를 간단히 짚고 넘어갈게요</p>
+            </section>
+
+            <!-- ── 슬라이드 2/10: [table] 모델 비교 ── -->
+            <section>
+                <h2>모델 비교</h2>
+                <table class="mt-3">
+                    <thead>
+                        <tr>
+                            <th>모델</th>
+                            <th>특징</th>
+                            <th>언제 쓰면 좋은지</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Opus</strong></td>
+                            <td>가장 똑똑, 토큰 4~5배 소모</td>
+                            <td>복잡한 설계, 어려운 버그</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sonnet</strong></td>
+                            <td>균형 잡힘, 대부분 작업 충분</td>
+                            <td>일반 코딩, 파일 수정, 기능 구현</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Haiku</strong></td>
+                            <td>가장 빠르고 저렴</td>
+                            <td>간단한 질문, 파일 검색</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-gray-500 mt-2" style="font-size:0.5em;">출처: Claude Code 공식 문서</p>
+            </section>
+
+            <!-- ── 슬라이드 3/10: [basic] 모델 비유 ── -->
+            <section>
+                <h2>모델 비유</h2>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4 mb-3">
+                        <i data-lucide="sparkles" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff;">Opus = <strong>시니어 개발자</strong></span>
+                    </div>
+                    <div class="flex items-center gap-4 mb-3">
+                        <i data-lucide="code" class="w-8 h-8 text-blue-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff;">Sonnet = <strong>중급 개발자</strong></span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="zap" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff;">Haiku = <strong>주니어 개발자</strong></span>
+                    </div>
+                </div>
+                <p class="text-emerald-400 mt-3" style="font-weight:600;">시니어한테 복사 붙여넣기 시키는 건 낭비</p>
+            </section>
+
+            <!-- ── 슬라이드 4/10: [basic] 현재 모델 확인부터 ── -->
+            <section>
+                <h2>현재 모델 확인</h2>
+                <p>지금 내가 어떤 모델을 쓰고 있는지 확인부터</p>
+            </section>
+
+            <!-- ── 슬라이드 5/10: [code] /model 명령어 ── -->
+            <section>
+                <h2>/model 명령어</h2>
+                <pre class="mt-3"><code class="language-bash">/model</code></pre>
+                <p class="mt-3">이렇게 입력하면 현재 설정된 모델 확인</p>
+                <div class="card-elevated p-4 mt-2">
+                    <p style="font-size:0.6em; color:#d1d5db; margin:0;">Pro 구독자, Opus라고 떠 있으면 바로 변경</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 6/10: [comment-card] 실제 댓글 — 오푸스 디폴트 ── -->
+            <section>
+                <h2>실제 댓글</h2>
+                <div class="comment-card mt-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center shrink-0">
+                            <i data-lucide="user" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                        <span style="font-size:0.45em; color:#6b7280;">@시청자</span>
+                    </div>
+                    <p style="padding-left:2.75rem; font-size:0.6em; color:#d1d5db;">오푸스가 디폴트로 잡혀 있어서 작업할 때마다 신경 안 쓰면 그냥 오푸스로 넘어가는 것 같아요</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 7/10: [basic] 고정해버리면 된다 ── -->
+            <section>
+                <h2>고정해버리면 된다</h2>
+                <p>매번 신경 쓸 필요 없이</p>
+                <p class="text-emerald-400" style="font-weight:600;">settings.json에 딱 한 줄만 추가</p>
+            </section>
+
+            <!-- ── 슬라이드 8/10: [code] settings.json 설정 ── -->
+            <section>
+                <h2>settings.json 설정</h2>
+                <pre class="mt-3"><code class="language-json">{
+  "model": "sonnet"
+}</code></pre>
+                <div class="card-glow p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; font-weight:600; margin:0;">Claude Code 켤 때마다 항상 Sonnet</p>
+                            <p style="font-size:0.55em; color:#9ca3af; margin:0.3em 0 0 0;">30초 설정으로 한도 보호</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 9/10: [basic] 세션 중 모델 전환 ── -->
+            <section>
+                <h2>세션 중 모델 전환</h2>
+                <div class="card-elevated p-5 mt-3">
+                    <pre style="margin:0;"><code class="language-bash">/model sonnet
+/model opus</code></pre>
+                </div>
+                <p class="text-gray-400 mt-3" style="font-size:0.6em;">세션 중간에 모델 전환 가능</p>
+                <p class="text-gray-500 mt-2" style="font-size:0.5em;">출처: Claude Code 공식 문서</p>
+            </section>
+
+            <!-- SECTION-CONTENT-END -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/search/search.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: false,
+            controls: true,
+            progress: true,
+            center: true,
+            fragments: false,
+
+            plugins: [
+                RevealHighlight,
+                RevealNotes,
+                RevealMath.KaTeX,
+                RevealZoom,
+                RevealSearch
+            ]
+        }).then(() => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

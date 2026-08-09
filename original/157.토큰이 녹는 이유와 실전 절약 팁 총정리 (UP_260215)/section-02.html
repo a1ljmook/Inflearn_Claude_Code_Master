@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PREVIEW: 섹션2 전문용어+팩트</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 코드 하이라이팅 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        :root {
+            --primary: #34d399;
+            --primary-rgb: 52, 211, 153;
+            --accent: #F0C850;
+            --accent-rgb: 240, 200, 80;
+            --text-primary: #ffffff;
+            --text-body: #d1d5db;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(39, 39, 42, 0.8);
+            --card-border: rgba(63, 63, 70, 0.5);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --card-shadow-accent: 0 8px 32px rgba(52, 211, 153, 0.15);
+        }
+
+        .reveal { background: #000000; }
+        .reveal .slides { width: 720px !important; text-align: left; }
+        .reveal h1 { font-size: 1.5em; }
+        .reveal h2 { font-size: 1em; }
+        .reveal h3 { font-size: 0.9em; }
+        .reveal p, .reveal li { font-size: 0.75em; line-height: 1.7; }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #ffffff;
+            text-transform: none;
+            letter-spacing: -0.02em;
+        }
+        .reveal p, .reveal li { color: #d1d5db; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-accent {
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a84b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-elevated {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+        }
+        .card-glow {
+            background: var(--card-bg);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow-accent);
+        }
+        .slide-glow { position: relative; }
+        .slide-glow::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(var(--primary-rgb), 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .accent-line-left {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .accent-line-left::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.2) 100%);
+            border-radius: 2px;
+        }
+        .badge-primary {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--primary-rgb), 0.15);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--primary);
+        }
+        .badge-accent {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--accent-rgb), 0.15);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--accent);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+        }
+        .text-glow-accent {
+            text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+        }
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .quote-box {
+            word-break: keep-all;
+            background: var(--card-bg);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+        }
+        .quote-box p {
+            font-size: 0.6em;
+            line-height: 1.6;
+            margin: 0;
+            color: #d1d5db;
+        }
+
+        .preview-watermark {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 9999;
+            padding: 4px 12px;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: system-ui, sans-serif;
+            color: #34d399;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- SECTION-CONTENT-START -->
+
+            <!-- ── 슬라이드 1/11: [basic] 전문용어 예고 ── -->
+            <section>
+                <h2>전문용어 예고</h2>
+                <p>알아두면 좋은 전문용어 몇 가지만 짚고 갑니다</p>
+                <p class="text-emerald-400" style="font-weight:600;">어렵지 않습니다</p>
+            </section>
+
+            <!-- ── 슬라이드 2/11: [stat-2col] 토큰 ── -->
+            <section>
+                <h2>토큰 <span class="badge-primary">Token</span></h2>
+                <div class="grid grid-cols-12 gap-4 mt-4">
+                    <div class="col-span-6 card-elevated p-6">
+                        <div class="flex items-start gap-4">
+                            <i data-lucide="type" class="w-10 h-10 text-emerald-400 mt-1 shrink-0"></i>
+                            <div class="flex-1">
+                                <h3 class="text-white mb-2">정의</h3>
+                                <p style="font-size:0.6em;">AI가 텍스트 처리하는 최소 단위</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-span-6 card-elevated p-6">
+                        <div class="flex items-start gap-4">
+                            <i data-lucide="coins" class="w-10 h-10 text-amber-400 mt-1 shrink-0"></i>
+                            <div class="flex-1">
+                                <h3 class="text-white/60 mb-2">비유</h3>
+                                <p style="font-size:0.6em; color:#9ca3af;">돈을 원 단위로 세듯<br>AI는 토큰 단위로 셈</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 3/11: [basic] 컨텍스트 윈도우 ── -->
+            <section>
+                <h2>컨텍스트 윈도우 <span class="badge-primary">Context Window</span></h2>
+                <p>AI가 한 번에 처리할 수 있는 토큰의 총량</p>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="layout" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <span style="font-size:0.7em; color:#fff; font-weight:600;">작업 공간의 크기</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 4/11: [stat-2col] 모델별 토큰 한계 ── -->
+            <section>
+                <h2>모델별 토큰 한계</h2>
+                <div class="grid grid-cols-12 gap-4 mt-4">
+                    <div class="col-span-6 card-elevated p-6">
+                        <div class="flex flex-col items-start">
+                            <span class="badge-primary mb-3">Sonnet</span>
+                            <div class="stat-number text-emerald-400">200K</div>
+                            <p style="font-size:0.55em; color:#9ca3af; margin-top:0.5em;">약 20만 토큰</p>
+                        </div>
+                    </div>
+                    <div class="col-span-6 card-elevated p-6">
+                        <div class="flex flex-col items-start">
+                            <span class="badge-accent mb-3">Opus (beta)</span>
+                            <div class="stat-number text-amber-400">1M</div>
+                            <p style="font-size:0.55em; color:#9ca3af; margin-top:0.5em;">약 100만 토큰</p>
+                        </div>
+                    </div>
+                </div>
+                <p style="font-size:0.55em;" class="text-gray-500 mt-3">숫자 크지만 실전에선 생각보다 금방 참</p>
+            </section>
+
+            <!-- ── 슬라이드 5/11: [basic] 컨텍스트 엔지니어링 ── -->
+            <section>
+                <h2>컨텍스트 엔지니어링</h2>
+                <p>작업 공간을 효율적으로 관리하는 기술</p>
+                <div class="card-glow p-5 mt-3">
+                    <p style="font-size:0.65em; color:#d1d5db;">필요한 것만 넣고<br>불필요한 건 빼고<br>상황에 따라 정리</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 6/11: [basic] 컨텍스트 롯 ── -->
+            <section>
+                <h2>컨텍스트 롯 <span class="badge-accent">Context Rot</span></h2>
+                <p>관리 안 하면 컨텍스트가 썩는다</p>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="trash-2" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <span style="font-size:0.65em; color:#d1d5db;">작업 A 끝났는데 안 치우고 바로 작업 B 시작 → 파일·에러 로그·테스트 결과 잔해 남음</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 7/11: [basic] 환각 ── -->
+            <section>
+                <h2>환각 <span class="badge-accent">Hallucination</span></h2>
+                <p>컨텍스트 롯이 심해지면 발생</p>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-red-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; font-weight:600; margin:0;">AI가 틀린 답을 자신 있게 말함</p>
+                            <p style="font-size:0.55em; color:#9ca3af; margin:0.3em 0 0 0;">관련 없는 정보가 많아 헷갈림</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 8/11: [diagram] 악순환 정리 ── -->
+            <section>
+                <h2>악순환 구조</h2>
+                <div class="flex items-center gap-3 mt-4">
+                    <div class="card-elevated p-4 flex-1 text-center">
+                        <p style="font-size:0.6em;">컨텍스트<br>관리 안 함</p>
+                    </div>
+                    <span class="text-emerald-400" style="font-size:1.2em;">→</span>
+                    <div class="card-elevated p-4 flex-1 text-center">
+                        <p style="font-size:0.6em;">토큰<br>낭비</p>
+                    </div>
+                    <span class="text-emerald-400" style="font-size:1.2em;">→</span>
+                    <div class="card-elevated p-4 flex-1 text-center">
+                        <p style="font-size:0.6em;">AI<br>환각</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 mt-3">
+                    <div class="card-elevated p-4 flex-1 text-center">
+                        <p style="font-size:0.6em;">퀄리티<br>저하</p>
+                    </div>
+                    <span class="text-emerald-400" style="font-size:1.2em;">→</span>
+                    <div class="card-elevated p-4 flex-1 text-center">
+                        <p style="font-size:0.6em;">재작업<br>반복</p>
+                    </div>
+                    <span class="text-emerald-400" style="font-size:1.2em;">→</span>
+                    <div class="card-elevated p-4 flex-1 text-center">
+                        <p style="font-size:0.6em;">토큰<br>재소진</p>
+                    </div>
+                </div>
+                <p style="font-size:0.55em;" class="text-gray-500 mt-3">비용 + 품질 이중 문제</p>
+            </section>
+
+            <!-- ── 슬라이드 9/11: [quote] 간단한 설정으로 해결 ── -->
+            <section>
+                <h2>간단한 설정으로 해결</h2>
+                <div class="quote-box mt-4">
+                    <p>이 악순환, 대부분은 간단한 설정 하나로 끊을 수 있다</p>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 10/11: [basic] Opus 체크 필수 ── -->
+            <section>
+                <h2>Opus 체크 필수</h2>
+                <p>토큰 녹는다고 하시는 분들</p>
+                <div class="card-glow p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="settings" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; font-weight:600; margin:0;">지금 모델이 Opus로 잡혀 있지 않나요?</p>
+                            <p style="font-size:0.55em; color:#9ca3af; margin:0.3em 0 0 0;">Opus는 Sonnet 대비 토큰 4~5배 소모 — settings.json 한 줄로 해결</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 11/11: [basic] 실전으로 이동 ── -->
+            <section>
+                <h2>실전으로 이동</h2>
+                <p>가장 먼저 확인해야 할 것부터 시작합니다</p>
+            </section>
+
+            <!-- SECTION-CONTENT-END -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/search/search.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: false,
+            controls: true,
+            progress: true,
+            center: true,
+            fragments: false,
+
+            plugins: [
+                RevealHighlight,
+                RevealNotes,
+                RevealMath.KaTeX,
+                RevealZoom,
+                RevealSearch
+            ]
+        }).then(() => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

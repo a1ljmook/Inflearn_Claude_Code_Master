@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PREVIEW: 섹션7 실전팁-프롬프트+설정</title>
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- 코드 하이라이팅 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+
+    <style>
+        :root {
+            --primary: #34d399;
+            --primary-rgb: 52, 211, 153;
+            --accent: #F0C850;
+            --accent-rgb: 240, 200, 80;
+            --text-primary: #ffffff;
+            --text-body: #d1d5db;
+            --text-muted: #9ca3af;
+            --card-bg: rgba(39, 39, 42, 0.8);
+            --card-border: rgba(63, 63, 70, 0.5);
+            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --card-shadow-accent: 0 8px 32px rgba(52, 211, 153, 0.15);
+        }
+
+        .reveal { background: #000000; }
+        .reveal .slides { width: 720px !important; text-align: left; }
+        .reveal h1 { font-size: 1.5em; }
+        .reveal h2 { font-size: 1em; }
+        .reveal h3 { font-size: 0.9em; }
+        .reveal p, .reveal li { font-size: 0.75em; line-height: 1.7; }
+        .reveal h1, .reveal h2, .reveal h3 {
+            color: #ffffff;
+            text-transform: none;
+            letter-spacing: -0.02em;
+        }
+        .reveal p, .reveal li { color: #d1d5db; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-text-accent {
+            background: linear-gradient(135deg, var(--accent) 0%, #d4a84b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-elevated {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+        }
+        .card-glow {
+            background: var(--card-bg);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow-accent);
+        }
+        .slide-glow { position: relative; }
+        .slide-glow::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(var(--primary-rgb), 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .accent-line-left {
+            position: relative;
+            padding-left: 1rem;
+        }
+        .accent-line-left::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.2) 100%);
+            border-radius: 2px;
+        }
+        .badge-primary {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--primary-rgb), 0.15);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--primary);
+        }
+        .badge-accent {
+            display: inline-block;
+            padding: 0.2em 0.6em;
+            background: rgba(var(--accent-rgb), 0.15);
+            border: 1px solid rgba(var(--accent-rgb), 0.3);
+            border-radius: 0.375rem;
+            font-size: 0.55em;
+            color: var(--accent);
+        }
+        .text-glow {
+            text-shadow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+        }
+        .text-glow-accent {
+            text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+        }
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+        .quote-box {
+            word-break: keep-all;
+            background: var(--card-bg);
+            border-left: 3px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0.5rem;
+            box-shadow: var(--card-shadow);
+        }
+        .quote-box p {
+            font-size: 0.6em;
+            line-height: 1.6;
+            margin: 0;
+            color: #d1d5db;
+        }
+
+        .preview-watermark {
+            position: fixed;
+            top: 12px;
+            right: 16px;
+            z-index: 9999;
+            padding: 4px 12px;
+            background: rgba(52, 211, 153, 0.15);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: system-ui, sans-serif;
+            color: #34d399;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- SECTION-CONTENT-START -->
+
+            <!-- ── 슬라이드 1/19: [basic] 팁 4: 구체적인 프롬프트 ── -->
+            <section>
+                <h2>팁 4: 구체적인 프롬프트</h2>
+                <p>지금까지는 설정이나 명령어로 토큰을 아끼는 방법</p>
+                <p class="text-emerald-400" style="font-weight:600;">이번은 프롬프트 습관만 바꾸면 됨</p>
+                <p class="text-gray-500 mt-2">가장 간단하면서도 효과 큼</p>
+            </section>
+
+            <!-- ── 슬라이드 2/19: [basic] 전체 탐색 vs 파일 하나 ── -->
+            <section>
+                <h2>전체 탐색 vs 파일 하나</h2>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="folder-search" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; margin:0;">"이 코드 개선해줘"</p>
+                            <p style="font-size:0.6em; color:#9ca3af; margin:0.3em 0 0 0;">→ 프로젝트 전체 탐색, 토큰 급증</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 3/19: [basic] 구체적 프롬프트의 효과 ── -->
+            <section>
+                <h2>구체적 프롬프트의 효과</h2>
+                <div class="card-glow p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="file-code" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; margin:0;">"auth.ts의 login 함수에 입력값 검증 추가해줘"</p>
+                            <p style="font-size:0.6em; color:#34d399; margin:0.3em 0 0 0;">→ 해당 파일만 열고 즉시 작업</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-gray-500 mt-3" style="font-size:0.65em;">같은 결과인데 토큰 차이 수십 배</p>
+            </section>
+
+            <!-- ── 슬라이드 4/19: [basic] 환각 문제도 감소 ── -->
+            <section>
+                <h2>환각 문제도 감소</h2>
+                <p>컨텍스트에 관련 없는 정보가 적을수록</p>
+                <p class="text-emerald-400" style="font-weight:600;">AI가 헷갈릴 일 감소</p>
+                <p class="text-gray-500 mt-2">토큰 절약 + 품질 향상 = 일석이조</p>
+            </section>
+
+            <!-- ── 슬라이드 5/19: [checklist] 구체적 프롬프트 체크리스트 ── -->
+            <section>
+                <h2>구체적 프롬프트 체크리스트</h2>
+                <div class="card-elevated p-5 mt-4">
+                    <div class="flex items-start gap-3 mb-3">
+                        <i data-lucide="check" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                        <p style="font-size:0.65em; color:#d1d5db; margin:0;">파일명 명시</p>
+                    </div>
+                    <div class="flex items-start gap-3 mb-3">
+                        <i data-lucide="check" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                        <p style="font-size:0.65em; color:#d1d5db; margin:0;">함수명 명시</p>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="check" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
+                        <p style="font-size:0.65em; color:#d1d5db; margin:0;">구체적인 요구사항 작성</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 6/19: [basic] 팁 5: MCP Tool Search ── -->
+            <section>
+                <h2>팁 5: MCP Tool Search</h2>
+                <p>MCP 서버 여러 개 연결해서 쓰시는 분들 주목</p>
+                <p class="text-gray-500" style="font-size:0.65em;">Slack · GitHub · Notion 등</p>
+            </section>
+
+            <!-- ── 슬라이드 7/19: [basic] 안 쓰는 도구도 로드된다 ── -->
+            <section>
+                <h2>안 쓰는 도구도 로드</h2>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; margin:0;">MCP 서버는 안 쓰고 있어도</p>
+                            <p style="font-size:0.6em; color:#9ca3af; margin:0.3em 0 0 0;">매 요청마다 도구 정의가 컨텍스트에 포함</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 8/19: [basic] MCP Tool Search 작동 원리 ── -->
+            <section>
+                <h2>MCP Tool Search 작동 원리</h2>
+                <p>MCP 도구 정의를 미리 로드하지 않고</p>
+                <p class="text-emerald-400" style="font-weight:600;">필요할 때만 검색해서 가져옴</p>
+                <p class="text-gray-500 mt-2">안 쓰는 도구가 컨텍스트 차지 안 함</p>
+            </section>
+
+            <!-- ── 슬라이드 9/19: [basic] 권장 설정값 ── -->
+            <section>
+                <h2>권장 설정값</h2>
+                <p>기본값: <span class="badge-accent">auto</span> — MCP 도구 10% 초과시 자동 활성화</p>
+                <p class="text-emerald-400 mt-2" style="font-weight:600;">추천: <span class="badge-primary">true</span> — 항상 켜두기</p>
+                <p class="text-gray-600 mt-2" style="font-size:0.5em;">출처: Claude Code 공식 문서</p>
+            </section>
+
+            <!-- ── 슬라이드 10/19: [code] MCP Tool Search 설정 ── -->
+            <section>
+                <h2>MCP Tool Search 설정</h2>
+                <p class="text-gray-500 mb-3" style="font-size:0.65em;">settings.json에 추가</p>
+                <pre><code class="language-json" style="font-size:0.5em;">{
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  }
+}</code></pre>
+                <p class="text-gray-500 mt-3" style="font-size:0.6em;">MCP 서버 2~3개 이상 사용시 체감 큼</p>
+            </section>
+
+            <!-- ── 슬라이드 11/19: [basic] 팁 6: CLAUDE.md 관리 ── -->
+            <section>
+                <h2>CLAUDE.md 관리</h2>
+            </section>
+
+            <!-- ── 슬라이드 12/19: [basic] CLAUDE.md 매번 로드 문제 ── -->
+            <section>
+                <h2>CLAUDE.md 매번 로드</h2>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="refresh-cw" class="w-8 h-8 text-amber-400 shrink-0"></i>
+                        <div>
+                            <p style="font-size:0.7em; color:#fff; margin:0;">세션 시작마다 전체 로드</p>
+                            <p style="font-size:0.6em; color:#9ca3af; margin:0.3em 0 0 0;">PR 리뷰 · DB 마이그레이션 · API 가이드 전부 포함</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 슬라이드 13/19: [basic] 안 쓰는 지시사항도 토큰 소모 ── -->
+            <section>
+                <h2>안 쓰는 지시사항도 소모</h2>
+                <p>지금 PR 리뷰 안 하고 있어도</p>
+                <p class="text-amber-400" style="font-weight:600;">PR 리뷰 규칙이 매번 컨텍스트 차지</p>
+                <p class="text-gray-500 mt-2">MCP Tool Search와 같은 원리</p>
+            </section>
+
+            <!-- ── 슬라이드 14/19: [basic] 공식 권장 분량 ── -->
+            <section>
+                <h2>공식 권장 분량</h2>
+                <div class="card-glow p-5 mt-4">
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="file-text" class="w-8 h-8 text-emerald-400 shrink-0"></i>
+                        <span style="font-size:0.75em; color:#fff; font-weight:600;">CLAUDE.md는 <span class="text-emerald-400">약 500줄 이하</span> 유지</span>
+                    </div>
+                </div>
+                <p class="text-gray-600 mt-3" style="font-size:0.5em;">출처: Claude Code 공식 문서</p>
+            </section>
+
+            <!-- ── 슬라이드 15/19: [basic] Skills로 분리 ── -->
+            <section>
+                <h2>Skills로 분리</h2>
+                <p>나머지 내용은 Skills로 분리</p>
+                <p class="text-emerald-400" style="font-weight:600;">Skills는 필요할 때만 로드</p>
+            </section>
+
+            <!-- ── 슬라이드 16/19: [table] CLAUDE.md vs Skill 비교 ── -->
+            <section>
+                <h2>CLAUDE.md vs Skill</h2>
+                <table style="width:100%; font-size:0.55em; margin-top:1rem;">
+                    <thead>
+                        <tr style="border-bottom:2px solid rgba(52, 211, 153, 0.3);">
+                            <th style="text-align:left; padding:0.5rem 0.75rem; color:#9ca3af;"></th>
+                            <th style="text-align:left; padding:0.5rem 0.75rem; color:#fff;">CLAUDE.md</th>
+                            <th style="text-align:left; padding:0.5rem 0.75rem; color:#fff;">Skill</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid rgba(63, 63, 70, 0.5);">
+                            <td style="padding:0.5rem 0.75rem; color:#9ca3af;">로드 시점</td>
+                            <td style="padding:0.5rem 0.75rem; color:#d1d5db;">매 세션 자동</td>
+                            <td style="padding:0.5rem 0.75rem; color:#34d399;">필요할 때만</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid rgba(63, 63, 70, 0.5);">
+                            <td style="padding:0.5rem 0.75rem; color:#9ca3af;">넣을 내용</td>
+                            <td style="padding:0.5rem 0.75rem; color:#d1d5db;">항상 적용할 규칙</td>
+                            <td style="padding:0.5rem 0.75rem; color:#34d399;">특정 작업용 지시</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:0.5rem 0.75rem; color:#9ca3af;">예시</td>
+                            <td style="padding:0.5rem 0.75rem; color:#d1d5db;">한국어 대답 · 빌드 명령</td>
+                            <td style="padding:0.5rem 0.75rem; color:#34d399;">PR 리뷰 · 배포 절차</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-gray-600 mt-3" style="font-size:0.5em;">출처: Claude Code 공식 문서</p>
+            </section>
+
+            <!-- ── 슬라이드 17/19: [basic] 분리 원칙 정리 ── -->
+            <section>
+                <h2>분리 원칙 정리</h2>
+                <div class="card-elevated p-5 mt-3">
+                    <div class="flex items-center gap-4 mb-3">
+                        <i data-lucide="file-check" class="w-7 h-7 text-emerald-400 shrink-0"></i>
+                        <p style="font-size:0.65em; color:#d1d5db; margin:0;">CLAUDE.md → 핵심 규칙만</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="folder" class="w-7 h-7 text-emerald-400 shrink-0"></i>
+                        <p style="font-size:0.65em; color:#d1d5db; margin:0;">Skills → 가끔 쓰는 상세 지시</p>
+                    </div>
+                </div>
+                <p class="text-gray-500 mt-3" style="font-size:0.65em;">매 세션 기본 토큰 소모 감소</p>
+            </section>
+
+            <!-- SECTION-CONTENT-END -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/search/search.js"></script>
+
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            slideNumber: false,
+            controls: true,
+            progress: true,
+            center: true,
+            fragments: false,
+
+            plugins: [
+                RevealHighlight,
+                RevealNotes,
+                RevealMath.KaTeX,
+                RevealZoom,
+                RevealSearch
+            ]
+        }).then(() => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이 강의, 이렇게 들으셔야 합니다</title>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #FFFFFF;
+            --text-sub: #D5D5D5;
+            --text-dim: #AAAAAA;
+            --accent: #58A6FF;
+            --accent-dim: rgba(88, 166, 255, 0.12);
+            --surface: #161616;
+            --border: #333333;
+            --font-main: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --title: clamp(3.2rem, 10vw, 8rem);
+            --h2: clamp(2.5rem, 6.5vw, 5rem);
+            --h3: clamp(1.4rem, 3vw, 2rem);
+            --body: clamp(1.25rem, 2.5vw, 1.7rem);
+            --small: clamp(1.15rem, 2vw, 1.5rem);
+            --label: clamp(1.3rem, 2.5vw, 1.7rem);
+            --mono: clamp(1.15rem, 2vw, 1.5rem);
+            --pad: clamp(2rem, 5vw, 6rem);
+            --gap: clamp(1.2rem, 3vw, 3rem);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            height: 100%;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
+        }
+
+        *,
+        *:focus,
+        *:focus-visible,
+        *:focus-within {
+            outline: 0 !important;
+            box-shadow: none !important;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg);
+            color: var(--text);
+            height: 100%;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            font-weight: 500;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: var(--pad);
+            position: relative;
+            text-align: center;
+            contain: layout style paint;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+            overflow: hidden;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .mega {
+            font-size: var(--title);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: var(--h2);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: var(--h3);
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        p,
+        li {
+            font-size: var(--body);
+            line-height: 1.65;
+            font-weight: 400;
+        }
+
+        .accent {
+            color: var(--accent);
+        }
+
+        .sub {
+            color: var(--text-sub);
+        }
+
+        .dim {
+            color: var(--text-dim);
+        }
+
+        .label {
+            font-family: var(--font-mono);
+            font-size: var(--label);
+            letter-spacing: 0.03em;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            text-align: center;
+        }
+
+        .card-hot {
+            border-top: 3px solid var(--accent);
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            width: 100%;
+        }
+
+        .tag {
+            display: inline-block;
+            font-family: var(--font-mono);
+            font-size: var(--small);
+            padding: 0.2em 0.7em;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-radius: 6px;
+            font-weight: 800;
+        }
+
+        .code {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: clamp(1rem, 2vw, 1.6rem);
+            font-family: var(--font-mono);
+            font-size: var(--mono);
+            line-height: 1.75;
+            color: #D4D4D8;
+            text-align: left;
+            width: 100%;
+            max-width: 750px;
+        }
+
+        .code .c {
+            color: #B0B0B0;
+        }
+
+        .code .k {
+            color: var(--accent);
+        }
+
+        .num-big {
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        .num-label {
+            font-size: var(--body);
+            color: var(--text-sub);
+            margin-top: 0.6em;
+            font-weight: 500;
+        }
+
+        .comparison {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(2rem, 5vw, 4rem);
+            width: 100%;
+            text-align: center;
+        }
+
+        .arrow {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .quote-bar {
+            border-left: 4px solid var(--accent);
+            padding-left: clamp(1rem, 2.5vw, 2rem);
+            text-align: left;
+            max-width: 1100px;
+        }
+
+        .quote-bar p {
+            font-size: clamp(1.8rem, 3.8vw, 3.0rem);
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        .quote-bar .attr {
+            font-size: var(--body);
+            color: var(--text-sub);
+            margin-top: var(--gap);
+            font-weight: 400;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform, opacity;
+        }
+
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+            will-change: auto;
+        }
+
+        .d1 {
+            transition-delay: 0.06s;
+        }
+
+        .d2 {
+            transition-delay: 0.14s;
+        }
+
+        .d3 {
+            transition-delay: 0.22s;
+        }
+
+        .d4 {
+            transition-delay: 0.30s;
+        }
+
+        @media (max-height: 700px) {
+            :root {
+                --title: clamp(2.5rem, 8vw, 5rem);
+                --h2: clamp(2rem, 5.5vw, 3.5rem);
+                --pad: clamp(1.5rem, 4vw, 3rem);
+                --gap: clamp(0.8rem, 2vw, 1.5rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --title: clamp(2rem, 7vw, 3.5rem);
+                --h2: clamp(1.6rem, 4.5vw, 2.5rem);
+                --pad: clamp(1rem, 3vw, 2rem);
+                --gap: clamp(0.5rem, 1.2vw, 0.8rem);
+            }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --title: clamp(1.5rem, 5vw, 2.5rem);
+                --h2: clamp(1.2rem, 3.5vw, 2rem);
+                --pad: clamp(0.5rem, 2vw, 1.2rem);
+                --gap: clamp(0.4rem, 1vw, 0.6rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison {
+                flex-direction: column;
+            }
+
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== 섹션 1: 인사 + 솔직한 이야기 ===== -->
+
+    <!-- s1: 타이틀 -->
+    <section class="slide" id="s1" role="region" aria-label="슬라이드 1: 타이틀">
+        <div class="slide-content">
+            <p class="label reveal d1">MINDSET</p>
+            <h1 class="mega reveal d2" style="margin-top: 0.3em;">이 강의,<br><span class="accent">이렇게</span> 들으세요</h1>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">스펙이 아닌 마인드셋
+                업데이트</p>
+        </div>
+    </section>
+
+    <!-- s2: 비개발자도 선수 지식 없이 수강 가능 -->
+    <section class="slide" id="s2" role="region" aria-label="슬라이드 2: 선수 지식 없이 수강 가능">
+        <div class="slide-content">
+            <h2 class="reveal d1">비개발자도<br><span class="accent">선수 지식 없이</span> 수강 가능</h2>
+        </div>
+    </section>
+
+    <!-- s3: Claude Code 활용 예시 -->
+    <section class="slide" id="s3" role="region" aria-label="슬라이드 3: Claude Code 활용">
+        <div class="slide-content">
+            <p class="label reveal d1">CLAUDE CODE 활용</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">PDF 분석 · 보고서 · <span class="accent">PPT 제작</span></h2>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">개발 지식 없이도
+                충분히 활용 가능</p>
+        </div>
+    </section>
+
+    <!-- s4: 수강후기 통계 -->
+    <section class="slide" id="s4" role="region" aria-label="슬라이드 4: 수강후기 통계">
+        <div class="slide-content">
+            <p class="label reveal d1">수강후기</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">460개 중 <span class="accent">453개</span> 만족</h2>
+            <div class="comparison reveal d3" style="margin-top: var(--gap);">
+                <div>
+                    <p class="num-big" style="color: var(--accent);">439</p>
+                    <p class="num-label">5점</p>
+                </div>
+                <div>
+                    <p class="num-big">14</p>
+                    <p class="num-label">4점</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- s5: 비개발자 수강평 캡처 (텍스트 대체) -->
+    <section class="slide" id="s5" role="region" aria-label="슬라이드 5: 비개발자 수강평">
+        <div class="slide-content">
+            <h2 class="reveal d1">비개발자 · 마케터 · 기획자</h2>
+            <p class="reveal d2 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">"비개발자인데도
+                <span class="accent">할 수 있었다</span>"
+            </p>
+        </div>
+    </section>
+
+    <!-- s6: 마인드셋 업데이트 -->
+    <section class="slide" id="s6" role="region" aria-label="슬라이드 6: 마인드셋 업데이트">
+        <div class="slide-content">
+            <p class="label reveal d1">이번 업데이트</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">스펙이 아닌<br><span class="accent">마인드셋</span></h2>
+        </div>
+    </section>
+
+    <!-- ===== 섹션 2: 반복이 답이다 ===== -->
+
+    <!-- s7: 경험이 많으면 한 번에 이해 가능 -->
+    <section class="slide" id="s7" role="region" aria-label="슬라이드 7: 경험 많으면 이해 가능">
+        <div class="slide-content">
+            <h2 class="reveal d1">경험이 많으면<br><span class="accent">한 번에</span> 이해 가능</h2>
+            <p class="reveal d2 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">이미 비슷한 걸
+                반복해본 경험이 있으니까</p>
+        </div>
+    </section>
+
+    <!-- s8: 한 번에 이해 못하는 건 정상 -->
+    <section class="slide" id="s8" role="region" aria-label="슬라이드 8: 정상입니다">
+        <div class="slide-content">
+            <h2 class="reveal d1">한 번에 이해 못하는 건<br><span class="accent">정상</span>입니다</h2>
+            <p class="reveal d2 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">경험이 없는데 한번에
+                이해하면<br>오히려 특출난 겁니다</p>
+        </div>
+    </section>
+
+    <!-- s9: 운전 비유 -->
+    <section class="slide" id="s9" role="region" aria-label="슬라이드 9: 운전 비유">
+        <div class="slide-content">
+            <h2 class="reveal d1">운전 <span class="accent">처음</span> 배울 때</h2>
+            <div class="comparison reveal d2" style="margin-top: var(--gap);">
+                <div>
+                    <p style="font-size: var(--h3); font-weight: 700;">처음</p>
+                    <p class="sub" style="font-size: var(--body); margin-top: 0.5em;">핸들 돌려, 사이드미러 봐,<br>깜빡이 켜... 멘붕</p>
+                </div>
+                <div class="arrow">vs</div>
+                <div>
+                    <p style="font-size: var(--h3); font-weight: 700; color: var(--accent);">10년 차</p>
+                    <p class="sub" style="font-size: var(--body); margin-top: 0.5em;">동시에 아무 생각 없이</p>
+                </div>
+            </div>
+            <p class="reveal d3" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;"><span
+                    class="accent">경험의 차이</span>일 뿐</p>
+        </div>
+    </section>
+
+    <!-- s10: 경험이 적을수록 반복이 더 필요 -->
+    <section class="slide" id="s10" role="region" aria-label="슬라이드 10: 경험 적을수록 반복">
+        <div class="slide-content">
+            <h2 class="reveal d1">경험이 적을수록<br><span class="accent">반복</span>이 더 필요하다</h2>
+        </div>
+    </section>
+
+    <!-- s11: 반복이 답입니다 -->
+    <section class="slide" id="s11" role="region" aria-label="슬라이드 11: 반복이 답입니다">
+        <div class="slide-content">
+            <h1 class="mega reveal d1"><span class="accent">반복</span>이<br>답입니다</h1>
+        </div>
+    </section>
+
+    <!-- s12: 저도 기본 3번, 어떤 건 10번 -->
+    <section class="slide" id="s12" role="region" aria-label="슬라이드 12: 저도 기본 3번">
+        <div class="slide-content">
+            <p class="label reveal d1">짐코딩도</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">기본 <span class="accent">3번</span>,<br>어떤 건 <span
+                    class="accent">10번</span> 넘게</h2>
+        </div>
+    </section>
+
+    <!-- s13: 영화 비유 -->
+    <section class="slide" id="s13" role="region" aria-label="슬라이드 13: 영화 비유">
+        <div class="slide-content">
+            <h2 class="reveal d1">영화도 2번 보면<br>안 보이던 <span class="accent">복선, 디테일</span>이 보인다</h2>
+        </div>
+    </section>
+
+    <!-- s15: 강의는 당연히 더 -->
+    <section class="slide" id="s15" role="region" aria-label="슬라이드 15: 배우는 강의는 당연히 더">
+        <div class="slide-content">
+            <h2 class="reveal d1">그냥 보는 영화도 그런데</h2>
+            <h2 class="reveal d2" style="margin-top: 0.3em;"><span class="accent">배우는 강의</span>는 당연히 더</h2>
+        </div>
+    </section>
+
+    <!-- s16: 짐코딩의 공부법 (카드 그리드) -->
+    <section class="slide" id="s16" role="region" aria-label="슬라이드 16: 짐코딩의 공부법">
+        <div class="slide-content">
+            <h2 class="reveal d1">짐코딩의 <span class="accent">공부법</span></h2>
+            <div class="grid-3 reveal d2" style="margin-top: var(--gap);">
+                <div class="card card-hot">
+                    <span class="tag">1회차</span>
+                    <h3 style="margin-top: 0.5em;">기능 이해</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">가볍게 따라가며<br>스펙만 파악하기</p>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag">2회차</span>
+                    <h3 style="margin-top: 0.5em;">간단한 걸 만들기</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">나만의 애플리케이션 등<br>아주 작은 프로젝트</p>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag">3회차</span>
+                    <h3 style="margin-top: 0.5em;">디테일 파기</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">궁금했던 부분<br>깊이 실험하기</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- s17: 새 프로젝트마다 다시 보기 -->
+    <section class="slide" id="s17" role="region" aria-label="슬라이드 17: 새 프로젝트마다 다시 보기">
+        <div class="slide-content">
+            <h2 class="reveal d1">새 프로젝트마다<br><span class="accent">다시 보기</span></h2>
+            <p class="reveal d2 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">그래서 10번 넘게
+                본 적도</p>
+        </div>
+    </section>
+
+    <!-- s18: 아무리 봐도 이해가 안 될 때 -->
+    <section class="slide" id="s18" role="region" aria-label="슬라이드 18: 이해가 안 될 때">
+        <div class="slide-content">
+            <h2 class="reveal d1">아무리 봐도<br><span class="accent">이해가 안 될 때</span></h2>
+        </div>
+    </section>
+
+    <!-- s19: 뇌가 준비 안 됐을 뿐 -->
+    <section class="slide" id="s19" role="region" aria-label="슬라이드 19: 뇌가 준비 안 됐을 뿐">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"지금 내 뇌가<br>이걸 <span class="accent">받아들일 준비</span>가<br>안 됐을 뿐"</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- s20: 내려놓으세요 -->
+    <section class="slide" id="s20" role="region" aria-label="슬라이드 20: 내려놓으세요">
+        <div class="slide-content">
+            <h2 class="reveal d1"><span class="accent">내려놓으세요</span></h2>
+            <p class="reveal d2 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">1주일, 한 달,
+                3개월 뒤에 다시</p>
+        </div>
+    </section>
+
+    <!-- s21: 한방에 이해가 돼요 -->
+    <section class="slide" id="s21" role="region" aria-label="슬라이드 21: 한방에 이해">
+        <div class="slide-content">
+            <h2 class="reveal d1">그때<br><span class="accent">한방에</span> 이해가 돼요</h2>
+        </div>
+    </section>
+
+    <!-- ===== 섹션 3: 수강평 사례 ===== -->
+
+    <!-- s22: 실제 수강생 후기 -->
+    <section class="slide" id="s22" role="region" aria-label="슬라이드 22: 실제 수강생 후기">
+        <div class="slide-content">
+            <p class="label reveal d1">실제 수강생 후기</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">말로만이 아니라<br><span class="accent">직접</span> 보여드릴게요</h2>
+        </div>
+    </section>
+
+    <!-- s23: dev.hellolab 1회차 -->
+    <section class="slide" id="s23" role="region" aria-label="슬라이드 23: 수강평 1회차">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"1회차에서는 도저히 무슨 소리인지,<br>왜 저렇게 해야하는지<br><span class="accent">목적과 의미를 알 수 없었습니다.</span>"</p>
+                <p class="attr">— dev.hellolab, 수강평</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- s24: dev.hellolab 2회차 -->
+    <section class="slide" id="s24" role="region" aria-label="슬라이드 24: 수강평 2회차">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"2회차부터 조금씩 익숙해지고<br><span class="accent">혼자 프로젝트를 진행할 수 있게</span><br>되었습니다."</p>
+                <p class="attr">— dev.hellolab, 수강평</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- s25: dev.hellolab 3회차 -->
+    <section class="slide" id="s25" role="region" aria-label="슬라이드 25: 수강평 3회차">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"3회차에는 충분히 이해가 된 상태로<br>힘들던 1회차와 다르게<br><span class="accent">재미있게</span> 강의를 볼 수 있었네요."</p>
+                <p class="attr">— dev.hellolab, 수강평</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- s26: 반복의 힘 -->
+    <section class="slide" id="s26" role="region" aria-label="슬라이드 26: 반복의 힘">
+        <div class="slide-content">
+            <h2 class="reveal d1">1회차 <span class="dim">"무슨 소리?"</span></h2>
+            <p class="reveal d2" style="margin-top: var(--gap);"><span class="arrow">→</span></p>
+            <h2 class="reveal d3">3회차 <span class="accent">"재미있다"</span></h2>
+            <p class="reveal d4" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">이게 <span
+                    class="accent">반복의 힘</span>이에요</p>
+        </div>
+    </section>
+
+    <!-- s27: 진유나 마케터 -->
+    <section class="slide" id="s27" role="region" aria-label="슬라이드 27: 마케터 수강평">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"저는 <span class="accent">개발자가 아닌 마케터</span>입니다.<br>비개발자 기준으로도<br>진짜 된다는 걸 처음 느낀 강의였습니다."</p>
+                <p class="attr">— 진유나(노스), 수강평</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- s28: 결과물이 짠 -->
+    <section class="slide" id="s28" role="region" aria-label="슬라이드 28: 결과물이 짠">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"따라하기만 해도<br>눈에 보이는 결과물이 <span class="accent">짠</span> 하고 나와서<br>뿌듯하기도 하다"</p>
+                <p class="attr">— 진유나(노스), 수강평</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- s29: 여러분도 할 수 있어요 -->
+    <section class="slide" id="s29" role="region" aria-label="슬라이드 29: 여러분도 할 수 있어요">
+        <div class="slide-content">
+            <h1 class="mega reveal d1">여러분도<br><span class="accent">할 수 있어요</span></h1>
+        </div>
+    </section>
+
+    <!-- ===== 섹션 4: 터미널 ===== -->
+
+    <!-- s30: 이미 시작하신 거예요 -->
+    <section class="slide" id="s30" role="region" aria-label="슬라이드 30: 이미 시작하신 거예요">
+        <div class="slide-content">
+            <h2 class="reveal d1">이미 <span class="accent">아셨잖아요</span></h2>
+            <p class="reveal d2 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">Claude
+                Code는 터미널 도구</p>
+            <h2 class="reveal d3" style="margin-top: var(--gap);">이미 <span class="accent">시작하신 거예요</span></h2>
+        </div>
+    </section>
+
+    <!-- s31: 터미널 = 키보드로 말 거는 것 -->
+    <section class="slide" id="s31" role="region" aria-label="슬라이드 31: 터미널이란">
+        <div class="slide-content">
+            <p class="label reveal d1">터미널이란?</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;"><span class="accent">키보드</span>로<br>컴퓨터한테 말 거는 것</h2>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">마우스로 하는 걸
+                글자로 하는 거예요</p>
+        </div>
+    </section>
+
+    <!-- s32: 명령어 6개 -->
+    <section class="slide" id="s32" role="region" aria-label="슬라이드 32: 터미널 명령어 6개">
+        <div class="slide-content">
+            <h2 class="reveal d1">터미널 명령어, <span class="accent">딱 6개</span></h2>
+            <div class="code reveal d2" style="margin-top: var(--gap);">
+                <span class="k">pwd</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">→ 지금 내가 어디에
+                    있는지</span><br>
+                <span class="k">cd</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">→ 폴더
+                    이동</span><br>
+                <span class="k">ls</span> (dir) &nbsp;&nbsp;&nbsp;<span class="c">→ 파일 목록 보기</span><br>
+                <span class="k">clear</span> (cls) <span class="c">→ 화면 깨끗하게</span><br>
+                <span class="k">mkdir</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">→ 새 폴더 만들기</span><br>
+                <span class="k">~</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">→ 홈
+                    디렉토리 (내 기본 폴더)</span>
+            </div>
+            <p class="reveal d3" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">이게 <span
+                    class="accent">전부</span>입니다</p>
+        </div>
+    </section>
+
+    <!-- s33: 10분만 실습하면 끝 -->
+    <section class="slide" id="s33" role="region" aria-label="슬라이드 33: 10분만 실습">
+        <div class="slide-content">
+            <h2 class="reveal d1"><span class="accent">10분</span>만<br>실습하면 끝</h2>
+        </div>
+    </section>
+
+    <!-- ===== 섹션 5: 마무리 ===== -->
+
+    <!-- s34: 요지 정리 -->
+    <section class="slide" id="s34" role="region" aria-label="슬라이드 34: 요지 정리">
+        <div class="slide-content">
+            <h2 class="reveal d1">한 번에 못 따라가는 건<br><span class="accent">정상</span>이다</h2>
+            <h2 class="reveal d2" style="margin-top: var(--gap);">경험이 적을수록<br><span class="accent">반복</span>하면 된다</h2>
+        </div>
+    </section>
+
+    <!-- s35: 공식 -->
+    <section class="slide" id="s35" role="region" aria-label="슬라이드 35: 공식">
+        <div class="slide-content">
+            <p class="label reveal d1">FORMULA</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">내 역량 <span class="accent">×</span> AI 활용 능력</h2>
+            <p class="reveal d3" style="margin-top: var(--gap);"><span class="num-big accent">=</span></p>
+            <h2 class="reveal d4" style="margin-top: 0.2em;">결과물</h2>
+        </div>
+    </section>
+
+    <!-- s36: 반복하면 올라간다 -->
+    <section class="slide" id="s36" role="region" aria-label="슬라이드 36: 반복하면 역량 상승">
+        <div class="slide-content">
+            <h2 class="reveal d1">반복하면 <span class="accent">역량</span>이 올라가고<br>결과물도 함께 올라갑니다</h2>
+        </div>
+    </section>
+
+    <!-- s37: 끝까지 가보세요! -->
+    <section class="slide" id="s37" role="region" aria-label="슬라이드 37: 끝까지 가보세요">
+        <div class="slide-content">
+            <h1 class="mega reveal d1">자신 있게<br><span class="accent">끝까지</span> 가보세요!</h1>
+        </div>
+    </section>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.35 });
+        slides.forEach(s => obs.observe(s));
+        if (slides[0]) slides[0].classList.add('visible');
+        let cur = 0, busy = false, touchY = 0;
+        const go = i => { if (i < 0 || i >= slides.length || busy) return; busy = true; cur = i; slides[i].scrollIntoView({ behavior: 'smooth' }); setTimeout(() => busy = false, 600); };
+        document.addEventListener('keydown', e => {
+            if (e.key === 'f' || e.key === 'F') { if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } return; }
+            if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); go(cur + 1); } else if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(cur - 1); }
+        });
+        document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', e => { const d = touchY - e.changedTouches[0].clientY; if (Math.abs(d) > 50) go(d > 0 ? cur + 1 : cur - 1); }, { passive: true });
+        let lastW = 0; document.addEventListener('wheel', e => { const n = Date.now(); if (n - lastW < 800) return; lastW = n; go(e.deltaY > 0 ? cur + 1 : cur - 1); }, { passive: true });
+    </script>
+</body>
+
+</html>
