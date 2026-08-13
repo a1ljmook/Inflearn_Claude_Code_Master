@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>개발자 포트폴리오</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#050505',
+                        card: 'rgba(24, 24, 27, 0.6)',
+                        accent: '#2dd4bf',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-dark text-zinc-300 font-sans antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-dark/60 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="text-white font-bold text-xl tracking-tighter">DEV.PORTFOLIO</a>
+            <div class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#about" class="hover:text-accent transition-colors">소개</a>
+                <a href="#skills" class="hover:text-accent transition-colors">기술 스택</a>
+                <a href="#projects" class="hover:text-accent transition-colors">프로젝트</a>
+                <a href="#education" class="hover:text-accent transition-colors">학력/자격증</a>
+                <a href="#contact" class="hover:text-accent transition-colors">연락처</a>
+            </div>
+            <button id="menu-btn" class="md:hidden text-zinc-400 hover:text-white">
+                <i class="fa-solid fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-dark/90 backdrop-blur-xl border-b border-white/10 px-6 py-4 space-y-4 text-center">
+            <a href="#about" class="block hover:text-accent transition-colors">소개</a>
+            <a href="#skills" class="block hover:text-accent transition-colors">기술 스택</a>
+            <a href="#projects" class="block hover:text-accent transition-colors">프로젝트</a>
+            <a href="#education" class="block hover:text-accent transition-colors">학력/자격증</a>
+            <a href="#contact" class="block hover:text-accent transition-colors">연락처</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center pt-16 px-6 overflow-hidden relative">
+        <div class="absolute top-1/4 -left-20 w-96 h-96 bg-glow-teal rounded-full blur-3xl opacity-50"></div>
+        <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-glow-purple rounded-full blur-3xl opacity-50"></div>
+
+        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center z-10 reveal">
+            <div class="text-left space-y-8">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold tracking-wide uppercase">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                    </span>
+                    <span class="ml-1">Available for Freelance</span>
+                </div>
+                <h1 class="text-6xl md:text-8xl font-extrabold text-white leading-[1.1] tracking-tighter">
+                    Crafting Digital <span class="text-accent">Experiences</span>
+                </h1>
+                <p class="text-lg md:text-xl text-zinc-400 max-w-xl leading-relaxed">
+                    끊임없이 배우고 성장하는 개발자입니다. 효율적인 데이터 처리와 최신 AI 기술을 활용하여 사용자에게 가치를 제공하는 서비스를 만드는 것에 관심이 많습니다.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#projects" class="bg-accent hover:bg-teal-400 text-dark px-8 py-4 rounded-full font-bold transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(45,212,191,0.4)]">프로젝트 보기</a>
+                    <a href="#contact" class="backdrop-blur-md bg-white/5 border border-white/10 hover:bg-white/10 text-white px-8 py-4 rounded-full font-bold transition-all">연락하기</a>
+                </div>
+            </div>
+            <div class="relative hidden md:flex justify-center items-center">
+                <div class="absolute w-[500px] h-[500px] bg-glow-teal rounded-full blur-3xl opacity-60"></div>
+                <div class="relative animate-float">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/WinnieThePooh-Winnie-OriginalChristopher.png/400px-WinnieThePooh-Winnie-OriginalChristopher.png" alt="3D Asset" class="w-full max-w-md relative z-10 drop-shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-32 px-6 bg-zinc-900/20">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <h3 class="text-4xl font-bold text-white mb-4 tracking-tight">About Me</h3>
+                <div class="w-16 h-1.5 bg-accent mx-auto rounded-full"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-16 items-center reveal">
+                <div class="relative">
+                    <div class="aspect-square bg-card rounded-3xl border border-white/10 overflow-hidden backdrop-blur-sm">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/WinnieThePooh-Winnie-OriginalChristopher.png/400px-WinnieThePooh-Winnie-OriginalChristopher.png" alt="Profile" class="w-full h-full object-cover">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-accent rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob"></div>
+                </div>
+                <div class="space-y-8 text-zinc-400 text-lg leading-relaxed">
+                    <p>
+                        안녕하세요! 저는 최신 AI 기술과 효율적인 인프라 구축에 열정을 가진 개발자입니다.
+                        특히 LLM과 외부 지식 베이스를 결합한 <span class="text-white font-semibold">RAG (Retrieval-Augmented Generation)</span> 시스템을 통해
+                        단순한 답변을 넘어 정확하고 신뢰할 수 있는 정보를 제공하는 시스템을 설계하는 것에 큰 흥미를 느끼고 있습니다.
+                    </p>
+                    <p>
+                        단순히 코드를 작성하는 것을 넘어, 인프라 레벨에서의 최적화와 운영 경험을 쌓기 위해 hCloud와 같은 클라우드 환경을 적극적으로 활용하고 있습니다.
+                        사용자에게 실질적인 가치를 제공할 수 있는 서비스를 만들기 위해 매일 성장하고 있습니다.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <h3 class="text-4xl font-bold text-white mb-4 tracking-tight">Technical Skills</h3>
+                <div class="w-16 h-1.5 bg-accent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10 reveal">
+                <!-- Languages & Frameworks -->
+                <div class="p-10 bg-card rounded-3xl border border-white/10 hover:border-accent/40 transition-all duration-500 group backdrop-blur-md">
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mr-5 group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                            <i class="fa-solid fa-code text-xl"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white">Languages & Frameworks</h4>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl text-sm font-medium border border-white/10 hover:border-accent/50 transition-colors">Python</span>
+                        <span class="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl text-sm font-medium border border-white/10 hover:border-accent/50 transition-colors">RAG</span>
+                        <span class="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl text-sm font-medium border border-white/10 hover:border-accent/50 transition-colors">LLM</span>
+                        <span class="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl text-sm font-medium border border-white/10 hover:border-accent/50 transition-colors">Tailwind CSS</span>
+                    </div>
+                </div>
+
+                <!-- Infrastructure -->
+                <div class="p-10 bg-card rounded-3xl border border-white/10 hover:border-accent/40 transition-all duration-500 group backdrop-blur-md">
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mr-5 group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                            <i class="fa-solid fa-server text-xl"></i>
+                        </div>
+                        <h4 class="text-2xl font-bold text-white">Infrastructure & Cloud</h4>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl text-sm font-medium border border-white/10 hover:border-accent/50 transition-colors">hCloud</span>
+                        <span class="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl text-sm font-medium border border-white/10 hover:border-accent/50 transition-colors">Rocky Linux 8.10</span>
+                        <span class="px-4 py-2 bg-white/5 backdrop-blur-sm rounded-xl text-sm font-medium border border-white/10 hover:border-accent/50 transition-colors">Cloud Infra</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-32 px-6 bg-zinc-900/20">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <h3 class="text-4xl font-bold text-white mb-4 tracking-tight">Featured Projects</h3>
+                <div class="w-16 h-1.5 bg-accent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10 reveal">
+                <!-- Project 1 -->
+                <div class="group bg-card rounded-3xl border border-white/10 overflow-hidden hover:border-accent/50 transition-all duration-500 hover:-translate-y-3 backdrop-blur-md">
+                    <div class="aspect-video bg-zinc-800 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Winnie-the-Pooh_66.png/600px-Winnie-the-Pooh_66.png" alt="VIVA-Chat" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8">
+                        <h4 class="text-2xl font-bold text-white mb-3">VIVA-Chat h-Cloud</h4>
+                        <p class="text-zinc-400 text-sm mb-6 leading-relaxed">
+                            [프로젝트에 대한 간단한 설명]
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-[10px] uppercase tracking-widest font-bold px-3 py-1 bg-accent/10 text-accent rounded-full border border-accent/20">Rocky 8.10</span>
+                            <span class="text-[10px] uppercase tracking-widest font-bold px-3 py-1 bg-accent/10 text-accent rounded-full border border-accent/20">hCloud</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-sm font-bold text-white group-hover:text-accent transition-colors">
+                            자세히 보기 <i class="fa-solid fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 2 (Placeholder) -->
+                <div class="group bg-card rounded-3xl border border-white/10 overflow-hidden hover:border-accent/50 transition-all duration-500 hover:-translate-y-3 backdrop-blur-md">
+                    <div class="aspect-video bg-zinc-800 overflow-hidden">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/WinnieThePooh-Winnie-OriginalChristopher.png/600px-WinnieThePooh-Winnie-OriginalChristopher.png" alt="Project 2" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-8">
+                        <h4 class="text-2xl font-bold text-white mb-3">[프로젝트 명 2]</h4>
+                        <p class="text-zinc-400 text-sm mb-6 leading-relaxed">
+                            [프로젝트에 대한 간단한 설명]
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="text-[10px] uppercase tracking-widest font-bold px-3 py-1 bg-accent/10 text-accent rounded-full border border-accent/20">Python</span>
+                            <span class="text-[10px] uppercase tracking-widest font-bold px-3 py-1 bg-accent/10 text-accent rounded-full border border-accent/20">RAG</span>
+                        </div>
+                        <a href="#" class="inline-flex items-center text-sm font-bold text-white group-hover:text-accent transition-colors">
+                            자세히 보기 <i class="fa-solid fa-arrow-right ml-2 text-xs transition-transform group-hover:translate-x-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-32 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <h3 class="text-4xl font-bold text-white mb-4 tracking-tight">Education & Certifications</h3>
+                <div class="w-16 h-1.5 bg-accent mx-auto rounded-full"></div>
+            </div>
+
+            <div class="space-y-8 reveal">
+                <div class="flex items-start p-8 bg-card rounded-3xl border border-white/10 group hover:border-accent/40 transition-all duration-500 backdrop-blur-md">
+                    <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mr-8 shrink-0 group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-2">[학교 및 전공 입력]</h4>
+                        <p class="text-zinc-400 text-base">학위 정보 및 졸업 연도</p>
+                    </div>
+                </div>
+                <div class="flex items-start p-8 bg-card rounded-3xl border border-white/10 group hover:border-accent/40 transition-all duration-500 backdrop-blur-md">
+                    <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mr-8 shrink-0 group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                        <i class="fa-solid fa-certificate text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-2">[자격증 입력]</h4>
+                        <p class="text-zinc-400 text-base">취득일 및 발행 기관</p>
+                    </div>
+                </div>
+                <div class="flex items-start p-8 bg-card rounded-3xl border border-white/10 group hover:border-accent/40 transition-all duration-500 backdrop-blur-md">
+                    <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mr-8 shrink-0 group-hover:bg-accent group-hover:text-white transition-all duration-500">
+                        <i class="fa-solid fa-star text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-2">[기타 활동]</h4>
+                        <p class="text-zinc-400 text-base">오픈소스 기여, 커뮤니티 활동 등</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <footer id="contact" class="py-32 px-6 bg-zinc-900/40 border-t border-white/10">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="reveal">
+                <h3 class="text-4xl font-bold text-white mb-6 tracking-tight">Get In Touch</h3>
+                <p class="text-zinc-400 text-lg mb-16 leading-relaxed">
+                    함께 성장하며 가치를 만들어낼 동료를 찾고 있습니다.<br>
+                    언제든 편하게 연락 주세요!
+                </p>
+                <div class="flex justify-center space-x-8 mb-20">
+                    <a href="mailto:[이메일을 입력하세요]" class="w-14 h-14 bg-card border border-white/10 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:border-accent transition-all duration-500 hover:-translate-y-2 backdrop-blur-md">
+                        <i class="fa-solid fa-envelope text-xl"></i>
+                    </a>
+                    <a href="[github.com/username]" target="_blank" class="w-14 h-14 bg-card border border-white/10 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:border-accent transition-all duration-500 hover:-translate-y-2 backdrop-blur-md">
+                        <i class="fa-brands fa-github text-xl"></i>
+                    </a>
+                    <a href="[blog.url]" target="_blank" class="w-14 h-14 bg-card border border-white/10 rounded-full flex items-center justify-center text-zinc-400 hover:text-white hover:border-accent transition-all duration-500 hover:-translate-y-2 backdrop-blur-md">
+                        <i class="fa-solid fa-globe text-xl"></i>
+                    </a>
+                </div>
+                <p class="text-zinc-600 text-sm tracking-widest">
+                    &copy; 2026 [이름을 입력하세요]. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
