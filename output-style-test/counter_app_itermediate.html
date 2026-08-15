@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Precision Counter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-ground: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            --text-main: #1E293B;
+            --accent: #2563EB;
+            --accent-hover: #1D4ED8;
+            --border: #E2E8F0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg-ground: #0F172A;
+                --bg-surface: #1E293B;
+                --text-main: #F1F5F9;
+                --accent: #3B82F6;
+                --accent-hover: #60A5FA;
+                --border: #334155;
+            }
+        }
+
+        [data-theme="dark"] {
+            --bg-ground: #0F172A;
+            --bg-surface: #1E293B;
+            --text-main: #F1F5F9;
+            --accent: #3B82F6;
+            --accent-hover: #60A5FA;
+            --border: #334155;
+        }
+
+        body {
+            background-color: var(--bg-ground);
+            color: var(--text-main);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .counter-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border);
+        }
+
+        .counter-value {
+            font-variant-numeric: tabular-nums;
+            text-wrap: balance;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0px);
+        }
+
+        .btn-secondary {
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+
+    <div class="counter-card w-full max-w-sm rounded-3xl shadow-2xl p-8 text-center">
+        <!-- Header -->
+        <header class="mb-8">
+            <h1 class="text-sm font-semibold tracking-widest uppercase opacity-50 mb-2">Digital Counter</h1>
+            <div class="h-1 w-12 bg-blue-500 mx-auto rounded-full"></div>
+        </header>
+
+        <!-- Display -->
+        <div class="mb-12">
+            <span id="count-display" class="counter-value text-8xl font-bold tracking-tighter">0</span>
+        </div>
+
+        <!-- Controls -->
+        <div class="grid grid-cols-3 gap-4">
+            <button id="btn-decrement"
+                    class="btn-secondary py-4 px-2 rounded-2xl font-medium text-lg"
+                    aria-label="감소">
+                -1
+            </button>
+
+            <button id="btn-reset"
+                    class="btn-secondary py-4 px-2 rounded-2xl font-medium text-lg"
+                    aria-label="리셋">
+                Reset
+            </button>
+
+            <button id="btn-increment"
+                    class="btn-primary py-4 px-2 rounded-2xl font-medium text-lg shadow-lg shadow-blue-500/30"
+                    aria-label="증가">
+                +1
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 상태 관리 객체
+        const state = {
+            count: 0
+        };
+
+        // DOM 요소 참조
+        const display = document.getElementById('count-display');
+        const btnIncrement = document.getElementById('btn-increment');
+        const btnDecrement = document.getElementById('btn-decrement');
+        const btnReset = document.getElementById('btn-reset');
+
+        // UI 업데이트 함수
+        function updateDisplay() {
+            display.textContent = state.count;
+
+            // 숫자 변화 시 가벼운 애니메이션 효과
+            display.classList.remove('scale-105');
+            void display.offsetWidth; // reflow 강제 발생
+            display.classList.add('scale-105');
+            setTimeout(() => display.classList.remove('scale-105'), 100);
+        }
+
+        // 이벤트 핸들러
+        btnIncrement.addEventListener('click', () => {
+            state.count++;
+            updateDisplay();
+        });
+
+        btnDecrement.addEventListener('click', () => {
+            state.count--;
+            updateDisplay();
+        });
+
+        btnReset.addEventListener('click', () => {
+            if (confirm('카운트를 초기화하시겠습니까?')) {
+                state.count = 0;
+                updateDisplay();
+            }
+        });
+
+        // 초기화
+        updateDisplay();
+    </script>
+</body>
+</html>

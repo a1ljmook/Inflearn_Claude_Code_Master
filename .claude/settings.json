@@ -1,3 +1,7 @@
 {
-    "plansDirectory": ".claude/plans/"
+    "plansDirectory": ".claude/plans/",
+    "permissions": {
+        "defaultMode": "acceptEdits"
+    },
+    "outputStyle": "Intermediate Developer"
 }

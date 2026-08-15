@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FocusDo — 미니멀 할 일 관리</title>
+    <style>
+        :root {
+            /* Palette - Light */
+            --bg-ground: #FDFDFD;
+            --bg-surface: #FFFFFF;
+            --accent: #0055FF;
+            --accent-soft: rgba(0, 85, 255, 0.1);
+            --text-main: #1A1A1A;
+            --text-muted: #666666;
+            --border-color: #E5E5E5;
+            --shadow: rgba(0, 0, 0, 0.05);
+
+            /* Typography */
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, monospace;
+
+            /* Spacing & Radius */
+            --radius: 8px;
+            --gap: 1.5rem;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg-ground: #121212;
+                --bg-surface: #1E1E1E;
+                --accent: #4D8BFF;
+                --accent-soft: rgba(77, 139, 255, 0.15);
+                --text-main: #E0E0E0;
+                --text-muted: #999999;
+                --border-color: #2A2A2A;
+                --shadow: rgba(0, 0, 0, 0.3);
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg-ground: #121212;
+            --bg-surface: #1E1E1E;
+            --accent: #4D8BFF;
+            --accent-soft: rgba(77, 139, 255, 0.15);
+            --text-main: #E0E0E0;
+            --text-muted: #999999;
+            --border-color: #2A2A2A;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-ground);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            padding: 4rem 1rem;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 540px;
+            display: flex;
+            flex-direction: column;
+            gap: var(--gap);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            text-wrap: balance;
+            line-height: 1;
+        }
+
+        .stats-badge {
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 0.75rem;
+            background: var(--bg-surface);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            border: 2px solid var(--border-color);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-group:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-main);
+            font-family: var(--font-main);
+            font-size: 1.125rem;
+            padding: 0.5rem;
+        }
+
+        button#add-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: calc(var(--radius) - 2px);
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-main);
+            transition: opacity 0.2s ease;
+        }
+
+        button#add-btn:hover {
+            opacity: 0.9;
+        }
+
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        li {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.1s ease, border-color 0.2s ease;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        li:hover {
+            border-color: var(--accent);
+        }
+
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox.checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .task-text.completed {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            color: #FF4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>FocusDo</h1>
+            <div class="stats-badge" id="stats">0 / 0</div>
+        </header>
+
+        <div class="input-group">
+            <input type="text" id="todo-input" placeholder="새로운 할 일을 입력하세요..." autocomplete="off">
+            <button id="add-btn">추가</button>
+        </div>
+
+        <ul id="todo-list">
+            <!-- 할 일이 여기에 동적으로 추가됩니다 -->
+        </ul>
+    </div>
+
+    <script>
+        const input = document.getElementById('todo-input');
+        const addBtn = document.getElementById('add-btn');
+        const list = document.getElementById('todo-list');
+        const stats = document.getElementById('stats');
+
+        let todos = JSON.parse(localStorage.getItem('focus-do-tasks')) || [];
+
+        function save() {
+            localStorage.setItem('focus-do-tasks', JSON.stringify(todos));
+            render();
+        }
+
+        function addTask() {
+            const text = input.value.trim();
+            if (text) {
+                todos.push({ id: Date.now(), text, completed: false });
+                input.value = '';
+                save();
+            }
+        }
+
+        function toggleTask(id) {
+            todos = todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            save();
+        }
+
+        function deleteTask(id) {
+            todos = todos.filter(t => t.id !== id);
+            save();
+        }
+
+        function render() {
+            list.innerHTML = '';
+
+            if (todos.length === 0) {
+                list.innerHTML = '<div class="empty-state">오늘의 할 일이 없습니다.</div>';
+            } else {
+                todos.forEach(todo => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <div class="checkbox ${todo.completed ? 'checked' : ''}" onclick="toggleTask(${todo.id})"></div>
+                        <span class="task-text ${todo.completed ? 'completed' : ''}" onclick="toggleTask(${todo.id})">${todo.text}</span>
+                        <button class="delete-btn" onclick="deleteTask(${todo.id})">&times;</button>
+                    `;
+                    list.appendChild(li);
+                });
+            }
+
+            const completedCount = todos.filter(t => t.completed).length;
+            stats.textContent = `${completedCount} / ${todos.length}`;
+        }
+
+        addBtn.addEventListener('click', addTask);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        // 초기 렌더링
+        render();
+    </script>
+</body>
+</html>
