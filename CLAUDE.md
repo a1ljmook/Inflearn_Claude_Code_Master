@@ -1,5 +1,4 @@
 # CLAUDE.md
-
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## 언어 및 커뮤니케이션 규칙
