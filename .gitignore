@@ -9,5 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
-# Claude local files
-ClAUDE.local.md
+# Claude local settings files
+CLAUDE.local.md
+# .mcp.json
