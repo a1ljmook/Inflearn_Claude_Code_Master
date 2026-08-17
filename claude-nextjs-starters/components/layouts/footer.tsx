@@ -44,7 +44,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
           © {new Date().getFullYear()} StarterKit. All rights reserved.
         </div>
-      </div}
+      </div>
     </footer>
   );
 }

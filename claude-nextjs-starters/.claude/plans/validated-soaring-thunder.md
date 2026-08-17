@@ -1,55 +1,31 @@
-# 모던 웹 스타터킷 구현 계획
+# 웹 애플리케이션 오류 해결 계획
 
-## 컨텍스트 (Context)
-이 프로젝트의 목표는 최소한의 Next.js 16 설치 상태를 전문적인 프로덕션 수준의 "모던 웹 스타터킷"으로 변환하는 것입니다. 현재 프로젝트는 Next.js 16, React 19, Tailwind 4, ShadcnUI 등 최신 스택의 기초만 잡혀 있는 상태입니다. 개발자가 확장 가능하고 표준화된 아키텍처를 바탕으로 빠르게 프로젝트를 시작할 수 있도록, 검증된 라이브러리를 활용한 베스트 프랙티스와 레이아웃 패턴을 제공합니다.
+## 1. 오류 정보 수집 (Findings)
+- **현상**: `http://localhost:3000` 접속 시 "페이지를 찾을 수 없습니다" (404 Not Found) 메시지 출력.
+- **분석 결과**: Next.js Route Groups 폴더 생성 과정에서 쉘(PowerShell)의 특수문자 처리 문제로 인해 디렉토리 구조가 오염됨.
+- **오염 패턴**: `(marketing)` $\rightarrow$ `(marketing/)/` 형태로 폴더가 분리되어 생성됨.
+- **결과**: Next.js 라우팅 시스템이 `(marketing)` 그룹을 인식하지 못해 루트 페이지(`/`)를 찾지 못함.
 
-## 권장 접근 방식: 기능 중심 아키텍처 (Feature-Driven Architecture)
-Next.js의 **Route Groups**를 활용하여 URL 구조에 영향을 주지 않으면서 시각적/논리적으로 분리된 세 가지 영역을 구축합니다.
+## 2. 오류 원인 분석 (Root Cause)
+- **원인**: PowerShell에서 `New-Item` 또는 파일 쓰기 시 괄호`()`가 포함된 경로를 처리하는 과정에서 경로 구분자와 괄호가 잘못 해석되어 중첩된 디렉토리(`(groupname` $\rightarrow$ `)`)가 생성됨.
+- **영향**: `app/(marketing)/page.tsx` 경로에 있어야 할 파일이 `app/(marketing/)/page.tsx`에 위치하게 되어 라우팅 실패.
 
-### 1. 핵심 구조 및 레이아웃
-`app` 디렉토리를 다음과 같이 그룹화하여 레이아웃을 격리합니다:
+## 3. 오류 해결 방안 (Solution)
+오염된 디렉토리 구조를 완전히 삭제하고, 정확한 경로로 파일을 재배치합니다.
 
-- **마케팅 그룹 `(marketing)`**:
-  - `app/(marketing)/layout.tsx`: 반응형 Navbar와 Footer가 포함된 공개 레이아웃.
-  - `app/(marketing)/page.tsx`: 고전환 랜딩 페이지 (Hero, Features, Pricing 섹션).
-- **인증 그룹 `(auth)`**:
-  - `app/(auth)/layout.tsx`: 인증 폼에 집중할 수 있는 중앙 정렬된 미니멀 레이아웃.
-  - `app/(auth)/login/page.tsx` 및 `app/(auth)/register/page.tsx`: 표준 인증 진입점.
-- **대시보드 그룹 `(dashboard)`**:
-  - `app/(dashboard)/layout.tsx`: 접이식 Sidebar, Header (사용자 프로필, 테마 토글), 스크롤 가능한 메인 콘텐츠 영역을 포함하는 앱 쉘.
-  - `app/(dashboard)/page.tsx`: KPI 카드가 포함된 대시보드 개요 페이지.
-  - `app/(dashboard)/profile/page.tsx`: 사용자 프로필 관리 페이지.
+### 단계별 수행 작업:
+1. **오염된 폴더 삭제**: `(auth`, `(dashboard`, `(marketing` 및 중복 생성된 빈 폴더들을 모두 삭제.
+2. **정확한 경로로 디렉토리 재생성**: 괄호를 포함한 폴더명을 정확하게 생성.
+3. **파일 이동 및 재배치**: 오염된 경로에 있던 파일들을 정규 경로로 이동.
+   - `app/(marketing/)/page.tsx` $\rightarrow$ `app/(marketing)/page.tsx`
+   - `app/(marketing/)/layout.tsx` $\rightarrow$ `app/(marketing)/layout.tsx`
+   - `app/(auth/)/layout.tsx` $\rightarrow$ `app/(auth)/layout.tsx`
+   - `app/(auth/)/login/page.tsx` $\rightarrow$ `app/(auth)/login/page.tsx`
+   - `app/(dashboard/)/layout.tsx` $\rightarrow$ `app/(dashboard)/layout.tsx`
+   - `app/(dashboard/)/page.tsx` $\rightarrow$ `app/(dashboard)/page.tsx`
+   - `app/(dashboard/)/profile/page.tsx` $\rightarrow$ `app/(dashboard)/profile/page.tsx`
 
-### 2. 라이브러리 활용 전략 ("바퀴를 재발명하지 않음")
-검증된 오픈소스 라이브러리를 적극적으로 도입하여 안정성과 개발 속도를 높입니다.
-
-- **폼 관리 및 유효성 검사**: `react-hook-form`과 `zod`를 조합하여 클라이언트/서버 통합 검증 체계 구축.
-- **날짜 및 시간 처리**: `date-fns`를 사용하여 일관된 날짜 포맷팅 및 조작 수행.
-- **상태 관리**: 전역 상태가 필요한 경우 가볍고 빠른 `zustand` 도입.
-- **UI 프라이미티브**: `shadcn/ui`를 기반으로 하되, 복잡한 UI는 `Radix UI`의 접근성 표준을 준수.
-- **아이콘**: `lucide-react`를 사용하여 일관된 시각적 언어 유지.
-
-### 3. 아키텍처 패턴 (골든 패스)
-Next.js 15/16의 권장 데이터 흐름을 보여주기 위해 **프로필 업데이트** 기능을 구현합니다:
-- **스키마**: `schemas/profile.ts` (`zod`를 사용하여 서버/클라이언트 공통 검증).
-- **액션**: `actions/profile.ts` (Server Action을 통한 검증 및 DB 반영).
-- **폼**: `components/features/profile/profile-form.tsx` (`react-hook-form` 기반의 클라이언트 컴포넌트).
-- **페이지**: `app/(dashboard)/profile/page.tsx` (초기 데이터를 페칭하는 서버 컴포넌트).
-
-### 4. 시스템 및 DX 향상
-- **글로벌 상태**: `loading.tsx`, `error.tsx`, `not-found.tsx`를 구현하여 사용자 경험(UX) 완성도 향상.
-- **타입 안정성**: `types/index.ts`에 공통 도메인 엔티티 정의.
-- **개발 문서**: 아키텍처 설명 및 기능 확장 방법을 담은 상세한 `README.md` 작성.
-
-## 주요 수정 및 생성 파일 목록
-- **레이아웃**: `app/(marketing)/layout.tsx`, `app/(auth)/layout.tsx`, `app/(dashboard)/layout.tsx`.
-- **페이지**: `app/(marketing)/page.tsx`, `app/(auth)/login/page.tsx`, `app/(dashboard)/page.tsx`, `app/(dashboard)/profile/page.tsx`.
-- **컴포넌트**: `components/layouts/navbar.tsx`, `components/layouts/sidebar.tsx`, `components/layouts/header.tsx`, `components/features/profile/profile-form.tsx`.
-- **로직/타입**: `actions/profile.ts`, `schemas/profile.ts`, `types/index.ts`.
-
-## 검증 계획
-1. **라우트 확인**: `/` (마케팅), `/login` (인증), `/dashboard` (앱) 이동 시 레이아웃이 올바르게 전환되는지 확인.
-2. **반응성 테스트**: 모바일 뷰포트에서 대시보드 사이드바의 접힘 동작 및 네비게이션 바의 반응성 확인.
-3. **데이터 흐름 테스트**: 프로필 폼 제출 시 `zod` 유효성 검사와 Server Action이 정상 작동하는지 확인.
-4. **UI 폴리싱**: 라이트/다크 모드 전환 시 모든 페이지에 테마가 일관되게 적용되는지 확인.
-5. **에러 핸들링**: 존재하지 않는 경로 접속 시 `not-found.tsx` 페이지가 정상 출력되는지 확인.
+## 4. 테스트 및 검증 (Verification)
+1. **Playwright 검증**: `http://localhost:3000`에 접속하여 랜딩 페이지가 정상적으로 출력되는지 확인.
+2. **라우트 확인**: `/login`, `/dashboard`, `/dashboard/profile` 경로가 각각 올바른 레이아웃과 함께 렌더링되는지 확인.
+3. **콘솔 확인**: Next.js 서버 로그에 라우팅 관련 에러가 없는지 확인.

@@ -1,0 +1,60 @@
+- generic:
+  - generic [active]:
+    - generic [ref=f4e3]:
+      - generic [ref=f4e4]:
+        - navigation [ref=f4e6]:
+          - button [disabled] [ref=f4e7]:
+            - img "previous" [ref=f4e8]
+          - generic [ref=f4e10]:
+            - generic [ref=f4e11]: 1/
+            - generic [ref=f4e12]: "1"
+          - button [disabled] [ref=f4e13]:
+            - img "next" [ref=f4e14]
+        - generic [ref=f4e17]:
+          - generic "Latest available version is detected (16.3.1)." [ref=f4e20]: Next.js 16.3.1
+          - generic [ref=f4e21]: Turbopack
+      - dialog "Build Error" [ref=f4e23]:
+        - generic [ref=f4e26]:
+          - generic [ref=f4e28]:
+            - generic [ref=f4e29]:
+              - generic [ref=f4e30]: Build Error
+              - generic [ref=f4e32]:
+                - button "Copy Error Info" [ref=f4e33] [cursor=pointer]
+                - button "No related documentation found" [disabled] [ref=f4e36]
+                - button "Attach Node.js inspector" [ref=f4e39] [cursor=pointer]
+            - generic [ref=f4e48]: "Expected '</', got '}'"
+          - generic [ref=f4e51]:
+            - generic [ref=f4e53]:
+              - generic [ref=f4e58]: ./components/layouts/footer.tsx (47:12)
+              - button "Open in editor" [ref=f4e59] [cursor=pointer]
+            - generic [ref=f4e64]:
+              - generic [ref=f4e65]: "Error: Expected '</', got '}'"
+              - generic [ref=f4e66]: 45 |
+              - generic [ref=f4e67]: "© {"
+              - text: new Date
+              - generic [ref=f4e68]: "().getFullYear()}"
+              - text: StarterKit
+              - generic [ref=f4e69]: .
+              - text: All
+              - generic [ref=f4e70]: rights reserved.
+              - generic [ref=f4e71]: 46 |
+              - generic [ref=f4e72]: </div>
+              - text: ">"
+              - generic [ref=f4e73]: 47 |
+              - generic [ref=f4e74]: "</div}"
+              - generic [ref=f4e75]: "|"
+              - text: ^
+              - generic [ref=f4e76]: 48 |
+              - generic [ref=f4e77]: </footer>
+              - generic [ref=f4e78]: 49 |
+              - generic [ref=f4e79]: );
+              - generic [ref=f4e80]: 50 |
+              - generic [ref=f4e81]: "} Parsing ecmascript source code failed Import trace: Server Component: ./components/layouts/footer.tsx ./app/(marketing)/layout.tsx"
+    - generic [ref=f4e86] [cursor=pointer]:
+      - button "Open Next.js Dev Tools" [ref=f4e87]
+      - button "Open issues overlay" [ref=f4e92]:
+        - generic [ref=f4e93]:
+          - generic [ref=f4e94]: "0"
+          - generic [ref=f4e95]: "1"
+        - generic [ref=f4e96]: Issue
+  - alert [ref=f4e97]

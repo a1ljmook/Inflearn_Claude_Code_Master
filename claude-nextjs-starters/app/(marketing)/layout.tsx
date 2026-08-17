@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/layouts/navbar";
+import { Header } from "@/components/layouts/header";
 import { Footer } from "@/components/layouts/footer";
 
 export default function MarketingLayout({
@@ -8,10 +8,8 @@ export default function MarketingLayout({
 }) {
   return (
     <div className="flex min-h-screen flex-col">
-      <Navbar />
-      <main className="flex-1">
-        {children}
-      </main>
+      <Header />
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );
