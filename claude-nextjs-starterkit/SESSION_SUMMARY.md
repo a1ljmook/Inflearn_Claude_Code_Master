@@ -11,6 +11,7 @@
   - `tailwind.config.js`를 제거하고 `postcss.config.mjs` 및 `globals.css` 내 `@theme` 블록으로 설정 관리.
 - **UI Library**: shadcn/ui (Tailwind v4 호환 설정)
   - `components.json` 내 `tailwind.config: ""` 설정 완료.
+- **Theme Management**: `next-themes` (다크/라이트 모드 지원)
 - **Icons**: Lucide React
 - **Build**: `npm run build`를 통해 정적 페이지 생성 및 타입 체크 검증 완료.
 
@@ -26,12 +27,20 @@
    - `Navbar`, `Footer` 공통 레이아웃 컴포넌트 개발.
    - `RootLayout`에 레이아웃 통합.
    - Home (`/`) 및 About (`/about`) 예시 페이지 구현.
-5. **검증**: 프로덕션 빌드 테스트 완료.
+5. **환경 재구축 및 검증 (노트북 PC)**:
+   - `npm install` 및 빌드 테스트를 통한 개발 환경 정상화.
+6. **다크 모드 시스템 구현**:
+   - `next-themes`를 이용한 테마 상태 관리 인프라 구축.
+   - `ThemeProvider` 및 `ModeToggle` 컴포넌트 구현 및 통합.
+   - 글로벌 CSS 다크 모드 변수 정의 및 레이아웃 적용.
+7. **Git 이력 관리**:
+   - 초기 설정 및 다크 모드 구현 내용을 논리적 단위로 나누어 커밋 및 `main` 브랜치 통합 완료.
 
 ## 📂 핵심 파일 경로
 - **설정**: `postcss.config.mjs`, `components.json`, `tsconfig.json`
 - **스타일**: `src/app/globals.css`
 - **레이아웃**: `src/app/layout.tsx`, `src/components/layout/Navbar.tsx`, `src/components/layout/Footer.tsx`
+- **테마**: `src/components/theme-provider.tsx`, `src/components/mode-toggle.tsx`
 - **페이지**: `src/app/page.tsx`, `src/app/about/page.tsx`
 
 ## 🚀 다음 단계 (Next Steps)
