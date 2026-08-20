@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { updateProfile } from "@/lib/actions/profile";
-import { toast } from "sonner"; // Assuming sonner is used or will be added
 
 export function ProfileForm({ initialData }: { initialData: Partial<ProfileFormValues> }) {
   const [isLoading, setIsLoading] = useState(false);

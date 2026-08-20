@@ -17,9 +17,9 @@ export default function NotFound() {
             죄송합니다. 요청하신 페이지가 존재하지 않거나 이동되었습니다.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/">홈으로 돌아가기</Link>
-        </Button>
+        <Link href="/">
+          <Button>홈으로 돌아가기</Button>
+        </Link>
       </div>
     </div>
   );

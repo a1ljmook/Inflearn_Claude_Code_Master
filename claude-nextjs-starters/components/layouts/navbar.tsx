@@ -45,8 +45,12 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            <Button variant="ghost" size="sm">로그인</Button>
-            <Button size="sm">시작하기</Button>
+            <Link href="/login">
+              <Button variant="ghost" size="sm">로그인</Button>
+            </Link>
+            <Link href="/login">
+              <Button size="sm">시작하기</Button>
+            </Link>
           </div>
 
           <button
@@ -73,8 +77,12 @@ export function Navbar() {
             </Link>
           ))}
           <div className="flex flex-col gap-2 pt-2">
-            <Button variant="ghost" className="w-full justify-start">로그인</Button>
-            <Button className="w-full">시작하기</Button>
+            <Link href="/login">
+              <Button variant="ghost" className="w-full justify-start">로그인</Button>
+            </Link>
+            <Link href="/login">
+              <Button className="w-full">시작하기</Button>
+            </Link>
           </div>
         </div>
       )}
