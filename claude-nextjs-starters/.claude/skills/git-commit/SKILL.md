@@ -7,7 +7,7 @@ allowed-tools: Bash(git status *) Bash(git diff *) Bash(git add *) Bash(git comm
 # Git Commit
 
 ## Git 규칙
-!`cat ${CLAUDE_PROJECT_DIR}/../.claude/rules/git-rules.md`
+@${CLAUDE_PROJECT_DIR}/../.claude/rules/git-rules.md
 
 ## 절차
 1. `git status`, `git diff`(unstaged), `git diff --staged`로 변경사항 파악. 없으면 중단.
