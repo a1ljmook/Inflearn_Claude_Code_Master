@@ -1,17 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema, type ProfileFormValues } from "@/schemas/profile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { updateProfile } from "@/lib/actions/profile";
 
 export function ProfileForm({ initialData }: { initialData: Partial<ProfileFormValues> }) {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -70,10 +73,9 @@ export function ProfileForm({ initialData }: { initialData: Partial<ProfileFormV
 
       <div className="space-y-2">
         <Label htmlFor="bio">소개</Label>
-        <textarea
+        <Textarea
           id="bio"
           {...register("bio")}
-          className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           placeholder="자신을 소개해주세요..."
         />
         {errors.bio && (
@@ -86,7 +88,7 @@ export function ProfileForm({ initialData }: { initialData: Partial<ProfileFormV
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           변경사항 저장
         </Button>
-        <Button variant="outline" type="button">취소</Button>
+        <Button variant="outline" type="button" onClick={() => router.back()}>취소</Button>
       </div>
     </form>
   );

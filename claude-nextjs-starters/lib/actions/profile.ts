@@ -27,13 +27,13 @@ export async function updateProfile(data: ProfileFormValues): Promise<ApiRespons
       data: { success: true },
       error: null,
     };
-  } catch (error: any) {
-    if (error.name === "ZodError") {
+  } catch (error: unknown) {
+    if (error instanceof Error && (error as any).name === "ZodError") {
       return {
         success: false,
         data: null,
         error: {
-          message: error.errors[0].message,
+          message: (error as any).errors[0].message,
           code: "VALIDATION_ERROR",
         },
       };
