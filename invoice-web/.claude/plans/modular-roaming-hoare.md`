@@ -1,0 +1,51 @@
+# Claude Code Doctor Plan
+
+## Context
+The user has invoked the `/doctor` command to perform a comprehensive health check and cleanup of their Claude Code setup. This includes diagnosing installation health, removing unused extensions, deduplicating and trimming documentation, optimizing hooks, and refining permission settings.
+
+## Approach
+I will follow the detailed `/doctor` specification provided in the system instructions, executing the checks in the following phases:
+
+### Phase 1: Data Gathering (Read-Only)
+I will use `Explore` agents to collect all necessary diagnostic information without making any changes:
+- **Installations & Version**: `which -a claude`, `npm -g config get prefix`, `claude --version`, and `installMethod` from `~/.claude.json`.
+- **Settings & Config**: Parse `~/.claude/settings.json`, `.claude/settings.json`, `.claude/settings.local.json`, `~/.claude.json`, and `.mcp.json` (using `jq` to avoid exposing secrets).
+- **Agents & Skills**: Scan `.claude/agents/*.md`, `~/.claude/agents/*.md`, and all `SKILL.md` files for frontmatter validity and name collisions.
+- **Usage Analysis**: Collect `skillUsage` and `pluginUsage` from `~/.claude.json` and scan the ~50 most recent session transcripts for tool calls and hook durations.
+- **Documentation**: Gather all `CLAUDE.md` and `.claude/rules/*.md` files to analyze for derivability and contradictions.
+- **Permissions**: Check `permissions.defaultMode` and aggregate denied read-only commands from transcripts.
+
+### Phase 2: Analysis & Report Generation
+I will process the gathered data according to the logic for Checks 0-9:
+- **Check 0**: Identify duplicate installs, PATH issues, and broken definitions.
+- **Check 1**: Determine unused skills/plugins/MCP servers based on counters and transcripts.
+- **Check 2**: Find redundancies between local and checked-in `CLAUDE.md` files.
+- **Check 3**: Identify derivable content in `CLAUDE.md` files.
+- **Check 4**: Propose migration of root `CLAUDE.md` content to lazy-loaded skills or subdirectory files.
+- **Check 5**: Flag slow hooks based on transcript `durationMs`.
+- **Check 6**: Estimate total resident context cost.
+- **Check 7**: Compare installed version against the latest for the configured channel.
+- **Check 8**: Verify if `auto` mode is the default permission mode.
+- **Check 9**: Identify frequently denied read-only commands for allowlist proposals.
+
+### Phase 3: User Confirmation & Application
+- Present a concise report with a summary table and grouped proposed actions.
+- Use `AskUserQuestion` for the two mandatory confirmation gates:
+    1. Consolidated cleanup (Checks 0-4, 7).
+    2. Permission changes (Checks 8, 9).
+- Apply confirmed changes using `Edit`, `Write`, or `/mcp disable`.
+
+## Critical Files
+- `~/.claude.json`
+- `~/.claude/settings.json`
+- `.claude/settings.json`
+- `.claude/settings.local.json`
+- `.mcp.json`
+- `CLAUDE.md`
+- `.claude/rules/*.md`
+- `~/.claude/projects/**/*.jsonl` (transcripts)
+
+## Verification
+- After applying fixes, I will list exactly what changed and provide instructions for reversal.
+- Version updates will be verified via `claude --version`.
+- Permission changes will be reflected in the relevant settings files.
