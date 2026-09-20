@@ -12,3 +12,6 @@ wheels/
 # Claude local settings files
 CLAUDE.local.md
 # .mcp.json
+
+# client_secret
+client_secret_*.json
