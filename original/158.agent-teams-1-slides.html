@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Teams — 서로 소통하며 함께 일하는 에이전트</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap">
+
+    <style>
+        /* ===========================================
+           CSS CUSTOM PROPERTIES (THEME: Team Flow)
+           Teal/Blue gradient on dark charcoal
+           =========================================== */
+        :root {
+            /* Colors */
+            --bg-primary: #111318;
+            --bg-secondary: #181b22;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-card-hover: rgba(255, 255, 255, 0.07);
+            --text-primary: #f0f0f0;
+            --text-secondary: rgba(240, 240, 240, 0.5);
+            --text-muted: rgba(240, 240, 240, 0.3);
+            --accent-teal: #00d2be;
+            --accent-blue: #3884ff;
+            --accent-teal-glow: rgba(0, 210, 190, 0.25);
+            --accent-blue-glow: rgba(56, 132, 255, 0.2);
+            --gradient-accent: linear-gradient(135deg, #00d2be, #3884ff);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+
+            /* Typography — all use clamp() for responsive scaling */
+            --font-display: 'Satoshi', 'Noto Sans KR', sans-serif;
+            --font-body: 'Noto Sans KR', 'Satoshi', sans-serif;
+            --title-size: clamp(2rem, 6vw, 4.5rem);
+            --h2-size: clamp(1.5rem, 4vw, 2.8rem);
+            --h3-size: clamp(1rem, 2.2vw, 1.4rem);
+            --body-size: clamp(0.8rem, 1.4vw, 1.1rem);
+            --small-size: clamp(0.65rem, 1vw, 0.85rem);
+            --badge-size: clamp(0.6rem, 1vw, 0.75rem);
+
+            /* Spacing — viewport-relative */
+            --slide-padding: clamp(1.5rem, 5vw, 5rem);
+            --content-gap: clamp(0.8rem, 2.5vw, 2rem);
+            --element-gap: clamp(0.4rem, 1vw, 1rem);
+
+            /* Animation */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --duration-normal: 0.7s;
+            --duration-fast: 0.4s;
+        }
+
+        /* ===========================================
+           BASE STYLES
+           =========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            height: 100%;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===========================================
+           PARTICLE CANVAS (background animation)
+           Floating particles with connection lines
+           =========================================== */
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Background gradient mesh */
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 80%, rgba(0, 210, 190, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(56, 132, 255, 0.06) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* ===========================================
+           NAVIGATION DOTS
+           =========================================== */
+        .nav-dots {
+            position: fixed;
+            right: clamp(0.8rem, 2vw, 1.5rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            z-index: 50;
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s var(--ease-out-expo);
+            padding: 0;
+        }
+
+        .nav-dot.active {
+            background: var(--accent-teal);
+            box-shadow: 0 0 10px var(--accent-teal-glow);
+            transform: scale(1.3);
+        }
+
+        .nav-dot:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===========================================
+           KEYBOARD HINT
+           =========================================== */
+        .keyboard-hint {
+            position: fixed;
+            bottom: clamp(1rem, 2vh, 2rem);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.5s;
+        }
+
+        .keyboard-hint .key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.6em;
+            height: 1.6em;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        /* ===========================================
+           FULLSCREEN BUTTON
+           =========================================== */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: clamp(1rem, 2vh, 2rem);
+            right: clamp(1rem, 2vw, 2rem);
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .fullscreen-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ===========================================
+           SLIDE CONTAINER
+           Each slide = exact viewport height
+           =========================================== */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            padding: var(--slide-padding);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        /* ===========================================
+           REVEAL ANIMATIONS
+           Triggered by .visible class via Intersection Observer
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                        transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                        transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                        transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                        transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal,
+        .slide.visible .reveal-scale,
+        .slide.visible .reveal-left,
+        .slide.visible .reveal-right {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+        }
+
+        /* Stagger children */
+        .slide.visible .reveal:nth-child(1),
+        .slide.visible .reveal-scale:nth-child(1) { transition-delay: 0.1s; }
+        .slide.visible .reveal:nth-child(2),
+        .slide.visible .reveal-scale:nth-child(2) { transition-delay: 0.2s; }
+        .slide.visible .reveal:nth-child(3),
+        .slide.visible .reveal-scale:nth-child(3) { transition-delay: 0.3s; }
+        .slide.visible .reveal:nth-child(4),
+        .slide.visible .reveal-scale:nth-child(4) { transition-delay: 0.4s; }
+        .slide.visible .reveal:nth-child(5) { transition-delay: 0.5s; }
+
+        /* ===========================================
+           SHARED COMPONENTS
+           =========================================== */
+
+        /* Badge / Chip */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4em;
+            background: rgba(0, 210, 190, 0.1);
+            border: 1px solid rgba(0, 210, 190, 0.2);
+            color: var(--accent-teal);
+            font-family: var(--font-display);
+            font-size: var(--badge-size);
+            font-weight: 700;
+            padding: 0.45em 1.1em;
+            border-radius: 100px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        /* Top accent line */
+        .top-line {
+            width: 50px;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 2px;
+            margin-bottom: var(--content-gap);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Section title */
+        .slide-title {
+            font-family: var(--font-display);
+            font-size: var(--h2-size);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: var(--element-gap);
+            text-align: center;
+        }
+
+        /* Section subtitle */
+        .slide-subtitle {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        /* Slide number */
+        .slide-number {
+            position: absolute;
+            top: var(--slide-padding);
+            left: var(--slide-padding);
+            font-family: var(--font-display);
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        /* ===========================================
+           SLIDE 1: TITLE SLIDE
+           =========================================== */
+        .title-slide .badge { margin-bottom: var(--content-gap); }
+
+        .title-slide h1 {
+            font-family: var(--font-display);
+            font-size: var(--title-size);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
+            text-align: center;
+        }
+
+        .title-slide .subtitle {
+            font-size: clamp(0.85rem, 1.8vw, 1.2rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .title-slide .premise {
+            margin-top: clamp(1.5rem, 4vh, 3rem);
+            padding: clamp(0.8rem, 2vw, 1.5rem) clamp(1.2rem, 3vw, 2rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            max-width: 520px;
+            text-align: center;
+        }
+
+        .title-slide .premise p {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .title-slide .premise .role {
+            color: var(--accent-teal);
+            font-weight: 700;
+        }
+
+        /* Agent dots */
+        .agent-dots {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: clamp(1.2rem, 3vh, 2rem);
+        }
+
+        .agent-dot {
+            width: clamp(10px, 1.2vw, 14px);
+            height: clamp(10px, 1.2vw, 14px);
+            border-radius: 50%;
+            animation: pulse-dot 2.5s ease-in-out infinite;
+        }
+        .agent-dot:nth-child(1) { background: var(--accent-teal); animation-delay: 0s; }
+        .agent-dot:nth-child(2) { background: var(--accent-blue); animation-delay: 0.3s; }
+        .agent-dot:nth-child(3) { background: var(--accent-teal); animation-delay: 0.6s; }
+        .agent-dot:nth-child(4) { background: var(--accent-blue); animation-delay: 0.9s; }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+
+        /* ===========================================
+           SLIDE 2: INDEPENDENT WORK (서브에이전트)
+           4 separate region cards, no connections
+           =========================================== */
+        .regions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+            width: 100%;
+            max-width: 800px;
+            margin-top: var(--content-gap);
+        }
+
+        .region-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: clamp(0.8rem, 2vw, 1.5rem);
+            text-align: center;
+            transition: all 0.3s var(--ease-out-expo);
+        }
+
+        .region-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .region-card .icon {
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            margin-bottom: clamp(0.3rem, 1vh, 0.6rem);
+        }
+
+        .region-card .name {
+            font-family: var(--font-display);
+            font-size: var(--h3-size);
+            font-weight: 700;
+            margin-bottom: clamp(0.2rem, 0.5vh, 0.4rem);
+        }
+
+        .region-card .person {
+            font-size: var(--small-size);
+            color: var(--text-muted);
+        }
+
+        .no-connect-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: var(--content-gap);
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+        }
+
+        .no-connect-label .x-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.4em;
+            height: 1.4em;
+            border-radius: 50%;
+            background: rgba(255, 80, 80, 0.15);
+            color: #ff5050;
+            font-size: 0.8em;
+            font-weight: 700;
+        }
+
+        .result-label {
+            margin-top: clamp(0.6rem, 1.5vh, 1rem);
+            font-size: var(--small-size);
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ===========================================
+           SLIDE 3: COLLABORATIVE WORK (Agent Teams)
+           Connected nodes with communication
+           =========================================== */
+        .team-visual {
+            position: relative;
+            width: min(90vw, 700px);
+            height: min(50vh, 380px);
+            margin-top: var(--content-gap);
+        }
+
+        .team-node {
+            position: absolute;
+            width: clamp(90px, 15vw, 140px);
+            padding: clamp(0.5rem, 1.2vw, 0.9rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            text-align: center;
+            z-index: 2;
+            transition: all 0.3s var(--ease-out-expo);
+        }
+
+        .team-node:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(0, 210, 190, 0.2);
+        }
+
+        .team-node .node-icon {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            margin-bottom: clamp(0.15rem, 0.5vh, 0.3rem);
+        }
+
+        .team-node .node-label {
+            font-family: var(--font-display);
+            font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .team-node .node-person {
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            color: var(--text-muted);
+            margin-top: 0.15em;
+        }
+
+        /* Position nodes in a diamond/cross layout */
+        .node-market    { top: 0;   left: 50%; transform: translateX(-50%); }
+        .node-compete   { top: 50%; left: 0;   transform: translateY(-50%); }
+        .node-budget    { top: 50%; right: 0;  transform: translateY(-50%); }
+        .node-schedule  { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        /* SVG connection lines */
+        .connection-lines {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .connection-lines line {
+            stroke: url(#lineGradient);
+            stroke-width: 1.5;
+            stroke-dasharray: 6 4;
+            animation: dash-flow 1.5s linear infinite;
+        }
+
+        @keyframes dash-flow {
+            to { stroke-dashoffset: -20; }
+        }
+
+        /* Speech bubbles */
+        .speech-bubble {
+            position: absolute;
+            background: rgba(0, 210, 190, 0.1);
+            border: 1px solid rgba(0, 210, 190, 0.2);
+            border-radius: 10px;
+            padding: clamp(0.3rem, 0.8vw, 0.5rem) clamp(0.5rem, 1vw, 0.8rem);
+            font-size: clamp(0.55rem, 0.9vw, 0.72rem);
+            color: var(--accent-teal);
+            z-index: 3;
+            white-space: nowrap;
+            animation: bubble-appear 0.5s var(--ease-spring) both;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: rgba(0, 210, 190, 0.1);
+            border-right: 1px solid rgba(0, 210, 190, 0.2);
+            border-bottom: 1px solid rgba(0, 210, 190, 0.2);
+            transform: rotate(45deg);
+        }
+
+        .bubble-1 {
+            top: 28%;
+            right: 28%;
+        }
+        .bubble-1::after {
+            bottom: -5px;
+            left: 30%;
+        }
+
+        .bubble-2 {
+            bottom: 28%;
+            left: 25%;
+        }
+        .bubble-2::after {
+            top: -5px;
+            right: 30%;
+            transform: rotate(-135deg);
+        }
+
+        .slide.visible .speech-bubble { animation-delay: 0.8s; }
+        .slide.visible .bubble-2 { animation-delay: 1.2s; }
+
+        @keyframes bubble-appear {
+            from { opacity: 0; transform: scale(0.7); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .connect-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: var(--content-gap);
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+        }
+
+        .connect-label .check-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.4em;
+            height: 1.4em;
+            border-radius: 50%;
+            background: rgba(0, 210, 190, 0.15);
+            color: var(--accent-teal);
+            font-size: 0.8em;
+            font-weight: 700;
+        }
+
+        /* ===========================================
+           SLIDE 4: CONCLUSION (비교)
+           Sub-agents vs Agent Teams side-by-side
+           =========================================== */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(1rem, 3vw, 2rem);
+            width: 100%;
+            max-width: 850px;
+            margin-top: var(--content-gap);
+        }
+
+        .compare-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: clamp(1rem, 2.5vw, 2rem);
+            text-align: center;
+            transition: all 0.3s var(--ease-out-expo);
+        }
+
+        .compare-card:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .compare-card.active-card {
+            border-color: rgba(0, 210, 190, 0.3);
+            background: rgba(0, 210, 190, 0.04);
+        }
+
+        .compare-card .card-icon {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: clamp(0.4rem, 1vh, 0.8rem);
+        }
+
+        .compare-card h3 {
+            font-family: var(--font-display);
+            font-size: var(--h3-size);
+            font-weight: 700;
+            margin-bottom: clamp(0.3rem, 0.8vh, 0.6rem);
+        }
+
+        .compare-card .card-desc {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
+        }
+
+        .compare-card .card-tag {
+            display: inline-block;
+            font-family: var(--font-display);
+            font-size: var(--small-size);
+            font-weight: 700;
+            padding: 0.3em 0.9em;
+            border-radius: 100px;
+            letter-spacing: 0.05em;
+        }
+
+        .compare-card:first-child .card-tag {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+        }
+
+        .compare-card.active-card .card-tag {
+            background: rgba(0, 210, 190, 0.15);
+            color: var(--accent-teal);
+        }
+
+        /* Mini node diagrams inside cards */
+        .mini-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: clamp(0.5rem, 1vw, 0.8rem);
+            margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
+        }
+
+        .mini-dot {
+            width: clamp(8px, 1vw, 12px);
+            height: clamp(8px, 1vw, 12px);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .active-card .mini-dot {
+            background: var(--accent-teal);
+            box-shadow: 0 0 8px var(--accent-teal-glow);
+        }
+
+        .mini-line {
+            width: clamp(12px, 2vw, 20px);
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .active-card .mini-line {
+            background: var(--gradient-accent);
+        }
+
+        .conclusion-text {
+            margin-top: var(--content-gap);
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 550px;
+        }
+
+        .conclusion-text strong {
+            color: var(--accent-teal);
+            font-weight: 700;
+        }
+
+        /* ===========================================
+           RESPONSIVE BREAKPOINTS
+           =========================================== */
+
+        /* Short viewports (< 700px height) */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1rem, 3vw, 2.5rem);
+                --content-gap: clamp(0.5rem, 1.5vw, 1.2rem);
+                --title-size: clamp(1.8rem, 5vw, 3.5rem);
+                --h2-size: clamp(1.3rem, 3.5vw, 2.2rem);
+            }
+        }
+
+        /* Very short viewports (< 600px height) */
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.4rem, 1vw, 0.8rem);
+                --title-size: clamp(1.4rem, 4.5vw, 2.5rem);
+                --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            .nav-dots, .keyboard-hint { display: none; }
+            .title-slide .premise { display: none; }
+            .speech-bubble { display: none; }
+        }
+
+        /* Extremely short (landscape phones, < 500px height) */
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2vw, 1rem);
+                --title-size: clamp(1.2rem, 4vw, 1.8rem);
+                --h2-size: clamp(1rem, 3vw, 1.4rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+
+        /* Narrow viewports (< 600px width) */
+        @media (max-width: 600px) {
+            .regions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .comparison {
+                grid-template-columns: 1fr;
+                gap: clamp(0.5rem, 2vw, 1rem);
+            }
+            .nav-dots { display: none; }
+
+            .team-visual {
+                height: min(45vh, 280px);
+            }
+
+            .team-node {
+                width: clamp(70px, 28vw, 110px);
+                padding: clamp(0.4rem, 1vw, 0.7rem);
+            }
+        }
+
+        /* Medium viewports (600px - 900px width) */
+        @media (min-width: 601px) and (max-width: 900px) {
+            .team-visual {
+                width: min(85vw, 550px);
+                height: min(45vh, 320px);
+            }
+        }
+
+        /* ===========================================
+           REDUCED MOTION
+           =========================================== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+            html { scroll-behavior: auto; }
+            .connection-lines line { animation: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background effects -->
+    <div class="bg-mesh"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation dots -->
+    <nav class="nav-dots" id="navDots" aria-label="슬라이드 내비게이션"></nav>
+
+    <!-- Keyboard hint -->
+    <div class="keyboard-hint" id="keyHint">
+        <span class="key">&#8592;</span>
+        <span class="key">&#8594;</span>
+        <span>이동</span>
+        <span style="margin-left: 0.3rem;" class="key">F</span>
+        <span>전체화면</span>
+    </div>
+
+    <!-- Fullscreen button -->
+    <button class="fullscreen-btn" id="fullscreenBtn" aria-label="전체화면 전환" title="전체화면 (F)">
+        <svg id="fsIconExpand" viewBox="0 0 24 24">
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <polyline points="9 21 3 21 3 15"></polyline>
+            <line x1="21" y1="3" x2="14" y2="10"></line>
+            <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+        <svg id="fsIconShrink" viewBox="0 0 24 24" style="display:none;">
+            <polyline points="4 14 10 14 10 20"></polyline>
+            <polyline points="20 10 14 10 14 4"></polyline>
+            <line x1="14" y1="10" x2="21" y2="3"></line>
+            <line x1="10" y1="14" x2="3" y2="21"></line>
+        </svg>
+    </button>
+
+    <!-- ============================================
+         SLIDE 1: TITLE
+         ============================================ -->
+    <section class="slide title-slide" data-slide="0">
+        <span class="slide-number">01 / 04</span>
+        <div class="slide-content">
+            <div class="badge reveal">Multi-Agent System</div>
+            <h1 class="reveal"><span class="gradient-text">Agent Teams</span></h1>
+            <p class="subtitle reveal">서로 소통하며 함께 일하는 에이전트</p>
+
+            <div class="premise reveal">
+                <p>여러분이 회사에 다니고 있고<br>직급은 <span class="role">팀장</span>이라고 가정해 보겠습니다.</p>
+            </div>
+
+            <div class="agent-dots reveal">
+                <div class="agent-dot"></div>
+                <div class="agent-dot"></div>
+                <div class="agent-dot"></div>
+                <div class="agent-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 2: INDEPENDENT WORK (서브에이전트)
+         ============================================ -->
+    <section class="slide" data-slide="1">
+        <span class="slide-number">02 / 04</span>
+        <div class="slide-content">
+            <div class="top-line reveal"></div>
+            <h2 class="slide-title reveal">독립적으로 일하는 팀</h2>
+            <p class="slide-subtitle reveal">
+                4개 지역 <strong>커피 프랜차이즈 시장 보고서</strong>를 만들어오라는 미션
+            </p>
+
+            <div class="regions-grid">
+                <div class="region-card reveal-scale">
+                    <div class="icon">🏙️</div>
+                    <div class="name">서울</div>
+                    <div class="person">팀원 A</div>
+                </div>
+                <div class="region-card reveal-scale">
+                    <div class="icon">🌊</div>
+                    <div class="name">부산</div>
+                    <div class="person">팀원 B</div>
+                </div>
+                <div class="region-card reveal-scale">
+                    <div class="icon">🏔️</div>
+                    <div class="name">대구</div>
+                    <div class="person">팀원 C</div>
+                </div>
+                <div class="region-card reveal-scale">
+                    <div class="icon">🌿</div>
+                    <div class="name">광주</div>
+                    <div class="person">팀원 D</div>
+                </div>
+            </div>
+
+            <div class="no-connect-label reveal">
+                <span class="x-icon">✕</span>
+                팀원끼리 대화할 필요 없음 — 결과만 받으면 끝
+            </div>
+
+            <p class="result-label reveal">= 이전 강의에서 배운 <strong style="color: var(--accent-blue);">서브에이전트</strong></p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 3: COLLABORATIVE WORK (Agent Teams)
+         ============================================ -->
+    <section class="slide" data-slide="2">
+        <span class="slide-number">03 / 04</span>
+        <div class="slide-content">
+            <div class="top-line reveal"></div>
+            <h2 class="slide-title reveal">함께 소통하는 팀</h2>
+            <p class="slide-subtitle reveal">
+                <strong>직장인 점심 도시락 배달 서비스</strong> 런칭 기획안 미션
+            </p>
+
+            <div class="team-visual reveal-scale">
+                <!-- SVG connection lines between nodes -->
+                <svg class="connection-lines" viewBox="0 0 700 380" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#00d2be" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#3884ff" stop-opacity="0.4"/>
+                        </linearGradient>
+                    </defs>
+                    <!-- Top to Left -->
+                    <line x1="350" y1="70" x2="110" y2="190"/>
+                    <!-- Top to Right -->
+                    <line x1="350" y1="70" x2="590" y2="190"/>
+                    <!-- Left to Bottom -->
+                    <line x1="110" y1="190" x2="350" y2="310"/>
+                    <!-- Right to Bottom -->
+                    <line x1="590" y1="190" x2="350" y2="310"/>
+                    <!-- Left to Right (horizontal) -->
+                    <line x1="170" y1="190" x2="530" y2="190"/>
+                    <!-- Top to Bottom (vertical) -->
+                    <line x1="350" y1="70" x2="350" y2="310"/>
+                </svg>
+
+                <!-- Team nodes -->
+                <div class="team-node node-market">
+                    <div class="node-icon">📊</div>
+                    <div class="node-label">시장 조사</div>
+                    <div class="node-person">팀원 A</div>
+                </div>
+                <div class="team-node node-compete">
+                    <div class="node-icon">🔍</div>
+                    <div class="node-label">경쟁사 분석</div>
+                    <div class="node-person">팀원 B</div>
+                </div>
+                <div class="team-node node-budget">
+                    <div class="node-icon">💰</div>
+                    <div class="node-label">예산안</div>
+                    <div class="node-person">팀원 C</div>
+                </div>
+                <div class="team-node node-schedule">
+                    <div class="node-icon">📅</div>
+                    <div class="node-label">일정표</div>
+                    <div class="node-person">팀원 D</div>
+                </div>
+
+                <!-- Speech bubbles showing communication -->
+                <div class="speech-bubble bubble-1">"시장 규모 얼마 나왔어?"</div>
+                <div class="speech-bubble bubble-2">"일정표 내가 할게!"</div>
+            </svg>
+            </div>
+
+            <div class="connect-label reveal">
+                <span class="check-icon">✓</span>
+                서로 대화하고, 할일 목록 보면서 같이 굴러가는 팀
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 4: CONCLUSION (비교)
+         ============================================ -->
+    <section class="slide" data-slide="3">
+        <span class="slide-number">04 / 04</span>
+        <div class="slide-content">
+            <div class="top-line reveal"></div>
+            <h2 class="slide-title reveal">같은 4명, <span class="gradient-text">다른 방식</span></h2>
+
+            <div class="comparison">
+                <div class="compare-card reveal-left">
+                    <div class="mini-diagram">
+                        <div class="mini-dot"></div>
+                        <div class="mini-dot"></div>
+                        <div class="mini-dot"></div>
+                        <div class="mini-dot"></div>
+                    </div>
+                    <h3>서브에이전트</h3>
+                    <p class="card-desc">각자 독립적으로 일하고<br>결과만 받는 방식</p>
+                    <span class="card-tag">이전 강의</span>
+                </div>
+
+                <div class="compare-card active-card reveal-right">
+                    <div class="mini-diagram">
+                        <div class="mini-dot"></div>
+                        <div class="mini-line"></div>
+                        <div class="mini-dot"></div>
+                        <div class="mini-line"></div>
+                        <div class="mini-dot"></div>
+                        <div class="mini-line"></div>
+                        <div class="mini-dot"></div>
+                    </div>
+                    <h3 class="gradient-text">Agent Teams</h3>
+                    <p class="card-desc">서로 소통하면서<br>같이 일하는 방식</p>
+                    <span class="card-tag">오늘의 주제</span>
+                </div>
+            </div>
+
+            <p class="conclusion-text reveal">
+                업무 성격에 따라 일하는 방식이 완전히 달라집니다.<br>
+                오늘은 <strong>Agent Teams</strong>을 배워보겠습니다.
+            </p>
+        </div>
+    </section>
+
+    <!-- ===========================================
+         JAVASCRIPT: Slide Presentation Controller
+         =========================================== -->
+    <script>
+        /* ===========================================
+           PARTICLE SYSTEM
+           Floating particles with connection lines
+           for the ambient background effect
+           =========================================== */
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.particleCount = window.innerWidth < 600 ? 20 : 35;
+                this.maxDist = 120;
+
+                this.resize();
+                this.init();
+                this.animate();
+
+                window.addEventListener('resize', () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                this.particles = [];
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: (Math.random() - 0.5) * 0.3,
+                        r: Math.random() * 1.5 + 0.5
+                    });
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                for (let i = 0; i < this.particles.length; i++) {
+                    const p = this.particles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+
+                    if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                    if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+
+                    /* Draw particle dot */
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    this.ctx.fillStyle = 'rgba(0, 210, 190, 0.12)';
+                    this.ctx.fill();
+
+                    /* Draw connection lines to nearby particles */
+                    for (let j = i + 1; j < this.particles.length; j++) {
+                        const q = this.particles[j];
+                        const dist = Math.hypot(p.x - q.x, p.y - q.y);
+                        if (dist < this.maxDist) {
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(q.x, q.y);
+                            const alpha = 0.05 * (1 - dist / this.maxDist);
+                            this.ctx.strokeStyle = `rgba(56, 132, 255, ${alpha})`;
+                            this.ctx.lineWidth = 0.5;
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        /* ===========================================
+           SLIDE PRESENTATION CONTROLLER
+           Handles navigation, animations, progress
+           =========================================== */
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.totalSlides = this.slides.length;
+                this.currentSlide = 0;
+                this.isScrolling = false;
+
+                this.progressBar = document.getElementById('progressBar');
+                this.navDotsContainer = document.getElementById('navDots');
+                this.keyHint = document.getElementById('keyHint');
+
+                this.createNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboard();
+                this.setupTouch();
+                this.setupWheel();
+                this.updateUI();
+
+                /* Hide keyboard hint after first interaction */
+                this.hintHidden = false;
+            }
+
+            /* Create navigation dot buttons */
+            createNavDots() {
+                for (let i = 0; i < this.totalSlides; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot';
+                    dot.setAttribute('aria-label', `슬라이드 ${i + 1}로 이동`);
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    this.navDotsContainer.appendChild(dot);
+                }
+            }
+
+            /* Intersection Observer triggers .visible class on slides */
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const idx = parseInt(entry.target.dataset.slide);
+                            if (!isNaN(idx)) {
+                                this.currentSlide = idx;
+                                this.updateUI();
+                            }
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            /* Keyboard: Arrow keys, Space, and F for fullscreen */
+            setupKeyboard() {
+                document.addEventListener('keydown', (e) => {
+                    this.hideHint();
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.goToSlide(Math.min(this.currentSlide + 1, this.totalSlides - 1));
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.goToSlide(Math.max(this.currentSlide - 1, 0));
+                    } else if (e.key === 'f' || e.key === 'F') {
+                        e.preventDefault();
+                        this.toggleFullscreen();
+                    }
+                });
+            }
+
+            /* Touch: swipe up/down navigation */
+            setupTouch() {
+                let touchStartY = 0;
+                document.addEventListener('touchstart', (e) => {
+                    touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+
+                document.addEventListener('touchend', (e) => {
+                    this.hideHint();
+                    const diff = touchStartY - e.changedTouches[0].clientY;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) {
+                            this.goToSlide(Math.min(this.currentSlide + 1, this.totalSlides - 1));
+                        } else {
+                            this.goToSlide(Math.max(this.currentSlide - 1, 0));
+                        }
+                    }
+                }, { passive: true });
+            }
+
+            /* Mouse wheel with debounce */
+            setupWheel() {
+                document.addEventListener('wheel', (e) => {
+                    this.hideHint();
+                    if (this.isScrolling) return;
+                    this.isScrolling = true;
+
+                    if (e.deltaY > 30) {
+                        this.goToSlide(Math.min(this.currentSlide + 1, this.totalSlides - 1));
+                    } else if (e.deltaY < -30) {
+                        this.goToSlide(Math.max(this.currentSlide - 1, 0));
+                    }
+
+                    setTimeout(() => { this.isScrolling = false; }, 800);
+                }, { passive: true });
+            }
+
+            /* Navigate to specific slide */
+            goToSlide(index) {
+                if (index < 0 || index >= this.totalSlides) return;
+                this.currentSlide = index;
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+                this.updateUI();
+            }
+
+            /* Update progress bar and navigation dots */
+            updateUI() {
+                /* Progress bar */
+                const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+                this.progressBar.style.width = progress + '%';
+
+                /* Navigation dots */
+                const dots = this.navDotsContainer.querySelectorAll('.nav-dot');
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === this.currentSlide);
+                });
+            }
+
+            /* Hide keyboard hint after first interaction */
+            hideHint() {
+                if (!this.hintHidden) {
+                    this.hintHidden = true;
+                    this.keyHint.style.opacity = '0';
+                    setTimeout(() => { this.keyHint.style.display = 'none'; }, 500);
+                }
+            }
+
+            /* Toggle fullscreen mode */
+            toggleFullscreen() {
+                const iconExpand = document.getElementById('fsIconExpand');
+                const iconShrink = document.getElementById('fsIconShrink');
+
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    const el = document.documentElement;
+                    const rfs = el.requestFullscreen || el.webkitRequestFullscreen;
+                    if (rfs) {
+                        rfs.call(el).then(() => {
+                            iconExpand.style.display = 'none';
+                            iconShrink.style.display = 'block';
+                        }).catch(() => {});
+                    }
+                } else {
+                    const efs = document.exitFullscreen || document.webkitExitFullscreen;
+                    if (efs) {
+                        efs.call(document).then(() => {
+                            iconExpand.style.display = 'block';
+                            iconShrink.style.display = 'none';
+                        }).catch(() => {});
+                    }
+                }
+            }
+        }
+
+        /* ===========================================
+           INITIALIZATION
+           =========================================== */
+        document.addEventListener('DOMContentLoaded', () => {
+            /* Start particle background */
+            new ParticleSystem(document.getElementById('particles-canvas'));
+
+            /* Start slide controller */
+            const presentation = new SlidePresentation();
+
+            /* Fullscreen button click */
+            document.getElementById('fullscreenBtn').addEventListener('click', () => {
+                presentation.toggleFullscreen();
+            });
+
+            /* Sync icon when exiting fullscreen via Esc */
+            document.addEventListener('fullscreenchange', () => {
+                const iconExpand = document.getElementById('fsIconExpand');
+                const iconShrink = document.getElementById('fsIconShrink');
+                if (document.fullscreenElement || document.webkitFullscreenElement) {
+                    iconExpand.style.display = 'none';
+                    iconShrink.style.display = 'block';
+                } else {
+                    iconExpand.style.display = 'block';
+                    iconShrink.style.display = 'none';
+                }
+            });
+            document.addEventListener('webkitfullscreenchange', () => {
+                document.dispatchEvent(new Event('fullscreenchange'));
+            });
+        });
+    </script>
+</body>
+</html>

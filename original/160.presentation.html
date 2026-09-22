@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에이전트 팀 활용 & 심화 — 비용 절반, 품질 2배</title>
+
+    <!-- Fonts: Clash Display (headings) + Satoshi (body) -->
+    <link rel="stylesheet"
+        href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <!-- JetBrains Mono for code/terminal elements -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===========================================
+           THEME: Neon Signal (Dark)
+           - Background: Deep dark (#050508)
+           - Accent: Neon green-blue gradient
+           - Fonts: Clash Display + Satoshi
+           =========================================== */
+        :root {
+            /* Colors */
+            --bg-primary: #050508;
+            --bg-card: rgba(10, 10, 18, 0.92);
+            --bg-card-hover: rgba(0, 255, 170, 0.1);
+            --border-subtle: rgba(255, 255, 255, 0.12);
+            --border-accent: rgba(0, 255, 170, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.78);
+            --text-tertiary: rgba(255, 255, 255, 0.55);
+            --accent-green: #00ffaa;
+            --accent-blue: #0088ff;
+            --accent-glow: rgba(0, 255, 170, 0.15);
+
+            /* Typography */
+            --font-display: 'Clash Display', 'Pretendard Variable', Pretendard, sans-serif;
+            --font-body: 'Satoshi', 'Pretendard Variable', Pretendard, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --title-size: clamp(2.8rem, 7vw, 6rem);
+            --h2-size: clamp(2rem, 5vw, 3.8rem);
+            --h3-size: clamp(1.4rem, 3vw, 2rem);
+            --body-size: clamp(1rem, 1.8vw, 1.35rem);
+            --small-size: clamp(0.85rem, 1.3vw, 1.1rem);
+            --mono-size: clamp(0.85rem, 1.3vw, 1.05rem);
+
+            /* Spacing */
+            --slide-padding: clamp(1.5rem, 4vw, 4rem);
+            --content-gap: clamp(1rem, 2.5vw, 2.5rem);
+            --element-gap: clamp(0.5rem, 1.2vw, 1rem);
+
+            /* Animation */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.7s;
+        }
+
+        /* ===========================================
+           BASE RESET
+           =========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            height: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===========================================
+           SLIDE CONTAINER
+           Each slide = exactly one viewport
+           =========================================== */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-height: 100%;
+            overflow: hidden;
+            padding: var(--slide-padding);
+            position: relative;
+            z-index: 2;
+        }
+
+        .slide-content.centered {
+            align-items: center;
+            text-align: center;
+        }
+
+        /* ===========================================
+           SHARED BACKGROUND EFFECTS
+           =========================================== */
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 255, 170, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 170, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+        }
+
+        .orb-green {
+            background: radial-gradient(circle, var(--accent-green) 0%, transparent 70%);
+            opacity: 0.25;
+        }
+
+        .orb-blue {
+            background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+            opacity: 0.2;
+        }
+
+        /* ===========================================
+           SHARED UI COMPONENTS
+           =========================================== */
+
+        /* Section badge */
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            padding: 0.35em 1em;
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            border-radius: 100px;
+            font-size: var(--small-size);
+            color: var(--accent-green);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: var(--content-gap);
+            width: fit-content;
+        }
+
+        /* Slide heading */
+        .slide-heading {
+            font-family: var(--font-display);
+            font-size: var(--h2-size);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--content-gap);
+        }
+
+        .slide-heading .accent {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .title-main .keyword-highlight {
+            background: linear-gradient(135deg, #00ffaa, #00ccff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Subtitle text */
+        .slide-subtitle {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 650px;
+        }
+
+        /* Quote block */
+        .quote-block {
+            padding: clamp(0.8rem, 2vw, 1.5rem) clamp(1rem, 2.5vw, 2rem);
+            background: var(--bg-card);
+            border-left: 2px solid var(--accent-green);
+            border-radius: 0 8px 8px 0;
+            font-size: var(--body-size);
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .quote-block .highlight {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* Card */
+        .card {
+            padding: clamp(0.8rem, 1.5vw, 1.5rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            transition: all 0.4s var(--ease-out-expo);
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-accent);
+            transform: translateY(-3px);
+        }
+
+        /* Topic pills */
+        .topic-pill {
+            padding: 0.45em 1.1em;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            font-size: var(--small-size);
+            color: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .topic-pill:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-accent);
+            color: var(--accent-green);
+        }
+
+        .topic-pill .num {
+            color: var(--accent-green);
+            font-weight: 600;
+            margin-right: 0.4em;
+        }
+
+        /* ===========================================
+           ANIMATIONS (scroll-triggered via .visible)
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal,
+        .slide.visible .reveal-left,
+        .slide.visible .reveal-right,
+        .slide.visible .reveal-scale {
+            opacity: 1;
+            transform: translateY(0) translateX(0) scale(1);
+        }
+
+        /* Stagger delays */
+        .delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        .delay-5 {
+            transition-delay: 0.5s;
+        }
+
+        .delay-6 {
+            transition-delay: 0.6s;
+        }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            z-index: 100;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* Nav dots & slide numbers: hidden */
+        .nav-dots {
+            display: none;
+        }
+
+        .slide-number {
+            display: none;
+        }
+
+        /* ===========================================
+           SLIDE 1: TITLE
+           =========================================== */
+        #slide-1 .orb-1 {
+            width: 500px;
+            height: 500px;
+            top: -15%;
+            right: -10%;
+            animation: float1 8s ease-in-out infinite;
+        }
+
+        #slide-1 .orb-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -10%;
+            left: -5%;
+            animation: float2 10s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(-30px, 20px);
+            }
+        }
+
+        @keyframes float2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(20px, -30px);
+            }
+        }
+
+        .title-main {
+            font-family: var(--font-display);
+            font-size: var(--title-size);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
+        }
+
+        .title-sub {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: clamp(1.5rem, 3vw, 3rem);
+        }
+
+        .topics-row {
+            display: flex;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===========================================
+           SLIDE 2: 팀원 = 새 세션 (다이어그램)
+           =========================================== */
+        .diagram-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1.5rem, 4vw, 4rem);
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .diagram-box {
+            flex: 1;
+            min-width: 200px;
+            max-width: 380px;
+            padding: clamp(1rem, 2vw, 2rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .diagram-box-title {
+            font-family: var(--font-display);
+            font-size: var(--h3-size);
+            font-weight: 600;
+            margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .diagram-box-title .icon {
+            width: clamp(1.5rem, 3vw, 2.2rem);
+            height: clamp(1.5rem, 3vw, 2.2rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-glow);
+            border-radius: 8px;
+            font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+        }
+
+        .load-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.3rem, 0.8vw, 0.6rem);
+        }
+
+        .load-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6em;
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            padding: 0.4em 0.6em;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .load-item .check {
+            color: var(--accent-green);
+            font-weight: 700;
+            font-size: 0.9em;
+            min-width: 1.2em;
+        }
+
+        .load-item .cross {
+            color: #ff5555;
+            font-weight: 700;
+            font-size: 0.9em;
+            min-width: 1.2em;
+        }
+
+        .load-item .label {
+            font-family: var(--font-mono);
+            font-size: var(--mono-size);
+        }
+
+        /* Arrow between boxes */
+        .diagram-arrow {
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            color: var(--accent-green);
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        .prompt-only-note {
+            margin-top: clamp(0.5rem, 1vw, 1rem);
+            padding: 0.5em 0.8em;
+            background: rgba(255, 85, 85, 0.08);
+            border: 1px solid rgba(255, 85, 85, 0.15);
+            border-radius: 8px;
+            font-size: var(--small-size);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .prompt-only-note .label {
+            font-family: var(--font-mono);
+        }
+
+        /* ===========================================
+           SLIDE 3: 서브에이전트 컨텍스트 구조
+           =========================================== */
+        .sub-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(1rem, 2vw, 1.5rem);
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .sub-agent-box {
+            width: 100%;
+            padding: clamp(1rem, 2vw, 1.8rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+        }
+
+        .sub-agent-box .box-header {
+            font-family: var(--font-display);
+            font-size: var(--h3-size);
+            font-weight: 600;
+            margin-bottom: clamp(0.5rem, 1vw, 1rem);
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .context-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+            gap: clamp(0.4rem, 1vw, 0.8rem);
+        }
+
+        .context-item {
+            padding: 0.5em 0.8em;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            font-size: var(--small-size);
+            white-space: nowrap;
+        }
+
+        .context-item .status {
+            font-size: 0.85em;
+            min-width: 1.5em;
+            text-align: center;
+        }
+
+        .context-item .status.auto {
+            color: var(--accent-green);
+        }
+
+        .context-item .status.manual {
+            color: #ffaa00;
+        }
+
+        .context-item .status.no {
+            color: #ff5555;
+        }
+
+        .context-item .name {
+            font-family: var(--font-mono);
+            font-size: var(--mono-size);
+            color: var(--text-secondary);
+        }
+
+        .context-item .desc {
+            font-size: calc(var(--small-size) * 0.9);
+            color: var(--text-tertiary);
+            margin-left: auto;
+        }
+
+        .skill-callout {
+            margin-top: clamp(0.8rem, 1.5vw, 1.2rem);
+            padding: 0.6em 1em;
+            background: rgba(255, 170, 0, 0.06);
+            border: 1px solid rgba(255, 170, 0, 0.15);
+            border-radius: 8px;
+            font-size: var(--small-size);
+            color: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .skill-callout code {
+            font-family: var(--font-mono);
+            color: #ffaa00;
+            background: rgba(255, 170, 0, 0.1);
+            padding: 0.15em 0.4em;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        /* ===========================================
+           SLIDE 4: 비교 테이블
+           =========================================== */
+        .comparison-wrapper {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: clamp(0.5rem, 1.2vw, 1rem) clamp(0.6rem, 1.5vw, 1.2rem);
+            text-align: center;
+            font-size: var(--body-size);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .comparison-table thead th {
+            background: rgba(0, 255, 170, 0.05);
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: var(--small-size);
+            letter-spacing: 0.05em;
+        }
+
+        .comparison-table thead th:first-child {
+            text-align: left;
+        }
+
+        .comparison-table tbody td:first-child {
+            text-align: left;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            font-size: var(--mono-size);
+            color: var(--accent-green);
+        }
+
+        .comparison-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .check-icon {
+            color: var(--accent-green);
+            font-size: 1.1em;
+        }
+
+        .cross-icon {
+            color: #ff5555;
+            font-size: 1.1em;
+        }
+
+        .warn-icon {
+            color: #ffaa00;
+            font-size: 1.1em;
+        }
+
+        .table-note {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        .table-note .em {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* Highlight row */
+        .comparison-table tbody tr.highlight-row {
+            background: rgba(255, 170, 0, 0.04);
+        }
+
+        .comparison-table tbody tr.highlight-row td:first-child {
+            color: #ffaa00;
+        }
+
+        /* Bottom insight box */
+        .insight-box {
+            margin-top: clamp(0.8rem, 2vw, 1.5rem);
+            padding: clamp(0.6rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            background: rgba(0, 255, 170, 0.04);
+            border: 1px solid rgba(0, 255, 170, 0.12);
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6em;
+            text-align: left;
+        }
+
+        .insight-box .insight-icon {
+            font-size: 1.1em;
+            flex-shrink: 0;
+            margin-top: 0.1em;
+        }
+
+        .insight-box p {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .insight-box p strong {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* ===========================================
+           SLIDE 5-6: FLOW CHART & APPROVAL CRITERIA
+           =========================================== */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(0.3rem, 0.8vw, 0.6rem);
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .flow-step {
+            padding: clamp(0.6rem, 1.2vw, 1.2rem) clamp(0.8rem, 1.5vw, 1.5rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            border-color: var(--border-accent);
+            background: var(--bg-card-hover);
+        }
+
+        .flow-step .step-num {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--accent-green);
+            margin-bottom: 0.3em;
+        }
+
+        .flow-step .step-label {
+            font-family: var(--font-display);
+            font-size: var(--body-size);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .flow-step .step-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-top: 0.2em;
+        }
+
+        .flow-step.flow-branch {
+            border-color: rgba(255, 170, 0, 0.25);
+            background: rgba(255, 170, 0, 0.05);
+        }
+
+        .flow-arrow {
+            color: var(--accent-green);
+            font-size: clamp(1rem, 1.8vw, 1.5rem);
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        /* Criteria cards */
+        .criteria-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .criteria-card {
+            padding: clamp(0.8rem, 1.5vw, 1.3rem) clamp(1rem, 2vw, 1.8rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .criteria-card:hover {
+            border-color: var(--border-accent);
+        }
+
+        .criteria-card .criteria-icon {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            flex-shrink: 0;
+            margin-top: 0.1em;
+        }
+
+        .criteria-card .criteria-text {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .criteria-card .criteria-text strong {
+            color: var(--accent-green);
+        }
+
+        .criteria-card .criteria-result {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-top: 0.3em;
+        }
+
+        /* ===========================================
+           SLIDE 7-10: COST & MODEL MIXING
+           =========================================== */
+        .cost-bars {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .cost-bar-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+        }
+
+        .cost-bar-label {
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            min-width: clamp(100px, 15vw, 160px);
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .cost-bar-track {
+            flex: 1;
+            height: clamp(2rem, 3.5vw, 3rem);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .cost-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 0.8em;
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            font-weight: 600;
+            color: #fff;
+            transition: width 1.2s var(--ease-out-expo);
+        }
+
+        .cost-bar-fill.bar-single {
+            background: linear-gradient(90deg, #0088ff, #00aaff);
+            width: 30%;
+        }
+
+        .cost-bar-fill.bar-sub {
+            background: linear-gradient(90deg, #ffaa00, #ffcc44);
+            width: 60%;
+        }
+
+        .cost-bar-fill.bar-team {
+            background: linear-gradient(90deg, #ff5555, #ff8866);
+            width: 95%;
+        }
+
+        .slide.visible .cost-bar-fill.bar-single {
+            width: 30%;
+        }
+
+        .slide.visible .cost-bar-fill.bar-sub {
+            width: 60%;
+        }
+
+        .slide.visible .cost-bar-fill.bar-team {
+            width: 95%;
+        }
+
+        /* Model mixing diagram */
+        .mix-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(1rem, 3vw, 3rem);
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .mix-box {
+            flex: 1;
+            min-width: 200px;
+            max-width: 350px;
+            padding: clamp(1rem, 2vw, 2rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .mix-box .mix-role {
+            font-family: var(--font-display);
+            font-size: var(--h3-size);
+            font-weight: 700;
+            margin-bottom: 0.3em;
+        }
+
+        .mix-box .mix-model {
+            font-family: var(--font-mono);
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 0.5em;
+        }
+
+        .mix-box .mix-model.opus {
+            color: #a882ff;
+        }
+
+        .mix-box .mix-model.sonnet {
+            color: var(--accent-green);
+        }
+
+        .mix-box .mix-tasks {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .mix-connector {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--text-tertiary);
+            flex-shrink: 0;
+        }
+
+        /* Strategy cards grid */
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .strategy-card {
+            padding: clamp(0.8rem, 1.5vw, 1.5rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .strategy-card:hover {
+            border-color: var(--border-accent);
+        }
+
+        .strategy-card .strategy-num {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3em;
+        }
+
+        .strategy-card .strategy-title {
+            font-family: var(--font-display);
+            font-size: var(--body-size);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.3em;
+        }
+
+        .strategy-card .strategy-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Decision flow */
+        .decision-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1vw, 0.8rem);
+            width: 100%;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .decision-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+            padding: clamp(0.6rem, 1.2vw, 1rem) clamp(0.8rem, 1.5vw, 1.5rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+        }
+
+        .decision-item .q {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            flex: 1;
+            text-align: left;
+        }
+
+        .decision-item .answer-yes {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--accent-green);
+            white-space: nowrap;
+            padding: 0.3em 0.8em;
+            border: 1px solid rgba(0, 255, 170, 0.2);
+            border-radius: 6px;
+            background: rgba(0, 255, 170, 0.06);
+        }
+
+        .decision-item .answer-no {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--accent-blue);
+            white-space: nowrap;
+            padding: 0.3em 0.8em;
+            border: 1px solid rgba(0, 136, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(0, 136, 255, 0.06);
+        }
+
+        /* ===========================================
+           SLIDE 11-12: HOOKS
+           =========================================== */
+        .hooks-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .hook-box {
+            flex: 1;
+            min-width: 150px;
+            max-width: 260px;
+            padding: clamp(0.8rem, 1.5vw, 1.5rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .hook-box .hook-icon {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            margin-bottom: 0.3em;
+        }
+
+        .hook-box .hook-label {
+            font-family: var(--font-display);
+            font-size: var(--body-size);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2em;
+        }
+
+        .hook-box .hook-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Hook comparison side-by-side */
+        .hook-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hook-compare-card {
+            padding: clamp(1rem, 2vw, 1.8rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+        }
+
+        .hook-compare-card .hc-title {
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+            font-weight: 600;
+            margin-bottom: 0.5em;
+        }
+
+        .hook-compare-card .hc-title.idle-color {
+            color: var(--accent-blue);
+        }
+
+        .hook-compare-card .hc-title.task-color {
+            color: var(--accent-green);
+        }
+
+        .hook-compare-card .hc-trigger {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-bottom: 0.6em;
+            padding-bottom: 0.6em;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hook-compare-card .hc-action {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .hook-compare-card .hc-analogy {
+            font-size: var(--small-size);
+            color: var(--text-tertiary);
+            font-style: italic;
+            margin-top: 0.5em;
+        }
+
+        .code-block {
+            font-family: var(--font-mono);
+            font-size: var(--mono-size);
+            color: rgba(255, 255, 255, 0.85);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: clamp(0.5rem, 1vw, 0.8rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            margin-top: 0.5em;
+            line-height: 1.6;
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        .code-block .code-comment {
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .code-block .code-keyword {
+            color: #ff6b9d;
+        }
+
+        .code-block .code-string {
+            color: var(--accent-green);
+        }
+
+        .code-block .code-number {
+            color: #ffaa00;
+        }
+
+        /* ===========================================
+           SLIDE 13: SUMMARY CARDS
+           =========================================== */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .summary-card {
+            padding: clamp(0.8rem, 1.5vw, 1.5rem);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            display: flex;
+            gap: clamp(0.5rem, 1vw, 0.8rem);
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+
+        .summary-card:hover {
+            border-color: var(--border-accent);
+        }
+
+        .summary-card .sum-num {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .summary-card .sum-content {
+            flex: 1;
+        }
+
+        .summary-card .sum-title {
+            font-family: var(--font-display);
+            font-size: var(--body-size);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.2em;
+        }
+
+        .summary-card .sum-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 700px) {
+
+            .strategy-grid,
+            .hook-compare,
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mix-diagram {
+                flex-direction: column;
+            }
+
+            .mix-connector {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* ===========================================
+           RESPONSIVE BREAKPOINTS
+           =========================================== */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1rem, 3vw, 2.5rem);
+                --content-gap: clamp(0.6rem, 1.5vw, 1.2rem);
+                --title-size: clamp(2rem, 5.5vw, 4rem);
+                --h2-size: clamp(1.6rem, 4vw, 2.8rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.8rem, 2.5vw, 2rem);
+                --content-gap: clamp(0.4rem, 1vw, 0.8rem);
+                --title-size: clamp(1.8rem, 5vw, 3rem);
+                --h2-size: clamp(1.4rem, 3.5vw, 2.2rem);
+                --body-size: clamp(0.85rem, 1.4vw, 1.1rem);
+            }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2vw, 1.2rem);
+                --title-size: clamp(1.5rem, 4.5vw, 2.5rem);
+                --h2-size: clamp(1.2rem, 3vw, 1.8rem);
+                --body-size: clamp(0.75rem, 1.2vw, 1rem);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .diagram-container {
+                flex-direction: column;
+            }
+
+            .diagram-arrow {
+                transform: rotate(90deg);
+            }
+
+            .topics-row {
+                justify-content: center;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation Dots -->
+    <nav class="nav-dots" id="navDots"></nav>
+
+    <!-- =============================================
+         SLIDE 1: TITLE — 오프닝 + 로드맵
+         ============================================= -->
+    <section class="slide" id="slide-1">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green orb-1"></div>
+        <div class="orb orb-blue orb-2"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">Claude Code 심화</div>
+            <h1 class="title-main reveal delay-2">
+                에이전트 팀 활용<br>
+                <span class="accent keyword-highlight">비용 절반</span>, <span class="accent keyword-highlight">품질 2배</span>
+            </h1>
+            <p class="title-sub reveal delay-3">딱 4가지만 바꾸면 됩니다</p>
+
+            <div class="topics-row reveal delay-4">
+                <div class="topic-pill"><span class="num">01</span> 컨텍스트 계승</div>
+                <div class="topic-pill"><span class="num">02</span> Plan Approval</div>
+                <div class="topic-pill"><span class="num">03</span> 모델 믹싱 & 비용</div>
+                <div class="topic-pill"><span class="num">04</span> Hooks</div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- =============================================
+         SLIDE 2: 팀원 = 새 Claude Code 세션
+         ============================================= -->
+    <section class="slide" id="slide-2">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green" style="width:350px;height:350px;top:-10%;left:60%;opacity:0.15;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 1 · 컨텍스트 계승</div>
+            <h2 class="slide-heading reveal delay-2">팀원 = <span class="accent">새 Claude Code 세션</span></h2>
+
+            <div class="sub-diagram">
+                <div class="sub-agent-box reveal delay-3">
+                    <div class="box-header">
+                        <span class="icon"
+                            style="width:1.8em;height:1.8em;display:inline-flex;align-items:center;justify-content:center;background:var(--accent-glow);border-radius:6px;font-size:0.9em;">🤖</span>
+                        팀원이 로드하는 것
+                    </div>
+                    <div class="context-grid">
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">시스템 프롬프트</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">CLAUDE.md</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">git status</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">MCP 도구</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">스킬</span>
+                            <span class="desc">전부 자동</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status no">✗</span>
+                            <span class="name">대화 기록</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-callout" style="border-color:rgba(0,255,170,0.15);background:rgba(0,255,170,0.06);">
+                        <span>✓</span>
+                        스킬은 전부 자동으로 로드 — 새 Claude Code 세션과 동일
+                    </div>
+                </div>
+
+                <div class="quote-block reveal delay-4" style="width: 100%;">
+                    "각 팀원은 <span class="highlight">완전히 독립된 Claude Code 세션</span>이다."
+                    <span style="display:block;margin-top:0.3em;font-size:0.85em;color:var(--text-tertiary);">— 공식 문서</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- =============================================
+         SLIDE 3: 서브에이전트 컨텍스트 구조
+         ============================================= -->
+    <section class="slide" id="slide-3">
+        <div class="grid-bg"></div>
+        <div class="orb orb-blue" style="width:400px;height:400px;bottom:-15%;right:-5%;opacity:0.15;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 1 · 컨텍스트 계승</div>
+            <h2 class="slide-heading reveal delay-2">서브에이전트 = <span class="accent">격리된 컨텍스트</span></h2>
+
+            <div class="sub-diagram">
+                <div class="sub-agent-box reveal delay-3">
+                    <div class="box-header">
+                        <span class="icon"
+                            style="width:1.8em;height:1.8em;display:inline-flex;align-items:center;justify-content:center;background:var(--accent-glow);border-radius:6px;font-size:0.9em;">⚡</span>
+                        서브에이전트가 로드하는 것
+                    </div>
+                    <div class="context-grid">
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">시스템 프롬프트</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">CLAUDE.md</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">git status</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status auto">✓</span>
+                            <span class="name">MCP 도구</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status manual">⚠</span>
+                            <span class="name">스킬</span>
+                            <span class="desc">선택 지정</span>
+                        </div>
+                        <div class="context-item">
+                            <span class="status no">✗</span>
+                            <span class="name">대화 기록</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-callout">
+                        <span>⚠</span>
+                        스킬은 자동으로 안 넘어감 → <code>skills:</code> 필드에 명시적으로 지정 필요
+                    </div>
+                </div>
+
+                <div class="quote-block reveal delay-4" style="width: 100%;">
+                    "격리된 컨텍스트를 로드한다: 시스템 프롬프트,<br /> 스킬(<span class="highlight">skills: 필드에 지정된 것만</span>), CLAUDE.md,
+                    git
+                    status."
+                    <span style="display:block;margin-top:0.3em;font-size:0.85em;color:var(--text-tertiary);">— 공식
+                        문서</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- =============================================
+         SLIDE 4: 스킬 상속 비교 테이블
+         ============================================= -->
+    <section class="slide" id="slide-4">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green" style="width:300px;height:300px;top:10%;left:-5%;opacity:0.12;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 1 · 핵심 비교</div>
+            <h2 class="slide-heading reveal delay-2">핵심 차이 = <span class="accent">스킬 상속 방식</span></h2>
+
+            <div class="comparison-wrapper">
+                <table class="comparison-table reveal-scale delay-3">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>CLAUDE.md</th>
+                            <th>MCP 도구</th>
+                            <th>스킬</th>
+                            <th>대화 기록</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>팀원</td>
+                            <td><span class="check-icon">✓ 자동</span></td>
+                            <td><span class="check-icon">✓ 자동</span></td>
+                            <td><span class="check-icon">✓ 전부 자동</span></td>
+                            <td><span class="cross-icon">✗ 프롬프트만</span></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>서브에이전트</td>
+                            <td><span class="check-icon">✓ 자동</span></td>
+                            <td><span class="check-icon">✓ 자동</span></td>
+                            <td><span class="warn-icon">⚠ 선택 지정</span></td>
+                            <td><span class="cross-icon">✗ 프롬프트만</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="insight-box reveal delay-4">
+                    <span class="insight-icon">💡</span>
+                    <p>
+                        유일한 차이는 <strong>스킬</strong>입니다.<br />
+                        팀원은 프로젝트의 모든 스킬을 전부 자동으로 가져가고,
+                        서브에이전트는 골라서 넣어줘야 합니다.
+                    </p>
+                </div>
+
+                <div class="insight-box reveal delay-5"
+                    style="margin-top: var(--element-gap); border-color: rgba(255, 170, 0, 0.12); background: rgba(255, 170, 0, 0.03);">
+                    <span class="insight-icon">🎯</span>
+                    <p>
+                        <strong style="color:#ffaa00;">설계 기준:</strong><br>
+                        스킬을 정밀하게 제어해야 한다면 → 서브에이전트<br>
+                        모든 팀원이 같은 스킬 세트면 → 팀원이 편리
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- =============================================
+         SLIDE 5: Plan Approval 플로우차트
+         ============================================= -->
+    <section class="slide" id="slide-5">
+        <div class="grid-bg"></div>
+        <div class="orb orb-blue" style="width:400px;height:400px;top:-10%;right:10%;opacity:0.15;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 2 · Plan Approval</div>
+            <h2 class="slide-heading reveal delay-2"><span class="accent">계획 먼저,</span> 코딩 나중</h2>
+            <p class="slide-subtitle reveal delay-3" style="margin-bottom:var(--content-gap);">팀원이 바로 코딩하면 방향이 틀어질 때 토큰
+                전부 낭비. 한 줄만 추가하세요.</p>
+
+            <div class="flow-container reveal delay-4">
+                <div class="flow-step">
+                    <div class="step-num">01</div>
+                    <div class="step-label">팀 생성</div>
+                    <div class="step-desc">plan approval</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-num">02</div>
+                    <div class="step-label">계획 분석</div>
+                    <div class="step-desc">Plan Mode</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-num">03</div>
+                    <div class="step-label">계획 제출</div>
+                    <div class="step-desc">리드에게 보고</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step flow-branch">
+                    <div class="step-num">04</div>
+                    <div class="step-label">승인 / 거절</div>
+                    <div class="step-desc">리드가 판단</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="flow-step">
+                    <div class="step-num">05</div>
+                    <div class="step-label">구현 시작</div>
+                    <div class="step-desc">승인 후 실행</div>
+                </div>
+            </div>
+
+            <div class="code-block reveal delay-5" style="max-width:700px;margin:var(--content-gap) auto 0;">
+                <span class="code-comment"># 프롬프트에 이 한 줄만 추가</span><br>
+                각 팀원이 변경하기 전에 <span class="code-keyword">plan approval</span>을 받도록 해줘.
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 6: 승인 기준 프롬프트 예시
+         ============================================= -->
+    <section class="slide" id="slide-6">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green" style="width:350px;height:350px;bottom:-10%;left:5%;opacity:0.12;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 2 · 승인 기준</div>
+            <h2 class="slide-heading reveal delay-2">프롬프트로 <span class="accent">자동 판단 기준</span> 설정</h2>
+            <p class="slide-subtitle reveal delay-3" style="margin-bottom:var(--content-gap);">리드가 알아서 판단하도록 기준을 미리
+                정해두세요.</p>
+
+            <div class="criteria-list">
+                <div class="criteria-card reveal delay-3">
+                    <span class="criteria-icon">🧪</span>
+                    <div>
+                        <div class="criteria-text">"<strong>테스트 커버리지를 포함하는 계획만 승인해.</strong>"</div>
+                        <div class="criteria-result">→ 테스트 없는 계획은 자동 거절</div>
+                    </div>
+                </div>
+                <div class="criteria-card reveal delay-4">
+                    <span class="criteria-icon">🛡️</span>
+                    <div>
+                        <div class="criteria-text">"<strong>데이터베이스 스키마를 수정하는 계획은 거절해.</strong>"</div>
+                        <div class="criteria-result">→ DB 변경은 무조건 차단</div>
+                    </div>
+                </div>
+                <div class="criteria-card reveal delay-5">
+                    <span class="criteria-icon">⚡</span>
+                    <div>
+                        <div class="criteria-text">"<strong>성능 영향 분석이 포함된 계획만 승인해.</strong>"</div>
+                        <div class="criteria-result">→ 성능 고려 없으면 거절</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box reveal delay-6" style="max-width:800px;margin:var(--content-gap) auto 0;">
+                <span class="insight-icon">💡</span>
+                <p>혼자 쓸 때든 팀으로 쓸 때든, <strong>"계획 먼저" 원칙</strong>은 변하지 않습니다. 이 습관 하나만 들여도 토큰 낭비가 확 줄어들어요.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 7: 토큰 비용 비교 차트
+         ============================================= -->
+    <section class="slide" id="slide-7">
+        <div class="grid-bg"></div>
+        <div class="orb orb-blue" style="width:450px;height:450px;top:5%;left:-10%;opacity:0.12;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 3 · 비용 현실</div>
+            <h2 class="slide-heading reveal delay-2">토큰 비용, <span class="accent">얼마나 차이날까?</span></h2>
+            <p class="slide-subtitle reveal delay-3" style="margin-bottom:var(--content-gap);">에이전트 팀의 토큰 사용량은 활성 팀원 수에
+                비례해서 증가합니다.</p>
+
+            <div class="cost-bars reveal delay-4">
+                <div class="cost-bar-item">
+                    <div class="cost-bar-label">단일 세션</div>
+                    <div class="cost-bar-track">
+                        <div class="cost-bar-fill bar-single">1x</div>
+                    </div>
+                </div>
+                <div class="cost-bar-item">
+                    <div class="cost-bar-label">서브에이전트</div>
+                    <div class="cost-bar-track">
+                        <div class="cost-bar-fill bar-sub">~2x</div>
+                    </div>
+                </div>
+                <div class="cost-bar-item">
+                    <div class="cost-bar-label">에이전트 팀</div>
+                    <div class="cost-bar-track">
+                        <div class="cost-bar-fill bar-team">3x+</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box reveal delay-5"
+                style="max-width:750px;margin:var(--content-gap) auto 0;border-color:rgba(255,85,85,0.15);background:rgba(255,85,85,0.04);">
+                <span class="insight-icon">⚠️</span>
+                <p>팀원 3명이면 단일 세션의 <strong style="color:#ff5555;">3배 이상</strong> 토큰 소모 + 조율 오버헤드까지. 여기서 전부 Opus로 돌리면? 5x
+                    플랜이라도 빠르게 소진됩니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 8: 모델 믹싱 패턴
+         ============================================= -->
+    <section class="slide" id="slide-8">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green" style="width:400px;height:400px;top:-5%;right:-5%;opacity:0.15;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 3 · 모델 믹싱</div>
+            <h2 class="slide-heading reveal delay-2"><span class="accent">모델 믹싱</span> = 핵심 전략</h2>
+
+            <div class="mix-diagram">
+                <div class="mix-box reveal-left delay-3">
+                    <div class="mix-role">리드</div>
+                    <div class="mix-model opus">Opus</div>
+                    <div class="mix-tasks">조율 · 추론 · 계획 검토<br>작업 분해 · 품질 판단</div>
+                </div>
+
+                <div class="mix-connector reveal-scale delay-3">⟷</div>
+
+                <div class="mix-box reveal-right delay-4">
+                    <div class="mix-role">팀원</div>
+                    <div class="mix-model sonnet">Sonnet</div>
+                    <div class="mix-tasks">코드 생성 · 파일 편집<br>실행 · 구현 작업</div>
+                </div>
+            </div>
+
+            <div class="code-block reveal delay-5"
+                style="max-width:600px;margin:var(--content-gap) auto 0;text-align:center;">
+                <span class="code-comment"># 프롬프트에 이 한 줄만 추가</span><br>
+                팀원은 모두 <span class="code-keyword">Sonnet</span>을 사용해.
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 9: 4가지 비용 절감 전략
+         ============================================= -->
+    <section class="slide" id="slide-9">
+        <div class="grid-bg"></div>
+        <div class="orb orb-blue" style="width:350px;height:350px;bottom:-10%;right:10%;opacity:0.12;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 3 · 비용 절감</div>
+            <h2 class="slide-heading reveal delay-2">4가지 <span class="accent">비용 절감</span> 전략</h2>
+
+            <div class="strategy-grid">
+                <div class="strategy-card reveal delay-3">
+                    <div class="strategy-num">01</div>
+                    <div class="strategy-title">팀이 진짜 필요한지 판단</div>
+                    <div class="strategy-desc">소통 불필요한 작업은 서브에이전트 사용. 조율 오버헤드 제거.</div>
+                </div>
+                <div class="strategy-card reveal delay-3">
+                    <div class="strategy-num">02</div>
+                    <div class="strategy-title">최소 인원으로 시작</div>
+                    <div class="strategy-desc">3~5명이면 충분. 10명은 수확 체감이 심함.</div>
+                </div>
+                <div class="strategy-card reveal delay-4">
+                    <div class="strategy-num">03</div>
+                    <div class="strategy-title">끝난 팀원은 즉시 종료</div>
+                    <div class="strategy-desc">세션이 살아있으면 계속 토큰 소모. 바로 종료 요청.</div>
+                </div>
+                <div class="strategy-card reveal delay-4">
+                    <div class="strategy-num">04</div>
+                    <div class="strategy-title">CLAUDE.md에 비용 지침</div>
+                    <div class="strategy-desc">broadcast 금지, 완료 후 즉시 종료, 반복 3회 제한.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 10: 의사결정 플로우차트
+         ============================================= -->
+    <section class="slide" id="slide-10">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green" style="width:350px;height:350px;top:5%;left:-5%;opacity:0.12;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 3 · 선택 기준</div>
+            <h2 class="slide-heading reveal delay-2">서브에이전트 vs <span class="accent">에이전트 팀</span></h2>
+            <p class="slide-subtitle reveal delay-3" style="margin-bottom:var(--content-gap);">이 4가지 질문만 던져보면 바로 답이
+                나옵니다.</p>
+
+            <div class="decision-list">
+                <div class="decision-item reveal delay-3">
+                    <div class="q">팀원 간 소통이 필요한가?</div>
+                    <div class="answer-yes">Yes → 에이전트 팀</div>
+                    <div class="answer-no">No → 서브에이전트</div>
+                </div>
+                <div class="decision-item reveal delay-4">
+                    <div class="q">프로젝트 컨텍스트 전체 필요한가?</div>
+                    <div class="answer-yes">Yes → 에이전트 팀</div>
+                    <div class="answer-no">No → 서브에이전트</div>
+                </div>
+                <div class="decision-item reveal delay-5">
+                    <div class="q">독립적 병렬 작업인가?</div>
+                    <div class="answer-no">Yes → 서브에이전트로 충분</div>
+                </div>
+                <div class="decision-item reveal delay-6">
+                    <div class="q">크로스 레이어 협업이 필요한가?</div>
+                    <div class="answer-yes">Yes → 에이전트 팀</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 11: Hooks 개념
+         ============================================= -->
+    <section class="slide" id="slide-11">
+        <div class="grid-bg"></div>
+        <div class="orb orb-blue" style="width:400px;height:400px;top:-10%;left:50%;opacity:0.12;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 4 · Hooks</div>
+            <h2 class="slide-heading reveal delay-2">Hooks = <span class="accent">이벤트 기반 자동화</span></h2>
+            <p class="slide-subtitle reveal delay-3" style="margin-bottom:var(--content-gap);">"어떤 일이 일어나면, 이 스크립트를 자동으로
+                실행해라"</p>
+
+            <div class="hooks-diagram reveal delay-4">
+                <div class="hook-box">
+                    <div class="hook-icon">📡</div>
+                    <div class="hook-label">이벤트 발생</div>
+                    <div class="hook-desc">팀원이 작업 완료<br>또는 idle 상태</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="hook-box">
+                    <div class="hook-icon">⚙️</div>
+                    <div class="hook-label">셸 스크립트 실행</div>
+                    <div class="hook-desc">테스트, lint,<br>타입 체크 등</div>
+                </div>
+                <div class="flow-arrow">→</div>
+                <div class="hook-box">
+                    <div class="hook-icon">🚦</div>
+                    <div class="hook-label">결과에 따라 제어</div>
+                    <div class="hook-desc">exit 0 = 통과<br>exit 2 = 차단</div>
+                </div>
+            </div>
+
+            <div class="insight-box reveal delay-5" style="max-width:750px;margin:var(--content-gap) auto 0;">
+                <span class="insight-icon">💡</span>
+                <p><strong>exit code</strong>는 스크립트가 끝날 때 보내는 신호 번호. <strong>0</strong> = "OK, 통과!", <strong
+                        style="color:#ff5555;">2</strong> = "문제 있어!" — 이 신호에 따라 Claude Code가 다음 동작을 결정합니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 12: TeammateIdle vs TaskCompleted
+         ============================================= -->
+    <section class="slide" id="slide-12">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green" style="width:350px;height:350px;bottom:-10%;left:10%;opacity:0.12;"></div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">섹션 4 · 훅 비교</div>
+            <h2 class="slide-heading reveal delay-2"><span class="accent">TeammateIdle</span> vs <span
+                    class="accent">TaskCompleted</span></h2>
+
+            <div class="hook-compare">
+                <div class="hook-compare-card reveal-left delay-3">
+                    <div class="hc-title idle-color">TeammateIdle</div>
+                    <div class="hc-trigger">팀원이 할 일을 끝내고 쉬고 있을 때 발동</div>
+                    <div class="hc-action">exit 2 → 피드백을 전달해서<br>팀원이 계속 작업하도록</div>
+                    <div class="hc-analogy">"쉬고 있는 직원에게 추가 업무를 주는 것"</div>
+                    <div class="code-block" style="margin-top:0.8em;">
+                        <span class="code-comment"># 활용 예시</span><br>
+                        <span class="code-string">"작업 끝나면 요약 보고서를 작성해라"</span>
+                    </div>
+                </div>
+
+                <div class="hook-compare-card reveal-right delay-4">
+                    <div class="hc-title task-color">TaskCompleted</div>
+                    <div class="hc-trigger">팀원이 태스크를 "완료" 처리할 때 발동</div>
+                    <div class="hc-action">exit 2 → <strong style="color:var(--accent-green);">완료 자체를
+                            차단</strong>하고<br>피드백 전달</div>
+                    <div class="hc-analogy">"팀장이 결과물 검토 후 돌려보내는 것"</div>
+                    <div class="code-block" style="margin-top:0.8em;">
+                        <span class="code-comment"># 자동 테스트 게이트</span><br>
+                        npm test || <span class="code-keyword">exit 2</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 13: 핵심 4가지 요약
+         ============================================= -->
+    <section class="slide" id="slide-13">
+        <div class="grid-bg"></div>
+        <div class="orb orb-green"
+            style="width:500px;height:500px;top:-15%;right:-10%;opacity:0.2;animation:float1 8s ease-in-out infinite;">
+        </div>
+        <div class="orb orb-blue"
+            style="width:400px;height:400px;bottom:-10%;left:-5%;opacity:0.15;animation:float2 10s ease-in-out infinite;">
+        </div>
+
+        <div class="slide-content centered">
+            <div class="section-badge reveal delay-1">핵심 정리</div>
+            <h2 class="slide-heading reveal delay-2">오늘 배운 <span class="accent">4가지</span></h2>
+
+            <div class="summary-grid">
+                <div class="summary-card reveal delay-3">
+                    <div class="sum-num">01</div>
+                    <div class="sum-content">
+                        <div class="sum-title">컨텍스트 계승</div>
+                        <div class="sum-desc">팀원은 새 세션으로 생성 — CLAUDE.md, MCP, 스킬 전부 자동. 서브에이전트는 스킬만 선택 주입.</div>
+                    </div>
+                </div>
+                <div class="summary-card reveal delay-3">
+                    <div class="sum-num">02</div>
+                    <div class="sum-content">
+                        <div class="sum-title">Plan Approval</div>
+                        <div class="sum-desc">구현 전에 계획 승인 → 잘못된 방향으로 토큰 낭비 방지.</div>
+                    </div>
+                </div>
+                <div class="summary-card reveal delay-4">
+                    <div class="sum-num">03</div>
+                    <div class="sum-content">
+                        <div class="sum-title">모델 믹싱</div>
+                        <div class="sum-desc">리드 = Opus, 팀원 = Sonnet → 비용 대폭 절감.</div>
+                    </div>
+                </div>
+                <div class="summary-card reveal delay-4">
+                    <div class="sum-num">04</div>
+                    <div class="sum-content">
+                        <div class="sum-title">Hooks</div>
+                        <div class="sum-desc">TaskCompleted 훅으로 자동 품질 게이트 → 테스트 안 돌리면 완료 불가.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insight-box reveal delay-5" style="max-width:800px;margin:var(--content-gap) auto 0;">
+                <span class="insight-icon">🚀</span>
+                <p>이 <strong>4가지만 적용</strong>해도 에이전트 팀을 훨씬 효율적으로 쓸 수 있습니다.</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ===========================================
+         JAVASCRIPT: Slide Controller
+         =========================================== -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+                this.isScrolling = false;
+                this.scrollCooldown = 800;
+
+                this.init();
+            }
+
+            init() {
+                this.createNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupWheelNav();
+                this.setupTouchNav();
+                this.updateProgress();
+
+                // Mark first slide as visible immediately
+                this.slides[0].classList.add('visible');
+            }
+
+            /* --- Nav Dots --- */
+            createNavDots() {
+                const container = document.getElementById('navDots');
+                for (let i = 0; i < this.totalSlides; i++) {
+                    const dot = document.createElement('button');
+                    dot.classList.add('nav-dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.setAttribute('aria-label', `슬라이드 ${i + 1}로 이동`);
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    container.appendChild(dot);
+                }
+            }
+
+            updateNavDots() {
+                const dots = document.querySelectorAll('.nav-dot');
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === this.currentSlide);
+                });
+            }
+
+            /* --- Progress Bar --- */
+            updateProgress() {
+                const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+            }
+
+            /* --- Intersection Observer for animations --- */
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+
+                            // Update current slide index
+                            const idx = Array.from(this.slides).indexOf(entry.target);
+                            if (idx !== -1) {
+                                this.currentSlide = idx;
+                                this.updateNavDots();
+                                this.updateProgress();
+                            }
+                        }
+                    });
+                }, {
+                    threshold: 0.5
+                });
+
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            /* --- Fullscreen Toggle (F key) --- */
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => { });
+                } else {
+                    document.exitFullscreen().catch(() => { });
+                }
+            }
+
+            /* --- Keyboard Navigation --- */
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    switch (e.key) {
+                        case 'f':
+                        case 'F':
+                            e.preventDefault();
+                            this.toggleFullscreen();
+                            break;
+                        case 'ArrowDown':
+                        case 'ArrowRight':
+                        case ' ':
+                            e.preventDefault();
+                            this.nextSlide();
+                            break;
+                        case 'ArrowUp':
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            this.prevSlide();
+                            break;
+                        case 'Home':
+                            e.preventDefault();
+                            this.goToSlide(0);
+                            break;
+                        case 'End':
+                            e.preventDefault();
+                            this.goToSlide(this.totalSlides - 1);
+                            break;
+                        case 'Escape':
+                            // Escape는 브라우저가 자동으로 전체화면 해제
+                            break;
+                    }
+                });
+            }
+
+            /* --- Wheel Navigation --- */
+            setupWheelNav() {
+                document.addEventListener('wheel', (e) => {
+                    if (this.isScrolling) return;
+
+                    if (Math.abs(e.deltaY) > 30) {
+                        this.isScrolling = true;
+                        if (e.deltaY > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                        setTimeout(() => { this.isScrolling = false; }, this.scrollCooldown);
+                    }
+                }, { passive: true });
+            }
+
+            /* --- Touch Navigation --- */
+            setupTouchNav() {
+                let startY = 0;
+                let startX = 0;
+
+                document.addEventListener('touchstart', (e) => {
+                    startY = e.touches[0].clientY;
+                    startX = e.touches[0].clientX;
+                }, { passive: true });
+
+                document.addEventListener('touchend', (e) => {
+                    const deltaY = startY - e.changedTouches[0].clientY;
+                    const deltaX = startX - e.changedTouches[0].clientX;
+
+                    // Only respond to vertical swipes (not horizontal)
+                    if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 50) {
+                        if (deltaY > 0) {
+                            this.nextSlide();
+                        } else {
+                            this.prevSlide();
+                        }
+                    }
+                }, { passive: true });
+            }
+
+            /* --- Navigation Methods --- */
+            nextSlide() {
+                if (this.currentSlide < this.totalSlides - 1) {
+                    this.goToSlide(this.currentSlide + 1);
+                }
+            }
+
+            prevSlide() {
+                if (this.currentSlide > 0) {
+                    this.goToSlide(this.currentSlide - 1);
+                }
+            }
+
+            goToSlide(index) {
+                if (index < 0 || index >= this.totalSlides) return;
+                this.currentSlide = index;
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+                this.updateNavDots();
+                this.updateProgress();
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+        });
+    </script>
+
+</body>
+
+</html>
