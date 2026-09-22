@@ -1,9 +1,7 @@
 {
-  "plansDirectory": ".claude/plans/",
   "permissions": {
     "defaultMode": "plan"
   },
-  "outputStyle": "Intermediate Developer",
   "hooks": {
     "PreToolUse": [
       {
@@ -27,5 +25,10 @@
         ]
       }
     ]
+  },
+  "outputStyle": "Intermediate Developer",
+  "plansDirectory": ".claude/plans/",
+  "enabledPlugins": {
+    "skill-creator@claude-plugins-official": true
   }
 }
