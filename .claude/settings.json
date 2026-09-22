@@ -26,9 +26,9 @@
       }
     ]
   },
-  "outputStyle": "Intermediate Developer",
-  "plansDirectory": ".claude/plans/",
   "enabledPlugins": {
     "skill-creator@claude-plugins-official": true
-  }
+  },
+  "outputStyle": "Intermediate Developer",
+  "plansDirectory": ".claude/plans/"
 }
