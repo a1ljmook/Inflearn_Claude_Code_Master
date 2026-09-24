@@ -1,0 +1,19 @@
+{
+  "name": "gymcoding-marketplace",
+  "description": "gymcoding의 Claude Code 플러그인 마켓플레이스",
+  "owner": {
+    "name": "gymcoding",
+    "email": "gymcoding@example.com"
+  },
+  "plugins": [
+    {
+      "name": "ppt-maker",
+      "source": "./plugins/ppt-maker-plugin",
+      "description": "PPT 생성 플러그인",
+      "version": "1.0.0",
+      "author": {
+        "name": "gymcoding"
+      }
+    }
+  ]
+}
