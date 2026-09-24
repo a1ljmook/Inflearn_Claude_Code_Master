@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code로 PPT 만들기 — Round 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===========================================
+           RESET & BASE
+           =========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            height: 100%;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #e8e8e8;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        /* ===========================================
+           CSS CUSTOM PROPERTIES
+           =========================================== */
+        :root {
+            --bg: #000000;
+            --accent: #38bd84;
+            --accent-dim: rgba(56, 189, 132, 0.15);
+            --accent-glow: rgba(56, 189, 132, 0.3);
+            --text-primary: #e8e8e8;
+            --text-secondary: #888;
+            --text-dim: #555;
+            --border: #1a1a1a;
+
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+
+            --title-size: clamp(2rem, 6vw, 5rem);
+            --h2-size: clamp(1.5rem, 4vw, 3rem);
+            --h3-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            --body-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            --label-size: clamp(0.8rem, 1.4vw, 1.1rem);
+            --small-size: clamp(0.7rem, 1vw, 0.85rem);
+
+            --slide-padding: clamp(2rem, 5vw, 5rem);
+            --content-gap: clamp(1rem, 2vw, 2rem);
+            --element-gap: clamp(0.5rem, 1vw, 1rem);
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ===========================================
+           SLIDE BASE
+           =========================================== */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: var(--slide-padding);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* ===========================================
+           GLOBAL BACKGROUND EFFECTS
+           =========================================== */
+
+        /* Scanline overlay on every slide */
+        .slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.005) 2px,
+                rgba(255, 255, 255, 0.005) 4px
+            );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Subtle grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(56, 189, 132, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 132, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           SLIDE NUMBER (hidden)
+           =========================================== */
+        .slide-number {
+            display: none;
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s var(--ease-out-expo),
+                        transform 0.7s var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal:nth-child(1) { transition-delay: 0.1s; }
+        .reveal:nth-child(2) { transition-delay: 0.2s; }
+        .reveal:nth-child(3) { transition-delay: 0.3s; }
+        .reveal:nth-child(4) { transition-delay: 0.4s; }
+        .reveal:nth-child(5) { transition-delay: 0.5s; }
+        .reveal:nth-child(6) { transition-delay: 0.6s; }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--accent-dim); }
+            50% { box-shadow: 0 0 25px var(--accent-glow); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===========================================
+           REUSABLE COMPONENTS
+           =========================================== */
+
+        /* Terminal badge */
+        .terminal-badge {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--accent);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: var(--content-gap);
+        }
+
+        .terminal-badge::before {
+            content: '>';
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Section title */
+        .section-title {
+            font-family: var(--font-sans);
+            font-size: var(--title-size);
+            font-weight: 700;
+            line-height: 1.1;
+            text-align: center;
+        }
+
+        .section-title .accent {
+            color: var(--accent);
+        }
+
+        /* Accent line divider */
+        .accent-line {
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+            margin: var(--content-gap) auto;
+        }
+
+        /* Description text */
+        .desc {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* Dark card */
+        .dark-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+        }
+
+        /* Terminal window */
+        .terminal-window {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+        }
+
+        .terminal-bar {
+            background: #111;
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.8rem, 1.2vw, 1rem);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .terminal-body {
+            padding: clamp(1rem, 2vw, 1.5rem);
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+        }
+
+        .prompt-line {
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .prompt-line .prompt {
+            color: var(--accent);
+        }
+
+        .prompt-line .cmd {
+            color: var(--text-primary);
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 1.1em;
+            background: var(--accent);
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            margin-left: 2px;
+        }
+
+        /* ===========================================
+           SLIDE 1: 전환 타이틀
+           =========================================== */
+        .slide-transition .big-title {
+            font-family: var(--font-sans);
+            font-size: clamp(2.5rem, 7vw, 6rem);
+            font-weight: 900;
+            text-align: center;
+            line-height: 1.05;
+        }
+
+        .slide-transition .big-title .accent {
+            color: var(--accent);
+        }
+
+        .slide-transition .sub {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--text-dim);
+            margin-top: var(--content-gap);
+        }
+
+        /* ===========================================
+           SLIDE 2: skill-creator 개념
+           =========================================== */
+        .slide-concept .diagram {
+            display: flex;
+            align-items: center;
+            gap: clamp(1rem, 3vw, 2.5rem);
+            margin-top: var(--content-gap);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .slide-concept .diagram-box {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1.5rem, 3vw, 2.5rem);
+            text-align: center;
+            min-width: 160px;
+        }
+
+        .slide-concept .diagram-box .box-label {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+        }
+
+        .slide-concept .diagram-box .box-desc {
+            font-size: var(--small-size);
+            color: var(--text-dim);
+        }
+
+        .slide-concept .diagram-box.output {
+            border-color: var(--accent);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .slide-concept .diagram-arrow {
+            font-family: var(--font-mono);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           SLIDE 3: 공식 문서 스펙
+           =========================================== */
+        .slide-spec .spec-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--element-gap);
+            width: 100%;
+            max-width: 600px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-spec .spec-list li {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            padding: clamp(0.6rem, 1vw, 0.8rem) clamp(1rem, 1.5vw, 1.2rem);
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1vw, 0.8rem);
+        }
+
+        .slide-spec .spec-list li .icon {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            flex-shrink: 0;
+        }
+
+        .slide-spec .bottom-note {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-dim);
+            margin-top: var(--content-gap);
+            text-align: center;
+        }
+
+        /* ===========================================
+           SLIDE 4: 새로 만들기 + 개선하기
+           =========================================== */
+        .slide-improve .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            width: 100%;
+            max-width: 700px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-improve .col-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .slide-improve .col-card .col-title {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--accent);
+            margin-bottom: var(--element-gap);
+        }
+
+        .slide-improve .col-card .col-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ===========================================
+           SLIDE 5: /plugin 설치 과정
+           =========================================== */
+        /* Uses shared .terminal-window styles */
+
+        .slide-install .output-line {
+            color: var(--text-dim);
+            font-size: var(--small-size);
+            line-height: 1.6;
+        }
+
+        .slide-install .output-line .highlight {
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           SLIDE 6: 설치 완료
+           =========================================== */
+        .slide-ready .ready-card {
+            background: #080808;
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+            margin-top: var(--content-gap);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .slide-ready .ready-card .check {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--accent);
+            margin-bottom: var(--element-gap);
+        }
+
+        .slide-ready .ready-card .ready-desc {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+        }
+
+        .slide-ready .bottom-cta {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--text-dim);
+            margin-top: var(--content-gap);
+        }
+
+        /* ===========================================
+           SLIDE 7: 3단계 전환
+           =========================================== */
+        .slide-steps .step-flow {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1.5rem);
+            margin-top: var(--content-gap);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .slide-steps .step-item {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--text-primary);
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1.2rem, 2vw, 1.8rem);
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .slide-steps .step-item.active {
+            border-color: var(--accent);
+            background: rgba(56, 189, 132, 0.05);
+            color: var(--accent);
+        }
+
+        .slide-steps .step-item .step-num {
+            font-size: var(--small-size);
+            color: var(--text-dim);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .slide-steps .step-item.active .step-num {
+            color: var(--accent-glow);
+        }
+
+        .slide-steps .step-arrow {
+            color: var(--accent);
+            font-size: var(--body-size);
+        }
+
+        /* ===========================================
+           SLIDE 8: 서브에이전트 병렬 리서치
+           =========================================== */
+        .slide-parallel .parallel-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.5rem, 1.5vw, 1.2rem);
+            width: 100%;
+            max-width: 700px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-parallel .parallel-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            text-align: center;
+        }
+
+        .slide-parallel .parallel-card .card-label {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-parallel .parallel-card .card-name {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            margin-bottom: var(--element-gap);
+        }
+
+        .slide-parallel .parallel-card .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .slide-parallel .parallel-card .status {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        /* ===========================================
+           SLIDE 9: 서브에이전트 구조 도식
+           =========================================== */
+        .slide-diagram .agent-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+            margin-top: var(--content-gap);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .slide-diagram .main-agent {
+            background: #080808;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1.5rem, 3vw, 2.5rem);
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--accent);
+            text-align: center;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .slide-diagram .arrows-row {
+            display: flex;
+            justify-content: center;
+            gap: clamp(2rem, 6vw, 5rem);
+            color: var(--accent);
+            font-size: var(--body-size);
+        }
+
+        .slide-diagram .sub-agents {
+            display: flex;
+            gap: clamp(0.5rem, 1.5vw, 1.2rem);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .slide-diagram .sub-agent {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: clamp(0.6rem, 1vw, 0.8rem) clamp(1rem, 1.5vw, 1.2rem);
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .slide-diagram .key-point {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-dim);
+            margin-top: var(--element-gap);
+            text-align: center;
+            padding: clamp(0.5rem, 1vw, 0.8rem) clamp(1rem, 2vw, 1.5rem);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: #050505;
+        }
+
+        /* ===========================================
+           SLIDE 10: 서브에이전트 vs 에이전트 팀
+           =========================================== */
+        .slide-compare .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            width: 100%;
+            max-width: 750px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-compare .compare-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .slide-compare .compare-card .card-header {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--accent);
+            margin-bottom: var(--element-gap);
+            padding-bottom: var(--element-gap);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .slide-compare .compare-card .compare-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.3rem, 0.6vw, 0.5rem);
+        }
+
+        .slide-compare .compare-card .compare-list li {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .slide-compare .compare-card .compare-list li .bullet {
+            color: var(--accent);
+            font-family: var(--font-mono);
+            flex-shrink: 0;
+        }
+
+        /* ===========================================
+           SLIDE 11: 리서치 완료
+           =========================================== */
+        .slide-done .bottom-cta {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--text-dim);
+            margin-top: var(--content-gap);
+        }
+
+        .slide-done .file-line {
+            color: var(--text-dim);
+            font-size: var(--small-size);
+            line-height: 1.7;
+        }
+
+        .slide-done .file-line .filename {
+            color: var(--text-primary);
+        }
+
+        .slide-done .file-line .status {
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+
+        /* ===========================================
+           NAV DOTS (hidden)
+           =========================================== */
+        .nav-dots {
+            display: none;
+        }
+
+        /* ===========================================
+           RESPONSIVE
+           =========================================== */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1.5rem, 3vw, 3rem);
+                --content-gap: clamp(0.6rem, 1.5vw, 1.2rem);
+                --title-size: clamp(1.8rem, 5vw, 3.5rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(1rem, 2.5vw, 2rem);
+                --content-gap: clamp(0.4rem, 1vw, 0.8rem);
+                --title-size: clamp(1.5rem, 4.5vw, 2.5rem);
+                --body-size: clamp(0.75rem, 1.2vw, 1rem);
+            }
+
+            .nav-dots { display: none; }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.8rem, 2vw, 1.5rem);
+                --title-size: clamp(1.2rem, 4vw, 2rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .slide-improve .two-col,
+            .slide-compare .compare-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slide-parallel .parallel-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slide-steps .step-flow {
+                flex-direction: column;
+            }
+
+            .slide-steps .step-arrow {
+                transform: rotate(90deg);
+            }
+
+            .slide-concept .diagram {
+                flex-direction: column;
+            }
+
+            .slide-concept .diagram-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                transition: opacity 0.3s ease;
+                transform: none;
+            }
+            html { scroll-behavior: auto; }
+            .cursor-blink, .terminal-badge::before, .spinner {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar"></div>
+
+    <!-- Navigation dots -->
+    <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+    <!-- ============================================
+         SLIDE 1: 전환 타이틀 — "웹 PPT 스킬 만들기"
+         ============================================ -->
+    <section class="slide slide-transition">
+        <span class="slide-number">01 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">let's build</div>
+
+            <div class="big-title reveal">
+                <span class="accent">웹 PPT 스킬</span><br>직접 만들기
+            </div>
+
+            <div class="sub reveal">// skill-creator를 활용해서</div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 2: skill-creator 개념
+         ============================================ -->
+    <section class="slide slide-concept">
+        <span class="slide-number">02 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">skill-creator란?</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">스킬</span>이 스킬을 만든다
+            </h2>
+
+            <div class="diagram reveal">
+                <div class="diagram-box">
+                    <div class="box-label">skill-creator</div>
+                    <div class="box-desc">스킬</div>
+                </div>
+                <div class="diagram-arrow">&rarr;</div>
+                <div class="diagram-box output">
+                    <div class="box-label">새로운 스킬</div>
+                    <div class="box-desc">output</div>
+                </div>
+            </div>
+
+            <p class="desc reveal" style="margin-top: var(--content-gap);">
+                공식 문서 스펙과 모범 사례를 자동 반영
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 3: 공식 문서 스펙 나열
+         ============================================ -->
+    <section class="slide slide-spec">
+        <span class="slide-number">03 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">직접 만들면?</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">공식 문서</span> 구조 맞추기가<br>은근히 까다롭다
+            </h2>
+
+            <ul class="spec-list">
+                <li class="reveal">
+                    <span class="icon">&gt;</span>
+                    SKILL.md 구조
+                </li>
+                <li class="reveal">
+                    <span class="icon">&gt;</span>
+                    트리거 조건
+                </li>
+                <li class="reveal">
+                    <span class="icon">&gt;</span>
+                    워크플로우 단계
+                </li>
+                <li class="reveal">
+                    <span class="icon">&gt;</span>
+                    모범 사례 적용
+                </li>
+            </ul>
+
+            <p class="bottom-note reveal">// skill-creator가 이걸 자동으로 반영합니다</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 4: 기존 스킬 개선 기능
+         ============================================ -->
+    <section class="slide slide-improve">
+        <span class="slide-number">04 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">새로 만들기 + 개선하기</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">기존 스킬도</span> 개선 가능
+            </h2>
+
+            <div class="two-col">
+                <div class="col-card reveal">
+                    <div class="col-title">새 스킬 생성</div>
+                    <div class="col-desc">
+                        요구사항만 전달하면<br>
+                        SKILL.md를 자동 생성<br>
+                        공식 스펙에 맞게 구조화
+                    </div>
+                </div>
+                <div class="col-card reveal">
+                    <div class="col-title">기존 스킬 개선</div>
+                    <div class="col-desc">
+                        기존 스킬을 분석해서<br>
+                        부족한 부분을 보완<br>
+                        최신 모범 사례 반영
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 5: /plugin 설치 과정
+         ============================================ -->
+    <section class="slide slide-install">
+        <span class="slide-number">05 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">설치</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                설치는 <span class="accent">간단</span>합니다
+            </h2>
+
+            <div class="terminal-window reveal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot" style="background: #ff5f57;"></div>
+                    <div class="terminal-dot" style="background: #febc2e;"></div>
+                    <div class="terminal-dot" style="background: #28c840;"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="prompt-line">
+                        <span class="prompt">&gt; </span>
+                        <span class="cmd">/plugin</span>
+                    </div>
+                    <div class="prompt-line">
+                        <span class="prompt">&gt; </span>
+                        <span class="cmd">Add Marketplace</span>
+                    </div>
+                    <div class="prompt-line">
+                        <span class="prompt">&gt; </span>
+                        <span class="cmd">anthropics/claude-plugins-official</span>
+                        <span class="cursor-blink"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 6: 설치 완료
+         ============================================ -->
+    <section class="slide slide-ready">
+        <span class="slide-number">06 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">설치 완료</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">skill-creator</span> 준비 완료
+            </h2>
+
+            <div class="ready-card reveal">
+                <div class="check">&#10003;</div>
+                <div class="ready-desc">56개 플러그인 중 skill-creator 설치</div>
+            </div>
+
+            <div class="bottom-cta reveal">// 바로 시작해볼게요</div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 7: 3단계 전환
+         ============================================ -->
+    <section class="slide slide-steps">
+        <span class="slide-number">07 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">스킬 만들기 전에</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">수집</span> &rarr; 계획 &rarr; 구현
+            </h2>
+
+            <div class="accent-line reveal"></div>
+
+            <div class="step-flow reveal">
+                <div class="step-item active">
+                    <span class="step-num">01</span>
+                    수집
+                </div>
+                <span class="step-arrow">&rarr;</span>
+                <div class="step-item">
+                    <span class="step-num">02</span>
+                    계획
+                </div>
+                <span class="step-arrow">&rarr;</span>
+                <div class="step-item">
+                    <span class="step-num">03</span>
+                    구현
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 8: 서브에이전트 병렬 리서치
+         ============================================ -->
+    <section class="slide slide-parallel">
+        <span class="slide-number">08 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">병렬 리서치</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">서브에이전트를</span> 병렬로 활용
+            </h2>
+
+            <div class="parallel-grid">
+                <div class="parallel-card reveal">
+                    <div class="card-label">SubAgent 01</div>
+                    <div class="card-name">슬라이드 레이아웃</div>
+                    <div class="status">
+                        <span class="spinner"></span>
+                        running
+                    </div>
+                </div>
+                <div class="parallel-card reveal">
+                    <div class="card-label">SubAgent 02</div>
+                    <div class="card-name">키보드 네비게이션</div>
+                    <div class="status">
+                        <span class="spinner"></span>
+                        running
+                    </div>
+                </div>
+                <div class="parallel-card reveal">
+                    <div class="card-label">SubAgent 03</div>
+                    <div class="card-name">CSS 애니메이션</div>
+                    <div class="status">
+                        <span class="spinner"></span>
+                        running
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 9: 서브에이전트 구조 도식
+         ============================================ -->
+    <section class="slide slide-diagram">
+        <span class="slide-number">09 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">서브에이전트 동작 방식</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">독립 작업</span>, 결과만 보고
+            </h2>
+
+            <div class="agent-diagram reveal">
+                <div class="sub-agents">
+                    <div class="sub-agent">서브 1</div>
+                    <div class="sub-agent">서브 2</div>
+                    <div class="sub-agent">서브 3</div>
+                </div>
+
+                <div class="arrows-row">
+                    <span>&darr;</span>
+                    <span>&darr;</span>
+                    <span>&darr;</span>
+                </div>
+
+                <div class="main-agent">메인 에이전트</div>
+            </div>
+
+            <div class="key-point reveal">
+                서브에이전트끼리는 서로 대화 불가
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 10: 서브에이전트 vs 에이전트 팀
+         ============================================ -->
+    <section class="slide slide-compare">
+        <span class="slide-number">10 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">비교</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                서브에이전트 <span class="accent">vs</span> 에이전트 팀
+            </h2>
+
+            <div class="compare-grid">
+                <div class="compare-card reveal">
+                    <div class="card-header">서브에이전트</div>
+                    <ul class="compare-list">
+                        <li><span class="bullet">&gt;</span> 독립 작업</li>
+                        <li><span class="bullet">&gt;</span> 결과만 보고</li>
+                        <li><span class="bullet">&gt;</span> 메인이 종합</li>
+                    </ul>
+                </div>
+                <div class="compare-card reveal">
+                    <div class="card-header">에이전트 팀</div>
+                    <ul class="compare-list">
+                        <li><span class="bullet">&gt;</span> 서로 대화</li>
+                        <li><span class="bullet">&gt;</span> 반박/협업</li>
+                        <li><span class="bullet">&gt;</span> 팀 단위 작업</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 11: 리서치 완료
+         ============================================ -->
+    <section class="slide slide-done">
+        <span class="slide-number">11 / 11</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">리서치 완료</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">수집</span> 완료
+            </h2>
+
+            <div class="terminal-window reveal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot" style="background: #ff5f57;"></div>
+                    <div class="terminal-dot" style="background: #febc2e;"></div>
+                    <div class="terminal-dot" style="background: #28c840;"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="file-line"><span class="status">&#10003;</span> <span class="filename">slide-layouts.md</span></div>
+                    <div class="file-line"><span class="status">&#10003;</span> <span class="filename">keyboard-navigation.md</span></div>
+                    <div class="file-line"><span class="status">&#10003;</span> <span class="filename">css-animations.md</span></div>
+                    <div class="file-line"><span class="status">&#10003;</span> <span class="filename">best-practices.md</span></div>
+                </div>
+            </div>
+
+            <div class="bottom-cta reveal">// 이제 결과를 한번 볼게요</div>
+        </div>
+    </section>
+
+    <!-- ============================================
+       JAVASCRIPT — Navigation & Animations
+       ============================================ -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.progressBar = document.querySelector('.progress-bar');
+                this.navContainer = document.querySelector('.nav-dots');
+                this.currentSlide = 0;
+
+                this.createNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupScrollTracking();
+            }
+
+            createNavDots() {
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('nav-dot');
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        this.slides[i].scrollIntoView({ behavior: 'smooth' });
+                    });
+                    this.navContainer.appendChild(dot);
+                });
+                this.navDots = document.querySelectorAll('.nav-dot');
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const index = Array.from(this.slides).indexOf(entry.target);
+                            this.currentSlide = index;
+                            this.updateNav(index);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide + 1);
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide - 1);
+                    } else if (e.key === 'f' || e.key === 'F') {
+                        this.toggleFullscreen();
+                    }
+                });
+            }
+
+            setupScrollTracking() {
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.scrollY;
+                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                    this.progressBar.style.width = progress + '%';
+                });
+            }
+
+            goToSlide(index) {
+                if (index >= 0 && index < this.slides.length) {
+                    this.slides[index].scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+
+            updateNav(index) {
+                this.navDots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+        });
+    </script>
+</body>
+</html>

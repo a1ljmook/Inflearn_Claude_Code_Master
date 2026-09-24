@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLAUDE.md 완벽 작성법 — 기본편</title>
+    <link rel="stylesheet"
+        href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=general-sans@400,500,600&display=swap">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ===========================================
+           THEME VARIABLES
+           =========================================== */
+        :root {
+            --bg-primary: #111111;
+            --bg-secondary: #1c1917;
+            --bg-card: #1c1c1c;
+            --text-primary: #f5f0eb;
+            --text-secondary: #9a918a;
+            --text-dim: #5a5550;
+            --accent: #e8734a;
+            --accent-soft: rgba(232, 115, 74, 0.12);
+            --accent-glow: rgba(232, 115, 74, 0.06);
+            --green: #4ec990;
+            --green-soft: rgba(78, 201, 144, 0.12);
+            --red: #e05561;
+            --red-soft: rgba(224, 85, 97, 0.12);
+
+            --font-display: 'Cabinet Grotesk', 'Noto Sans KR', sans-serif;
+            --font-body: 'General Sans', 'Noto Sans KR', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            --title-size: clamp(2.2rem, 6vw, 5rem);
+            --h2-size: clamp(1.4rem, 3.5vw, 2.8rem);
+            --h3-size: clamp(1.1rem, 2vw, 1.5rem);
+            --body-size: clamp(0.8rem, 1.3vw, 1.05rem);
+            --small-size: clamp(0.7rem, 1vw, 0.85rem);
+            --slide-padding: clamp(2rem, 5vw, 5rem);
+            --content-gap: clamp(1rem, 2.5vw, 2.5rem);
+            --element-gap: clamp(0.4rem, 1vw, 0.75rem);
+        }
+
+        /* ===========================================
+           BASE STYLES
+           =========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            height: 100%;
+        }
+
+        /* ===========================================
+           SLIDE CONTAINER
+           =========================================== */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: var(--slide-padding);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+            overflow: hidden;
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* ===========================================
+           SHARED COMPONENTS
+           =========================================== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: var(--small-size);
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 100px;
+            margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .section-tag {
+            font-family: var(--font-display);
+            font-size: var(--small-size);
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: clamp(0.4rem, 1vw, 0.75rem);
+        }
+
+        .slide h2 {
+            font-family: var(--font-display);
+            font-size: var(--h2-size);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--content-gap);
+        }
+
+        .glow-bg::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80vw;
+            height: 80vw;
+            max-width: 700px;
+            max-height: 700px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           SLIDE 1: HOOK
+           "65줄 텍스트 파일 → 400 Stars"
+           =========================================== */
+        .slide-hook {
+            background: var(--bg-primary);
+        }
+
+        .hook-number {
+            font-family: var(--font-display);
+            font-size: clamp(4rem, 12vw, 10rem);
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+
+        .hook-unit {
+            font-family: var(--font-display);
+            font-size: clamp(1rem, 2.5vw, 1.8rem);
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-top: clamp(0.25rem, 0.5vw, 0.5rem);
+        }
+
+        .hook-arrow {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--accent);
+            margin: clamp(0.75rem, 1.5vw, 1.25rem) 0;
+            opacity: 0.5;
+        }
+
+        .hook-result {
+            font-family: var(--font-display);
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .hook-result .accent {
+            color: var(--accent);
+        }
+
+        .hook-sub {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            margin-top: clamp(0.5rem, 1vw, 0.75rem);
+            line-height: 1.6;
+        }
+
+        /* ===========================================
+           SLIDE 2: TITLE
+           "CLAUDE.md 완벽 작성법 — 기본편"
+           =========================================== */
+        .slide-title {
+            background: var(--bg-primary);
+        }
+
+        .title-main {
+            font-family: var(--font-display);
+            font-size: var(--title-size);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+        }
+
+        .title-main .line-accent {
+            position: relative;
+            display: inline-block;
+        }
+
+        .title-main .line-accent::after {
+            content: '';
+            position: absolute;
+            bottom: 0.05em;
+            left: -2%;
+            width: 104%;
+            height: 0.15em;
+            background: var(--accent);
+            border-radius: 4px;
+            opacity: 0.4;
+        }
+
+        .title-desc {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+            max-width: 500px;
+            line-height: 1.7;
+        }
+
+        /* ===========================================
+           SLIDE 3: PAIN POINTS
+           "시청자 고민"
+           =========================================== */
+        .slide-pain {
+            background: var(--bg-primary);
+        }
+
+        .pain-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.5rem, 1vw, 0.8rem);
+            width: 100%;
+            max-width: 650px;
+            margin-top: clamp(0.5rem, 1vw, 0.75rem);
+        }
+
+        .pain-item {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.5rem, 1vw, 0.75rem);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: clamp(0.7rem, 1.3vw, 1rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            text-align: left;
+        }
+
+        .pain-icon {
+            flex-shrink: 0;
+            width: clamp(1.2rem, 2vw, 1.5rem);
+            height: clamp(1.2rem, 2vw, 1.5rem);
+            background: var(--accent-soft);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: clamp(0.65rem, 1vw, 0.8rem);
+            margin-top: 2px;
+        }
+
+        .pain-text {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* ===========================================
+           SLIDE 4: ANSWER
+           "답은 하나 — 컨텍스트 엔지니어링"
+           =========================================== */
+        .slide-answer {
+            background: var(--bg-primary);
+        }
+
+        .answer-label {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            margin-bottom: clamp(0.5rem, 1vw, 0.75rem);
+        }
+
+        .answer-main {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+        }
+
+        .answer-main .highlight {
+            color: var(--accent);
+        }
+
+        .answer-desc {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
+            max-width: 520px;
+            line-height: 1.7;
+        }
+
+        .answer-flow {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+            margin-top: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .flow-item {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1.25rem);
+            font-size: var(--small-size);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .flow-item.active {
+            background: var(--accent-soft);
+            border-color: rgba(232, 115, 74, 0.25);
+            color: var(--accent);
+        }
+
+        .flow-arrow {
+            color: var(--text-dim);
+            font-size: var(--small-size);
+        }
+
+        /* ===========================================
+           SLIDE 5: LEVERAGE POINT
+           "CLAUDE.md = 최고 레버리지 포인트"
+           =========================================== */
+        .slide-leverage {
+            background: var(--bg-primary);
+        }
+
+        .leverage-visual {
+            display: flex;
+            align-items: flex-end;
+            gap: clamp(0.75rem, 2vw, 1.5rem);
+            margin-top: clamp(0.5rem, 1.5vw, 1.25rem);
+            margin-bottom: clamp(0.75rem, 1.5vw, 1.25rem);
+        }
+
+        .lever-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(0.4rem, 0.8vw, 0.6rem);
+        }
+
+        .lever-bar {
+            width: clamp(60px, 10vw, 100px);
+            border-radius: 8px 8px 0 0;
+            transition: transform 0.3s ease;
+        }
+
+        .lever-bar:hover {
+            transform: translateY(-4px);
+        }
+
+        .lever-col .bar-label {
+            font-size: clamp(0.65rem, 0.9vw, 0.8rem);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .lever-bar.small {
+            height: clamp(60px, 12vh, 100px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .lever-bar.medium {
+            height: clamp(90px, 18vh, 150px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .lever-bar.large {
+            height: clamp(130px, 26vh, 220px);
+            background: var(--accent-soft);
+            border: 1px solid rgba(232, 115, 74, 0.2);
+        }
+
+        .lever-bar.large .bar-label {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .leverage-caption {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            max-width: 480px;
+            line-height: 1.7;
+        }
+
+        .leverage-caption strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ===========================================
+           SLIDE 6: AGENDA
+           "오늘 다룰 내용"
+           =========================================== */
+        .slide-agenda {
+            background: var(--bg-primary);
+        }
+
+        .agenda-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.2vw, 1rem);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .agenda-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.75rem, 1.5vw, 1.25rem);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            text-align: left;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .agenda-item:hover {
+            border-color: rgba(232, 115, 74, 0.2);
+            transform: translateX(4px);
+        }
+
+        .agenda-num {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 800;
+            color: var(--accent);
+            opacity: 0.5;
+            flex-shrink: 0;
+            width: clamp(2rem, 4vw, 3rem);
+        }
+
+        .agenda-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .agenda-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+            color: var(--text-primary);
+        }
+
+        .agenda-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===========================================
+           SECTION TITLE SLIDE
+           =========================================== */
+        .section-title-text {
+            font-family: var(--font-display);
+            font-size: clamp(1rem, 1.8vw, 1.4rem);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-top: clamp(0.5rem, 1vw, 0.75rem);
+        }
+
+        /* ===========================================
+           LOADING ORDER / FLOW DIAGRAM
+           =========================================== */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.5rem, 1.2vw, 1rem);
+            margin-top: var(--content-gap);
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .flow-box {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: clamp(0.6rem, 1.2vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+            font-size: var(--body-size);
+            font-weight: 500;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        .flow-box.highlighted {
+            background: var(--accent-soft);
+            border-color: rgba(232, 115, 74, 0.25);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .flow-box .flow-sub {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .flow-box.highlighted .flow-sub {
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        .flow-connector {
+            color: var(--text-dim);
+            font-size: clamp(1rem, 1.5vw, 1.25rem);
+        }
+
+        /* ===========================================
+           EFFECT / EXAMPLE CARDS
+           =========================================== */
+        .example-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 2.5vw, 2rem);
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .example-label {
+            font-size: var(--small-size);
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+        }
+
+        .example-code {
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .example-result {
+            font-size: var(--body-size);
+            color: var(--green);
+            margin-top: clamp(0.4rem, 0.8vw, 0.6rem);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ===========================================
+           QUOTE SLIDE
+           =========================================== */
+        .quote-block {
+            position: relative;
+            max-width: 650px;
+            text-align: left;
+            padding-left: clamp(1.25rem, 2.5vw, 2rem);
+            border-left: 3px solid var(--accent);
+        }
+
+        .quote-text {
+            font-family: var(--font-display);
+            font-size: clamp(1.1rem, 2vw, 1.6rem);
+            font-weight: 600;
+            line-height: 1.6;
+            color: var(--text-primary);
+            font-style: italic;
+        }
+
+        .quote-author {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            margin-top: clamp(0.5rem, 1vw, 0.75rem);
+        }
+
+        .quote-author strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ===========================================
+           STAT HIGHLIGHT
+           =========================================== */
+        .stat-row {
+            display: flex;
+            gap: clamp(1.5rem, 4vw, 3rem);
+            margin-top: var(--content-gap);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-top: clamp(0.25rem, 0.5vw, 0.4rem);
+        }
+
+        /* ===========================================
+           KEY POINT CARD
+           =========================================== */
+        .key-point {
+            background: var(--accent-soft);
+            border: 1px solid rgba(232, 115, 74, 0.2);
+            border-radius: 14px;
+            padding: clamp(1.25rem, 2.5vw, 2rem);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .key-point p {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        .key-point strong {
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           CONTEXT VS ENFORCEMENT
+           =========================================== */
+        .vs-container {
+            display: flex;
+            align-items: center;
+            gap: clamp(1rem, 3vw, 2.5rem);
+            margin-top: var(--content-gap);
+        }
+
+        .vs-box {
+            text-align: center;
+        }
+
+        .vs-label {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+        }
+
+        .vs-label.context {
+            color: var(--green);
+        }
+
+        .vs-label.enforce {
+            color: var(--red);
+        }
+
+        .vs-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .vs-symbol {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 800;
+            color: var(--text-dim);
+        }
+
+        /* ===========================================
+           BLOCKQUOTE / OFFICIAL DOC
+           =========================================== */
+        .doc-quote {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: clamp(1rem, 2vw, 1.5rem) clamp(1.25rem, 2.5vw, 2rem);
+            max-width: 700px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .doc-quote p {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .doc-quote strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .doc-source {
+            font-size: var(--small-size);
+            color: var(--text-dim);
+            margin-top: clamp(0.4rem, 0.8vw, 0.6rem);
+        }
+
+        /* ===========================================
+           TABLE SLIDE
+           =========================================== */
+        .slide-table {
+            width: 100%;
+            max-width: 700px;
+            border-collapse: collapse;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-table th,
+        .slide-table td {
+            padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1.25rem);
+            text-align: left;
+            font-size: var(--body-size);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .slide-table th {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--accent);
+            font-size: var(--small-size);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .slide-table td {
+            color: var(--text-primary);
+        }
+
+        .slide-table td.dim {
+            color: var(--text-secondary);
+        }
+
+        .slide-table td code {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           TWO-COLUMN COMPARE
+           =========================================== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(0.75rem, 1.5vw, 1.25rem);
+            width: 100%;
+            max-width: 700px;
+            margin-top: var(--content-gap);
+        }
+
+        @media (max-width: 600px) {
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            text-align: left;
+        }
+
+        .col-card h3 {
+            font-family: var(--font-display);
+            font-size: var(--h3-size);
+            font-weight: 700;
+            margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+        }
+
+        .col-card p {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .col-card code {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           COMPARISON TABLE (CLAUDE.md vs Auto Memory)
+           =========================================== */
+        .compare-table {
+            width: 100%;
+            max-width: 750px;
+            border-collapse: collapse;
+            margin-top: var(--content-gap);
+        }
+
+        .compare-table th,
+        .compare-table td {
+            padding: clamp(0.45rem, 0.9vw, 0.7rem) clamp(0.6rem, 1.2vw, 1rem);
+            text-align: left;
+            font-size: var(--body-size);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .compare-table th {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: var(--small-size);
+        }
+
+        .compare-table th:nth-child(2) {
+            color: var(--accent);
+        }
+
+        .compare-table th:nth-child(3) {
+            color: var(--text-secondary);
+        }
+
+        .compare-table td:first-child {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: var(--small-size);
+        }
+
+        /* ===========================================
+           SPEC LIST
+           =========================================== */
+        .spec-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.2vw, 1rem);
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: flex-start;
+            gap: clamp(0.6rem, 1.2vw, 1rem);
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            text-align: left;
+        }
+
+        .spec-num {
+            font-family: var(--font-display);
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            font-weight: 800;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .spec-text {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .spec-text strong {
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           CONTROL COMPARISON
+           =========================================== */
+        .control-row {
+            display: flex;
+            gap: clamp(1rem, 3vw, 2rem);
+            margin-top: var(--content-gap);
+        }
+
+        .control-item {
+            text-align: center;
+        }
+
+        .control-icon {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+        }
+
+        .control-label {
+            font-family: var(--font-display);
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .control-label .accent {
+            color: var(--accent);
+        }
+
+        .control-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* ===========================================
+           BAD PATTERN CARDS
+           =========================================== */
+        .bad-pattern {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-left: 3px solid var(--red);
+            border-radius: 0 10px 10px 0;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .bad-pattern .bad-label {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--red);
+            font-weight: 600;
+            margin-bottom: clamp(0.2rem, 0.4vw, 0.3rem);
+        }
+
+        .bad-pattern .bad-code {
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===========================================
+           GOOD PATTERN CARDS
+           =========================================== */
+        .good-pattern {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-left: 3px solid var(--green);
+            border-radius: 0 10px 10px 0;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .good-pattern .good-label {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--green);
+            font-weight: 600;
+            margin-bottom: clamp(0.2rem, 0.4vw, 0.3rem);
+        }
+
+        .good-pattern .good-code {
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.7;
+        }
+
+        /* ===========================================
+           BUDGET DIAGRAM
+           =========================================== */
+        .budget-bar-container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: var(--content-gap);
+        }
+
+        .budget-bar {
+            width: 100%;
+            height: clamp(30px, 5vh, 45px);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: clamp(0.4rem, 0.8vw, 0.6rem);
+        }
+
+        .budget-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--small-size);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .budget-segment.system {
+            width: 30%;
+            background: var(--text-dim);
+            color: var(--bg-primary);
+        }
+
+        .budget-segment.yours {
+            width: 70%;
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+
+        .budget-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+        }
+
+        /* ===========================================
+           PRINCIPLE CARDS (numbered list)
+           =========================================== */
+        .principle-list {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.6rem, 1.2vw, 1rem);
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .principle-item {
+            display: flex;
+            align-items: center;
+            gap: clamp(0.75rem, 1.5vw, 1.25rem);
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            text-align: left;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .principle-item:hover {
+            border-color: rgba(232, 115, 74, 0.2);
+            transform: translateX(4px);
+        }
+
+        .principle-num {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            font-weight: 800;
+            color: var(--accent);
+            opacity: 0.5;
+            flex-shrink: 0;
+            width: clamp(2rem, 4vw, 3rem);
+        }
+
+        .principle-text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .principle-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(0.9rem, 1.3vw, 1.1rem);
+            color: var(--text-primary);
+        }
+
+        .principle-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ===========================================
+           CODE BLOCK
+           =========================================== */
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            text-align: left;
+            width: 100%;
+            max-width: 650px;
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow: hidden;
+        }
+
+        .code-block .comment {
+            color: var(--text-dim);
+        }
+
+        .code-block .keyword {
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           SPEAKER SCRIPT (실제 읽을 스크립트)
+           =========================================== */
+        .script-box {
+            background: rgba(232, 115, 74, 0.06);
+            border: 1px dashed rgba(232, 115, 74, 0.25);
+            border-radius: 8px;
+            padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
+            margin-top: clamp(0.5rem, 1vw, 0.75rem);
+            width: 100%;
+            max-width: 700px;
+            text-align: left;
+        }
+
+        .script-label {
+            font-family: var(--font-mono);
+            font-size: clamp(0.55rem, 0.7vw, 0.65rem);
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: clamp(0.2rem, 0.4vw, 0.3rem);
+            opacity: 0.7;
+        }
+
+        .script-box p {
+            font-size: clamp(0.65rem, 0.95vw, 0.8rem);
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .script-box strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal:nth-child(1) {
+            transition-delay: 0.05s;
+        }
+
+        .reveal:nth-child(2) {
+            transition-delay: 0.15s;
+        }
+
+        .reveal:nth-child(3) {
+            transition-delay: 0.25s;
+        }
+
+        .reveal:nth-child(4) {
+            transition-delay: 0.35s;
+        }
+
+        .reveal:nth-child(5) {
+            transition-delay: 0.45s;
+        }
+
+        .reveal:nth-child(6) {
+            transition-delay: 0.55s;
+        }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--accent);
+            z-index: 100;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        /* ===========================================
+           NAV DOTS
+           =========================================== */
+        .nav-dots {
+            position: fixed;
+            right: clamp(1rem, 2vw, 2rem);
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 0;
+        }
+
+        .nav-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        .nav-dot:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ===========================================
+           RESPONSIVE
+           =========================================== */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1.25rem, 3.5vw, 2.5rem);
+                --content-gap: clamp(0.6rem, 1.5vw, 1.25rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(1rem, 3vw, 2rem);
+                --content-gap: clamp(0.5rem, 1.5vw, 1rem);
+                --title-size: clamp(1.5rem, 5vw, 2.5rem);
+                --h2-size: clamp(1.1rem, 3vw, 1.75rem);
+            }
+
+            .nav-dots {
+                display: none;
+            }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --title-size: clamp(1.25rem, 4vw, 2rem);
+                --slide-padding: clamp(0.75rem, 2vw, 1.5rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-dots {
+                display: none;
+            }
+
+            .answer-flow {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .leverage-visual {
+                gap: clamp(0.5rem, 1.5vw, 0.75rem);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.2s !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Progress Bar (disabled) -->
+    <div class="progress-bar" id="progressBar" style="display:none;"></div>
+
+    <!-- Nav Dots (disabled) -->
+    <nav class="nav-dots" id="navDots" style="display:none;"></nav>
+
+    <!-- =============================================
+         SLIDE 1: HOOK
+         "65줄 텍스트 파일 → 하루 만에 400 Stars"
+         ============================================= -->
+    <section class="slide slide-hook glow-bg">
+        <div class="slide-content">
+            <div class="badge reveal">
+                <span class="badge-dot"></span>
+                CLAUDE.md
+            </div>
+            <div class="hook-number reveal">65줄</div>
+            <div class="hook-unit reveal">텍스트 파일 하나</div>
+            <div class="hook-arrow reveal">&#8595;</div>
+            <div class="hook-result reveal">
+                GitHub 하루 만에 <span class="accent">400+ Stars</span>
+            </div>
+            <p class="hook-sub reveal">AI 코딩의 품질이 완전히 달라졌다</p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 2: TITLE
+         "CLAUDE.md 완벽 작성법 — 기본편"
+         ============================================= -->
+    <section class="slide slide-title glow-bg">
+        <div class="slide-content">
+            <div class="badge reveal">
+                <span class="badge-dot"></span>
+                기본편
+            </div>
+            <h1 class="title-main reveal">
+                CLAUDE.md<br><span class="line-accent">완벽 작성법</span>
+            </h1>
+            <p class="title-desc reveal">
+                컨텍스트 엔지니어링의 첫걸음.<br>
+                65줄짜리 파일 하나로 AI 코딩의 품질이 달라집니다.
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 3: PAIN POINTS
+         "시청자 고민"
+         ============================================= -->
+    <section class="slide slide-pain">
+        <div class="slide-content">
+            <p class="section-tag reveal">Pain Points</p>
+            <h2 class="reveal">이런 고민, 있으시죠?</h2>
+            <div class="pain-list">
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">CLAUDE.md 만들긴 했는데... 제대로 쓴 건 맞나?</div>
+                </div>
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">뭘 넣어야 할지 몰라서 대충 쓰고 있진 않나요?</div>
+                </div>
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">너무 많이 적어서 Claude가 절반을 무시하고 있진 않나요?</div>
+                </div>
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">프로젝트가 커지니까 Claude가 구조를 점점 못 지키는데... 왜?</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 3-B: PAIN POINTS (인프런)
+         "수강생 질문 모음"
+         ============================================= -->
+    <section class="slide slide-pain">
+        <div class="slide-content">
+            <p class="section-tag reveal">인프런 수강생 질문</p>
+            <h2 class="reveal">이런 질문, 많이 받았어요</h2>
+            <div class="pain-list">
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">CLAUDE.md에 뭘 넣어야 할지 모르겠어요</div>
+                </div>
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">Auto Memory는 뭔가요?</div>
+                </div>
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">작성했는데 Claude가 무시해요...</div>
+                </div>
+                <div class="pain-item reveal">
+                    <div class="pain-icon">?</div>
+                    <div class="pain-text">프로젝트가 커지니까 Claude가 구조를 못 지켜요...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 4: ANSWER
+         "답은 하나 — 컨텍스트 엔지니어링"
+         ============================================= -->
+    <section class="slide slide-answer glow-bg">
+        <div class="slide-content">
+            <p class="answer-label reveal">모든 고민의 답은 하나</p>
+            <h2 class="answer-main reveal" style="margin-bottom: 0;">
+                <span class="highlight">컨텍스트</span><br>엔지니어링
+            </h2>
+            <p class="answer-desc reveal">
+                AI에게 작업을 시킬 때, 꼭 필요한 정보만<br>
+                정확하게 전달하는 기술. 그 출발점이 CLAUDE.md
+            </p>
+            <div class="answer-flow reveal">
+                <div class="flow-item active">CLAUDE.md</div>
+                <span class="flow-arrow">&#8594;</span>
+                <div class="flow-item">컨텍스트 전달</div>
+                <span class="flow-arrow">&#8594;</span>
+                <div class="flow-item">AI 코딩 품질 &#8593;</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 5: LEVERAGE POINT
+         "CLAUDE.md = 최고 레버리지 포인트"
+         ============================================= -->
+    <section class="slide slide-leverage">
+        <div class="slide-content">
+            <p class="section-tag reveal">Key Concept</p>
+            <h2 class="reveal" style="margin-bottom: clamp(0.3rem, 0.8vw, 0.5rem);">최고 레버리지 포인트</h2>
+            <div class="leverage-visual reveal">
+                <div class="lever-col">
+                    <div class="lever-bar small"></div>
+                    <span class="bar-label">프롬프트</span>
+                </div>
+                <div class="lever-col">
+                    <div class="lever-bar small"></div>
+                    <span class="bar-label">설정 변경</span>
+                </div>
+                <div class="lever-col">
+                    <div class="lever-bar medium"></div>
+                    <span class="bar-label">Auto Memory</span>
+                </div>
+                <div class="lever-col">
+                    <div class="lever-bar large"></div>
+                    <span class="bar-label">CLAUDE.md</span>
+                </div>
+            </div>
+            <p class="leverage-caption reveal">
+                한 번 잘 써두면 <strong>매 세션마다 자동 적용</strong>.<br>
+                가장 적은 노력으로 가장 큰 효과를 내는 핵심 지점.
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         SLIDE 6: AGENDA
+         "오늘 다룰 내용"
+         ============================================= -->
+    <section class="slide slide-agenda">
+        <div class="slide-content">
+            <p class="section-tag reveal">Agenda</p>
+            <h2 class="reveal">오늘 다룰 내용</h2>
+            <div class="agenda-list">
+                <div class="agenda-item reveal">
+                    <div class="agenda-num">1</div>
+                    <div class="agenda-text">
+                        <div class="agenda-title">CLAUDE.md의 작동 원리</div>
+                        <div class="agenda-desc">Auto Memory 최신 스펙까지 정확 정리</div>
+                    </div>
+                </div>
+                <div class="agenda-item reveal">
+                    <div class="agenda-num">2</div>
+                    <div class="agenda-text">
+                        <div class="agenda-title">나쁜 패턴 vs 좋은 원칙</div>
+                        <div class="agenda-desc">나쁜 패턴 3가지 + 좋은 예시</div>
+                    </div>
+                </div>
+                <div class="agenda-item reveal">
+                    <div class="agenda-num">3</div>
+                    <div class="agenda-text">
+                        <div class="agenda-title">실전 활용 사례</div>
+                        <div class="agenda-desc">바로 가져다 쓸 수 있는 패턴 4가지</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         기본편 vs 고급편
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Roadmap</p>
+            <h2 class="reveal">기본편 vs 고급편</h2>
+            <div class="two-col">
+                <div class="col-card reveal" style="border-color: rgba(232, 115, 74, 0.25);">
+                    <h3 style="color: var(--accent);">기본편 (오늘)</h3>
+                    <p>CLAUDE.md 작동 원리<br>
+                        나쁜 패턴 vs 좋은 원칙<br>
+                        실전 활용 사례 4가지</p>
+                </div>
+                <div class="col-card reveal">
+                    <h3 style="color: var(--text-secondary);">고급편</h3>
+                    <p><code>.claude/rules/</code> 조건부 규칙<br>
+                        하위 디렉터리 on-demand 로딩<br>
+                        대규모 프로젝트 설계</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         섹션 1: CLAUDE.md란 무엇인가? (2:30 ~ 6:00)
+         ============================================================= -->
+
+    <!-- =============================================
+         S1-1: 섹션 타이틀
+         ============================================= -->
+    <section class="slide glow-bg">
+        <div class="slide-content">
+            <div class="badge reveal">
+                <span class="badge-dot"></span>
+                Section 01
+            </div>
+            <h1 class="title-main reveal">
+                CLAUDE.md란<br><span class="line-accent">무엇인가?</span>
+            </h1>
+            <p class="section-title-text reveal">작동 원리부터 정확히 짚고 넘어갑니다</p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S1-2: CLAUDE.md = 프로젝트 기억
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Core Concept</p>
+            <h2 class="reveal">CLAUDE.md = 프로젝트 기억</h2>
+            <p class="answer-desc reveal" style="margin-top: 0;">
+                Claude Code를 실행하면 가장 먼저 하는 일?<br>
+                CLAUDE.md 파일을 찾아서 <strong style="color:var(--accent);">통째로 읽습니다.</strong> 매 세션마다.
+            </p>
+            <div class="key-point reveal">
+                <p>프로젝트에서 지켜야 할 <strong>규칙과 맥락</strong>을 적어두는 메모 파일.<br>
+                    한 번 써두면 Claude가 매번 자동으로 기억합니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S1-3: 로딩 순서
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Loading Order</p>
+            <h2 class="reveal">CLAUDE.md 로딩 순서</h2>
+            <div class="flow-diagram reveal">
+                <div class="flow-box">
+                    <div>시스템 프롬프트</div>
+                    <div class="flow-sub">기본 설정서</div>
+                </div>
+                <span class="flow-connector">&#8594;</span>
+                <div class="flow-box highlighted">
+                    <div>CLAUDE.md</div>
+                    <div class="flow-sub">사전 지시서</div>
+                </div>
+                <span class="flow-connector">&#8594;</span>
+                <div class="flow-box">
+                    <div>사용자 대화</div>
+                    <div class="flow-sub">프롬프트 입력</div>
+                </div>
+            </div>
+            <p class="answer-desc reveal">
+                대화보다 <strong style="color:var(--accent);">먼저 읽히는 사전 지시서</strong> 역할
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S1-4: 효과 예시
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Example</p>
+            <h2 class="reveal">한 번 써두면 매번 자동 적용</h2>
+            <div class="example-card reveal">
+                <div class="example-label">CLAUDE.md</div>
+                <div class="example-code">"코드에 주석을 꼭 달아줘"</div>
+                <div class="example-result">&#10003; 매번 말 안 해도 알아서 주석 추가</div>
+            </div>
+            <div class="example-card reveal" style="margin-top: clamp(0.5rem, 1vw, 0.75rem);">
+                <div class="example-label">CLAUDE.md</div>
+                <div class="example-code">"새 파일 만들기 전에 나한테 먼저 확인해"</div>
+                <div class="example-result">&#10003; 매번 먼저 물어보고 생성</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S1-8: Context ≠ Enforcement
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Important</p>
+            <h2 class="reveal" style="margin-bottom: clamp(0.5rem, 1vw, 0.75rem);">많은 분들이 놓치는 부분</h2>
+            <div class="vs-container reveal">
+                <div class="vs-box">
+                    <div class="vs-label context">Context</div>
+                    <div class="vs-desc">맥락 (참고 사항)</div>
+                </div>
+                <div class="vs-symbol">&#8800;</div>
+                <div class="vs-box">
+                    <div class="vs-label enforce">Enforcement</div>
+                    <div class="vs-desc">강제 (무조건 따름)</div>
+                </div>
+            </div>
+            <div class="doc-quote reveal" style="margin-top: clamp(0.75rem, 1.5vw, 1rem);">
+                <p>
+                    "CLAUDE.md는 시스템 프롬프트의 일부가 아니라, <strong>사용자 메시지로 전달</strong>된다.
+                    Claude가 읽고 따르려고 하지만, <strong>모호하거나 충돌하는 지시에 대해서는
+                        엄격하게 따른다는 보장이 없다.</strong>"
+                </p>
+                <p class="doc-source">— Claude Code 공식 문서 (Memory)</p>
+            </div>
+            <p class="answer-desc reveal">
+                모호하게 쓰면 무시하고, <strong style="color:var(--accent);">구체적으로 쓰면 잘 따른다</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S1-10: CLAUDE.md 계층 구조
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Hierarchy</p>
+            <h2 class="reveal">CLAUDE.md 계층 구조</h2>
+            <table class="slide-table reveal">
+                <thead>
+                    <tr>
+                        <th>위치</th>
+                        <th>경로</th>
+                        <th>공유 범위</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>조직 정책</td>
+                        <td class="dim"><code>/Library/.../ClaudeCode/</code></td>
+                        <td>전 직원</td>
+                    </tr>
+                    <tr>
+                        <td>사용자 전역</td>
+                        <td class="dim"><code>~/.claude/CLAUDE.md</code></td>
+                        <td>나만</td>
+                    </tr>
+                    <tr>
+                        <td>프로젝트 루트</td>
+                        <td class="dim"><code>./CLAUDE.md</code></td>
+                        <td>팀 (git)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="answer-desc reveal">가장 많이 쓰는 건 <strong style="color:var(--accent);">프로젝트 CLAUDE.md</strong>(팀 공유)와
+                <strong style="color:var(--accent);">사용자 CLAUDE.md</strong>(나만의 설정)</p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S1-12: CLAUDE.md vs Auto Memory 비교표
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Comparison</p>
+            <h2 class="reveal">CLAUDE.md vs Auto Memory</h2>
+            <table class="compare-table reveal">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>CLAUDE.md</th>
+                        <th>Auto Memory</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>누가 쓰나</td>
+                        <td>내가 직접 작성</td>
+                        <td>Claude가 알아서 저장</td>
+                    </tr>
+                    <tr>
+                        <td>뭘 담나</td>
+                        <td>지침과 규칙</td>
+                        <td>학습한 패턴</td>
+                    </tr>
+                    <tr>
+                        <td>저장 위치</td>
+                        <td>프로젝트 루트</td>
+                        <td>~/.claude/projects/</td>
+                    </tr>
+                    <tr>
+                        <td>로드 방식</td>
+                        <td>매 세션 전체 로드</td>
+                        <td>처음 200줄만 로드</td>
+                    </tr>
+                    <tr>
+                        <td>비유</td>
+                        <td style="color: var(--accent); font-weight: 600;">업무 매뉴얼</td>
+                        <td>업무 일지</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="answer-desc reveal">오늘 집중할 건 <strong style="color:var(--accent);">여러분이 직접 컨트롤하는
+                    CLAUDE.md</strong>입니다.</p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S1-13: Auto Memory 최신 스펙 2가지
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Latest Spec</p>
+            <h2 class="reveal">Auto Memory 최신 스펙</h2>
+            <div class="spec-list">
+                <div class="spec-item reveal">
+                    <div class="spec-num">1</div>
+                    <div class="spec-text">
+                        MEMORY.md는 <strong>처음 200줄만</strong> 로드.<br>
+                        초과분은 별도 파일로 분리, 필요할 때 참조
+                    </div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-num">2</div>
+                    <div class="spec-text">
+                        <strong>/memory</strong> 명령어로 언제든 확인 + 편집 가능.<br>
+                        Claude가 기억한 내용을 직접 관리
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         섹션 2: 나쁜 CLAUDE.md vs 좋은 CLAUDE.md (6:00 ~ 12:00)
+         ============================================================= -->
+
+    <!-- =============================================
+         S2-1: 섹션 타이틀
+         ============================================= -->
+    <section class="slide glow-bg">
+        <div class="slide-content">
+            <div class="badge reveal">
+                <span class="badge-dot"></span>
+                Section 02
+            </div>
+            <h1 class="title-main reveal">
+                나쁜 CLAUDE.md<br>vs <span class="line-accent">좋은 CLAUDE.md</span>
+            </h1>
+            <p class="section-title-text reveal">어떻게 쓰느냐에 따라 결과가 완전히 달라집니다</p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S2-3: 나쁜 패턴 1 — 너무 길다
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal" style="color: var(--red);">Bad Pattern 01</p>
+            <h2 class="reveal">너무 길다 <span style="color: var(--red);">(300줄+)</span></h2>
+            <div class="stat-row reveal">
+                <div class="stat-item">
+                    <div class="stat-value" style="color: var(--green);">200줄</div>
+                    <div class="stat-label">공식 권장</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" style="color: var(--accent);">60줄</div>
+                    <div class="stat-label">HumanLayer 실무</div>
+                </div>
+            </div>
+            <div class="doc-quote reveal" style="margin-top: var(--content-gap); border-left-color: var(--red);">
+                <p>"CLAUDE.md가 너무 길면, 중요한 규칙이 노이즈에 묻혀서 Claude가 절반을 무시한다 — <strong>가차 없이 잘라내라(ruthlessly
+                        prune).</strong>"</p>
+                <p class="doc-source">— Claude Code Best Practices</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- =============================================
+         S2-5: 나쁜 패턴 2 — 모호한 지시 vs 구체적 지시
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal" style="color: var(--red);">Bad Pattern 02</p>
+            <h2 class="reveal">모호한 지시 vs 구체적 지시</h2>
+            <div class="bad-pattern reveal">
+                <div class="bad-label">BAD</div>
+                <div class="bad-code">
+                    &#10005; "깔끔한 코드를 작성하세요"<br>
+                    &#10005; "테스트를 잘 작성하세요"<br>
+                    &#10005; "파일을 잘 정리하세요"
+                </div>
+            </div>
+            <div class="good-pattern reveal" style="margin-top: clamp(0.5rem, 1vw, 0.75rem);">
+                <div class="good-label">GOOD</div>
+                <div class="good-code">
+                    &#10003; "함수는 30줄 이하로 작성하세요"<br>
+                    &#10003; "새 파일 만들기 전에 나한테 확인하세요"<br>
+                    &#10003; "API 관련 파일은 src/api/ 폴더에 만드세요"
+                </div>
+            </div>
+            <p class="answer-desc reveal">
+                <strong style="color:var(--accent);">검증 가능한 구체적인 행동</strong>을 지시해야 합니다
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S2-6: 나쁜 패턴 3 — 하나에 모든 걸 의존
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal" style="color: var(--red);">Bad Pattern 03</p>
+            <h2 class="reveal">CLAUDE.md 하나에 모든 걸 의존</h2>
+            <div class="flow-diagram reveal">
+                <div class="flow-box">
+                    <div>파일 10~20개</div>
+                    <div class="flow-sub">잘 동작함</div>
+                </div>
+                <span class="flow-connector">&#8594;</span>
+                <div class="flow-box">
+                    <div>파일 100~200개</div>
+                    <div class="flow-sub">구조 흔들림</div>
+                </div>
+                <span class="flow-connector">&#8594;</span>
+                <div class="flow-box" style="border-color: rgba(224, 85, 97, 0.3);">
+                    <div style="color: var(--red);">규칙 과다</div>
+                    <div class="flow-sub">노이즈에 묻힘</div>
+                </div>
+            </div>
+            <p class="answer-desc reveal">
+                프로젝트가 커질수록 규칙도 늘어남 → <strong style="color:var(--accent);">모듈화</strong> 필수<br>
+                해결법은 고급편에서!
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S2-7: 그러면 어떻게? — 좋은 CLAUDE.md 예시 + Boris Cherny
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Good Example</p>
+            <h2 class="reveal">그러면 어떻게 쓰나?</h2>
+            <div class="code-block reveal">
+                <span class="comment"># 프로젝트 개요</span><br>
+                Next.js 16 + TypeScript 기반 SaaS 대시보드<br><br>
+                <span class="comment">## 빌드 &amp; 테스트</span><br>
+                <span class="keyword">-</span> 빌드: pnpm build<br>
+                <span class="keyword">-</span> 테스트: pnpm test<br>
+                <span class="keyword">-</span> 린트: pnpm lint<br><br>
+                <span class="comment">## 코딩 규칙</span><br>
+                <span class="keyword">-</span> 서버 컴포넌트 기본. 'use client'는 꼭 필요할 때만<br>
+                <span class="keyword">-</span> API 라우트는 src/app/api/ 에 생성<br>
+                <span class="keyword">-</span> 에러 처리: 커스텀 AppError 클래스 사용
+            </div>
+            <div class="quote-block reveal" style="margin-top: clamp(0.75rem, 1.5vw, 1rem); max-width: 600px;">
+                <p class="quote-text" style="font-size: var(--body-size);">
+                    "실수 발견할 때마다 CLAUDE.md에 한 줄 추가.<br>
+                    처음부터 완벽하게 쓰려고 하지 마세요."
+                </p>
+                <p class="quote-author"><strong>Boris Cherny</strong> — Claude Code 초기 개발자</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         섹션 3: 이렇게 쓰세요 — 실전 활용 사례 (11:00 ~ 13:30)
+         ============================================================= -->
+
+    <!-- =============================================
+         S3-1: 섹션 타이틀
+         ============================================= -->
+    <section class="slide glow-bg">
+        <div class="slide-content">
+            <div class="badge reveal">
+                <span class="badge-dot"></span>
+                Section 03
+            </div>
+            <h1 class="title-main reveal">
+                이렇게 쓰세요<br><span class="line-accent">실전 활용 사례</span>
+            </h1>
+            <p class="section-title-text reveal">바로 가져다 쓸 수 있는 패턴 4가지</p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S3-2: 활용법 1 — 검증 방법을 알려줘라
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Practice 01</p>
+            <h2 class="reveal">검증 방법을 알려줘라</h2>
+            <div class="code-block reveal">
+                <span class="comment">## 빌드 &amp; 테스트</span><br>
+                <span class="keyword">-</span> 빌드: npm run build<br>
+                <span class="keyword">-</span> 테스트 (단일): npm test -- --testPathPattern=&lt;filename&gt;<br>
+                <span class="keyword">-</span> 린트: npm run lint<br><br>
+                <span class="comment">## 워크플로우</span><br>
+                <span class="keyword">-</span> 코드 수정 후 반드시 타입체크 실행<br>
+                <span class="keyword">-</span> 전체 테스트가 아닌 관련 파일만 테스트 (성능)<br>
+                <span class="keyword">-</span> 구현 후 린트 통과 확인
+            </div>
+            <p class="answer-desc reveal">
+                이거 하나만 넣어도, 결과 품질 <strong style="color:var(--accent);">2~3배 향상</strong> — Boris Cherny
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S3-4: 도메인 용어를 정의하라 (BAD + GOOD 통합)
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Practice 02</p>
+            <h2 class="reveal">도메인 용어를 정의하라</h2>
+            <div class="bad-pattern reveal">
+                <div class="bad-label">BAD</div>
+                <div class="bad-code">
+                    "주문 금액 계산해줘" → 주문항목 하나의 가격만 리턴.<br>
+                    "주문"이 뭔지 몰라서 생긴 실수
+                </div>
+            </div>
+            <div class="code-block reveal" style="margin-top: clamp(0.6rem, 1.2vw, 1rem);">
+                <span class="comment">## 도메인 용어</span><br>
+                <span class="keyword">-</span> <strong>주문(Order)</strong>: 고객이 한 번에 결제하는 주문 묶음 (배달비, 총액 포함)<br>
+                <span class="keyword">-</span> <strong>주문항목(OrderItem)</strong>: 주문 안의 개별 메뉴 (짜장면 1개, 탕수육 1개 등)<br>
+                <span class="keyword">-</span> <strong>가게(Store)</strong>: 실제 주문을 받는 개별 매장 (메뉴·영업시간 보유)
+            </div>
+            <p class="answer-desc reveal">
+                용어 세 줄이면 헷갈릴 여지가 사라집니다
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S3-6: 활용법 3 — .claude/rules/ 폴더 구조
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Practice 03</p>
+            <h2 class="reveal">.claude/rules/로 규칙 분리</h2>
+            <div class="code-block reveal">
+                <span class="comment">.claude/</span><br>
+                &nbsp;&nbsp;<span class="comment">rules/</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">testing.md</span> &nbsp;&nbsp;&nbsp;&nbsp;— 테스트 관련 규칙<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">api-design.md</span> — API 설계 규칙<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">security.md</span> &nbsp;&nbsp;— 보안 체크리스트
+            </div>
+            <p class="answer-desc reveal">
+                마크다운 파일을 만들면 <strong style="color:var(--accent);">매 세션마다 자동 로드</strong>.<br>
+                CLAUDE.md에 다 넣을 필요 없이 주제별로 분리!
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S3-7: @import로 기존 문서 참조
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Practice 03 — @import</p>
+            <h2 class="reveal">기존 문서를 중복 없이 참조</h2>
+            <div class="code-block reveal">
+                <span class="comment"># CLAUDE.md</span><br><br>
+                프로젝트 개요와 사용 가능한 명령어는<br>
+                <span class="keyword">@README.md</span> 참조<br><br>
+                npm 스크립트 목록은<br>
+                <span class="keyword">@package.json</span> 참조
+            </div>
+            <p class="answer-desc reveal">
+                이미 있는 문서를 또 적을 필요 없이<br>
+                <strong style="color:var(--accent);">@파일명</strong>으로 Claude가 알아서 읽습니다
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S3-9: Boris Cherny의 팀 워크플로
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Practice 04</p>
+            <h2 class="reveal">팀 공유로 집단지성을 쌓아라</h2>
+            <div class="principle-list">
+                <div class="principle-item reveal">
+                    <div class="principle-num">1</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">CLAUDE.md를 git에 커밋</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num">2</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">실수 발견 → CLAUDE.md에 한 줄 추가</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num">3</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">PR 올려서 팀원 리뷰</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num">4</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">머지 → 팀 전원의 Claude가 학습</div>
+                    </div>
+                </div>
+            </div>
+            <div class="code-block reveal"
+                style="margin-top: clamp(0.5rem, 1vw, 0.75rem); font-size: var(--small-size); line-height: 1.5;">
+                <span class="comment"># 주의사항 (팀 경험)</span><br>
+                <span class="keyword">-</span> XX 함수는 <strong>Promise.all</strong> 사용 (성능)<br>
+                <span class="keyword">-</span> 테스트 시 <strong>--watch 금지</strong> (CI hang)<br>
+                <span class="keyword">-</span> User 모델은 <strong>UserService</strong>로만 접근
+            </div>
+            <p class="answer-desc reveal">
+                <strong style="color:var(--accent);">팀의 경험이 CLAUDE.md에 축적</strong> — Boris Cherny
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         S3-11: 꿀팁 — Claude에게 CLAUDE.md 리뷰 시키기
+         ============================================= -->
+    <section class="slide glow-bg">
+        <div class="slide-content">
+            <p class="section-tag reveal">Bonus Tip</p>
+            <h2 class="reveal">Claude에게 리뷰 시키기</h2>
+            <div class="doc-quote reveal" style="border-left-color: var(--green);">
+                <p style="font-size: clamp(0.9rem, 1.5vw, 1.15rem); color: var(--text-primary);">
+                    "우리 CLAUDE.md 한번 리뷰해줘.<br>
+                    불필요한 내용이나 빠진 것 있어?"
+                </p>
+            </div>
+            <p class="answer-desc reveal">
+                Claude가 직접 피드백을 줍니다.<br>
+                주기적으로 관리하면 <strong style="color:var(--accent);">항상 최적의 상태</strong> 유지
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================================
+         마무리 (13:30 ~ 14:00)
+         ============================================================= -->
+
+    <!-- =============================================
+         M-1: 오늘의 핵심 3가지
+         ============================================= -->
+    <section class="slide glow-bg">
+        <div class="slide-content">
+            <p class="section-tag reveal">Summary</p>
+            <h2 class="reveal">오늘의 핵심 3가지</h2>
+            <div class="principle-list">
+                <div class="principle-item reveal">
+                    <div class="principle-num">1</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">최고 레버리지 포인트</div>
+                        <div class="principle-desc">한 번 잘 써두면 매 세션마다 자동 적용</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num">2</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">짧고 구체적으로</div>
+                        <div class="principle-desc">200줄 이하 + 검증 방법 & 도메인 용어가 핵심</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num">3</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">처음부터 완벽하게 쓰지 마라</div>
+                        <div class="principle-desc">한 줄씩 추가 → @import & .claude/rules/로 확장 → 팀 집단지성</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         M-2: 고급편 예고 (유튜브)
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Next Step</p>
+            <h2 class="reveal">컨텍스트 엔지니어링 다음 단계</h2>
+            <div class="principle-list">
+                <div class="principle-item reveal">
+                    <div class="principle-num" style="opacity:1; font-size: clamp(1rem, 1.5vw, 1.2rem);">&#9312;</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">.claude/rules/ + frontmatter</div>
+                        <div class="principle-desc">특정 파일에만 규칙을 조건부 적용</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num" style="opacity:1; font-size: clamp(1rem, 1.5vw, 1.2rem);">&#9313;</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">하위 디렉터리 CLAUDE.md</div>
+                        <div class="principle-desc">필요한 컨텍스트만 on-demand 로딩</div>
+                    </div>
+                </div>
+            </div>
+            <p class="answer-desc reveal">
+                프로젝트가 커져도 흔들리지 않는<br>
+                <strong style="color:var(--accent);">고급 컨텍스트 엔지니어링</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         M-3: 클로드코드 완벽마스터 강의 안내 (유튜브)
+         ============================================= -->
+    <section class="slide glow-bg">
+        <div class="slide-content">
+            <div class="badge reveal">
+                <span class="badge-dot"></span>
+                유튜브
+            </div>
+            <h2 class="answer-main reveal" style="margin-bottom: 0;">
+                <span class="highlight">클로드코드</span><br>완벽마스터
+            </h2>
+            <p class="answer-desc reveal">
+                Claude Code의 모든 기능을 A부터 Z까지<br>
+                실전 프로젝트와 함께 체계적으로 배우기
+            </p>
+            <div class="key-point reveal" style="margin-top: var(--content-gap); max-width: 500px;">
+                <p>기본편 + <strong>고급편</strong> 내용까지 포함<br>
+                    링크는 설명란에서 확인!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =============================================
+         M-4: 좋아요 / 구독 / 댓글 (유튜브)
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="badge reveal">
+                <span class="badge-dot"></span>
+                유튜브
+            </div>
+            <h2 class="answer-main reveal" style="margin-bottom: 0;">
+                감사합니다!
+            </h2>
+            <div class="flow-diagram reveal" style="margin-top: var(--content-gap);">
+                <div class="flow-box highlighted">좋아요</div>
+                <div class="flow-box highlighted">구독</div>
+                <div class="flow-box highlighted">댓글</div>
+            </div>
+            <p class="answer-desc reveal">
+                여러분만의 CLAUDE.md 팁이 있다면<br>
+                <strong style="color:var(--accent);">댓글로 공유</strong>해주세요!
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+         M-5: 고급편 예고 (인프런)
+         ============================================= -->
+    <section class="slide">
+        <div class="slide-content">
+            <p class="section-tag reveal">Next Step (인프런)</p>
+            <h2 class="reveal">고급편 예고</h2>
+            <div class="principle-list">
+                <div class="principle-item reveal">
+                    <div class="principle-num" style="opacity:1; font-size: clamp(1rem, 1.5vw, 1.2rem);">&#9312;</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">paths frontmatter로 조건부 규칙</div>
+                        <div class="principle-desc">.claude/rules/에서 특정 파일에만 적용</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num" style="opacity:1; font-size: clamp(1rem, 1.5vw, 1.2rem);">&#9313;</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">하위 디렉터리 on-demand 로딩</div>
+                        <div class="principle-desc">필요할 때만 불러오는 CLAUDE.md</div>
+                    </div>
+                </div>
+                <div class="principle-item reveal">
+                    <div class="principle-num" style="opacity:1; font-size: clamp(1rem, 1.5vw, 1.2rem);">&#9314;</div>
+                    <div class="principle-text-block">
+                        <div class="principle-title">InstructionsLoaded 훅</div>
+                        <div class="principle-desc">어떤 파일이 로드되는지 디버깅</div>
+                    </div>
+                </div>
+            </div>
+            <p class="answer-desc reveal">
+                궁금한 점은 질문 남겨주세요.<br>
+                <strong style="color:var(--accent);">다음 강의에서 뵙겠습니다!</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- =============================================
+       JAVASCRIPT: Navigation & Animations
+       ============================================= -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.currentSlide = 0;
+                this.totalSlides = this.slides.length;
+                this.progressBar = document.getElementById('progressBar');
+                this.navDotsContainer = document.getElementById('navDots');
+
+                this.createNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.updateProgress();
+            }
+
+            createNavDots() {
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('nav-dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.setAttribute('aria-label', `Slide ${i + 1}`);
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    this.navDotsContainer.appendChild(dot);
+                });
+                this.navDots = document.querySelectorAll('.nav-dot');
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const index = Array.from(this.slides).indexOf(entry.target);
+                            this.currentSlide = index;
+                            this.updateProgress();
+                            this.updateNavDots();
+                        }
+                    });
+                }, { threshold: 0.4 });
+
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.goToSlide(Math.min(this.currentSlide + 1, this.totalSlides - 1));
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.goToSlide(Math.max(this.currentSlide - 1, 0));
+                    } else if (e.key === 'f' || e.key === 'F') {
+                        if (!document.fullscreenElement) {
+                            document.documentElement.requestFullscreen();
+                        } else {
+                            document.exitFullscreen();
+                        }
+                    }
+                });
+            }
+
+            goToSlide(index) {
+                this.slides[index].scrollIntoView({ behavior: 'smooth' });
+            }
+
+            updateProgress() {
+                const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+                this.progressBar.style.width = progress + '%';
+            }
+
+            updateNavDots() {
+                this.navDots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === this.currentSlide);
+                });
+            }
+        }
+
+        new SlidePresentation();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#claude-code #session"
+  - generic [ref=e8]: "06"
+  - generic [ref=e9]:
+    - generic [ref=e10]: TIP 04
+    - heading "/clear vs /compact 언제 무엇을 쓸까" [level=2] [ref=e11]:
+      - text: /clear vs /compact
+      - text: 언제 무엇을 쓸까
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: NEW TASK
+          - generic [ref=e16]: /clear
+        - generic [ref=e17]: 새 작업 시작 — 내가 필요한 맥락만 직접 작성해서 전달
+        - generic [ref=e18]: · 노력 ↑ · 관련성 제어 ↑ · 컨텍스트 로트 0
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: CONTINUE
+          - generic [ref=e22]: /compact
+        - generic [ref=e23]: 대화가 디버깅으로 부풀 때 — 모델이 요약하고 위에서 이어감
+        - generic [ref=e24]: · 노력 ↓ · 힌트 지시 가능 (focus on X, drop Y)
+    - generic [ref=e25]: 새 작업엔 /clear, 같은 작업엔 /compact

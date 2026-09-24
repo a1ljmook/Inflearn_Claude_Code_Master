@@ -1,0 +1,38 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#opus4.7 best practice"
+  - generic [ref=e8]: "07"
+  - generic [ref=e9]:
+    - generic [ref=e10]: NUMBERS
+    - heading "어려운 과제에서 가장 크게 점프했다" [level=2] [ref=e11]:
+      - text: 어려운 과제에서
+      - text: 가장 크게 점프했다
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: Cursor
+        - generic [ref=e15]:
+          - generic [ref=e16]: 70%
+          - generic [ref=e17]: vs Opus 4.6 — 58%
+        - generic [ref=e18]: CursorBench 통과율
+      - generic [ref=e19]:
+        - generic [ref=e20]: XBOW
+        - generic [ref=e21]:
+          - generic [ref=e22]: 98.5%
+          - generic [ref=e23]: vs Opus 4.6 — 54.5%
+        - generic [ref=e24]: visual-acuity 벤치
+      - generic [ref=e25]:
+        - generic [ref=e26]: Rakuten
+        - generic [ref=e27]:
+          - generic [ref=e28]: 3×
+          - generic [ref=e29]: vs Opus 4.6
+        - generic [ref=e30]: 프로덕션 과제 해결
+      - generic [ref=e31]:
+        - generic [ref=e32]: Notion
+        - generic [ref=e33]:
+          - generic [ref=e34]: +14%
+          - generic [ref=e35]: 토큰 ↓ · 툴 에러 1/3
+        - generic [ref=e36]: 다단계 워크플로 정확도
+    - generic [ref=e37]: 현업 테스터 28명이 공통 평가 — Opus 4.6을 전방위 상회

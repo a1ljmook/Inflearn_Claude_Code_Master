@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>06 TIP 04 · /clear vs /compact</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .tip-title { margin-bottom: 48px; }
+  .feat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .feat {
+    padding: 32px 36px;
+    border-radius: 22px;
+    border: 1px solid var(--card-border);
+    background: var(--bg-elevated);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .feat .head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+  .feat .tag {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+  }
+  .feat .cmd {
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  .feat .desc {
+    font-size: 26px;
+    font-weight: 500;
+    color: #D4D4D4;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+  }
+  .feat .meta {
+    margin-top: 6px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--good-text);
+    letter-spacing: -0.01em;
+  }
+  .feat.primary {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#claude-code #session</div>
+  </header>
+
+  <div class="page-number">06</div>
+
+  <section class="card-body">
+    <div class="eyebrow">TIP 04</div>
+    <h2 class="title-xl tip-title">
+      /clear vs /compact<br>
+      언제 <span class="accent">무엇을</span> 쓸까
+    </h2>
+
+    <div class="feat-list">
+      <div class="feat primary">
+        <div class="head">
+          <span class="tag">NEW TASK</span>
+          <span class="cmd">/clear</span>
+        </div>
+        <div class="desc">새 작업 시작 — 내가 필요한 맥락만 직접 작성해서 전달</div>
+        <div class="meta">· 노력 ↑ · 관련성 제어 ↑ · 컨텍스트 로트 0</div>
+      </div>
+
+      <div class="feat">
+        <div class="head">
+          <span class="tag">CONTINUE</span>
+          <span class="cmd">/compact</span>
+        </div>
+        <div class="desc">대화가 디버깅으로 부풀 때 — 모델이 요약하고 위에서 이어감</div>
+        <div class="meta">· 노력 ↓ · 힌트 지시 가능 (focus on X, drop Y)</div>
+      </div>
+    </div>
+
+    <div class="bottom-banner">
+      새 작업엔 /clear, 같은 작업엔 /compact
+    </div>
+  </section>
+</div>
+</body>
+</html>

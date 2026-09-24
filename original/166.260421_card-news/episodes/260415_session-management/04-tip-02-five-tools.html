@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>04 TIP 02 · 5가지 전환점</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .tip-title { margin-bottom: 40px; }
+  .tool-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .tool {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 22px 28px;
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    background: var(--bg-elevated);
+  }
+  .tool.primary {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+  .tool .idx {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-feature-settings: "tnum";
+    min-width: 44px;
+  }
+  .tool .cmd {
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 30px;
+    font-weight: 700;
+    color: #fff;
+    min-width: 200px;
+    letter-spacing: -0.01em;
+  }
+  .tool .desc {
+    font-size: 24px;
+    font-weight: 500;
+    color: #D4D4D4;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    flex: 1;
+  }
+  .tool.primary .cmd { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#claude-code #session</div>
+  </header>
+
+  <div class="page-number">04</div>
+
+  <section class="card-body">
+    <div class="eyebrow">TIP 02</div>
+    <h2 class="title-xl tip-title">
+      매 턴마다 <span class="accent">5가지</span><br>
+      선택지가 있습니다
+    </h2>
+
+    <div class="tool-list">
+      <div class="tool">
+        <div class="idx">01</div>
+        <div class="cmd">Continue</div>
+        <div class="desc">같은 세션에서 메시지 이어가기</div>
+      </div>
+      <div class="tool primary">
+        <div class="idx">02</div>
+        <div class="cmd">/rewind</div>
+        <div class="desc">이전 메시지로 점프 (Esc Esc)</div>
+      </div>
+      <div class="tool">
+        <div class="idx">03</div>
+        <div class="cmd">/clear</div>
+        <div class="desc">새 세션 시작</div>
+      </div>
+      <div class="tool">
+        <div class="idx">04</div>
+        <div class="cmd">/compact</div>
+        <div class="desc">대화 요약 후 이어가기</div>
+      </div>
+      <div class="tool">
+        <div class="idx">05</div>
+        <div class="cmd">Subagents</div>
+        <div class="desc">깨끗한 컨텍스트의 자식에게 위임</div>
+      </div>
+    </div>
+
+    <div class="bottom-banner">
+      Continue 만 쓰지 말고 상황에 맞게 고르세요
+    </div>
+  </section>
+</div>
+</body>
+</html>

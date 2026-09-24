@@ -1,0 +1,28 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#opus4.7 best practice"
+  - generic [ref=e8]: "04"
+  - generic [ref=e9]:
+    - generic [ref=e10]: TIP 02
+    - heading "effort는 high / xhigh로 시작하세요" [level=2] [ref=e11]:
+      - text: effort는 high / xhigh로
+      - text: 시작하세요
+    - generic [ref=e13]:
+      - generic [ref=e15]: low
+      - generic [ref=e17]: medium
+      - generic [ref=e19]: high
+      - generic [ref=e20]:
+        - generic [ref=e21]: NEW
+        - generic [ref=e22]: xhigh
+      - generic [ref=e24]: max
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: ›
+        - generic [ref=e28]: xhigh 신설 — 추론 깊이와 응답 지연을 더 섬세하게 조절
+      - generic [ref=e29]:
+        - generic [ref=e30]: ›
+        - generic [ref=e31]: Claude Code 기본 effort 가 이미 xhigh 로 상향
+    - generic [ref=e32]: 코딩 · 에이전트 작업은 high / xhigh로 시작하세요

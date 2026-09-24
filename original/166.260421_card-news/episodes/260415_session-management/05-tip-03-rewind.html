@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>05 TIP 03 · /rewind</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .tip-title { margin-bottom: 48px; }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 4px;
+  }
+  .compare .box { min-height: 420px; display: flex; flex-direction: column; }
+  .box-bad .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    font-size: 28px;
+    color: var(--bad-text);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.4;
+  }
+  .kv-list { margin-top: 4px; display: flex; flex-direction: column; gap: 18px; }
+  .kv { display: flex; gap: 16px; align-items: baseline; }
+  .kv .k {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--good-text);
+    min-width: 110px;
+  }
+  .kv .v {
+    font-size: 24px;
+    font-weight: 500;
+    color: #E5E5E5;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .kv .v code {
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 22px;
+    color: #D4D4D4;
+    background: rgba(255,255,255,0.06);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#claude-code #session</div>
+  </header>
+
+  <div class="page-number">05</div>
+
+  <section class="card-body">
+    <div class="eyebrow">TIP 03</div>
+    <h2 class="title-xl tip-title">
+      실수는 수정 말고<br>
+      <span class="accent">/rewind</span> 하세요
+    </h2>
+
+    <div class="compare">
+      <div class="box box-bad">
+        <span class="tag">BAD</span>
+        <div class="content">"그거 말고 B 방식으로<br>다시 해줘"<br><br>실패한 시도가<br>컨텍스트에 그대로</div>
+      </div>
+      <div class="box box-good">
+        <span class="tag">GOOD</span>
+        <div class="kv-list">
+          <div class="kv"><span class="k">단축키</span><span class="v"><code>Esc Esc</code></span></div>
+          <div class="kv"><span class="k">동작</span><span class="v">이전 메시지로 점프</span></div>
+          <div class="kv"><span class="k">효과</span><span class="v">실패 경로만 삭제</span></div>
+          <div class="kv"><span class="k">유지</span><span class="v">읽어둔 파일은 남음</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-banner">
+      실패한 경로는 지우고, 유용한 정보만 남기세요
+    </div>
+  </section>
+</div>
+</body>
+</html>

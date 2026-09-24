@@ -1,0 +1,33 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#opus4.7 best practice"
+  - generic [ref=e8]: "05"
+  - generic [ref=e9]:
+    - generic [ref=e10]: TIP 03
+    - heading "토큰은 1.0 ~ 1.35배 늘어납니다" [level=2] [ref=e11]:
+      - text: 토큰은 1.0 ~ 1.35배
+      - text: 늘어납니다
+    - generic [ref=e12]:
+      - generic [ref=e14]:
+        - generic [ref=e15]: Opus 4.6
+        - generic [ref=e16]: 1.0×
+      - generic [ref=e20]:
+        - generic [ref=e21]: Opus 4.7 (토크나이저 업데이트)
+        - generic [ref=e22]: 최대 1.35×
+    - generic [ref=e25]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: "01"
+        - generic [ref=e28]: effort 조정
+        - generic [ref=e29]: 파라미터로 직접 제어
+      - generic [ref=e30]:
+        - generic [ref=e31]: "02"
+        - generic [ref=e32]: Task budgets
+        - generic [ref=e33]: public beta · 작업 단위
+      - generic [ref=e34]:
+        - generic [ref=e35]: "03"
+        - generic [ref=e36]: "\"간결하게\" 지시"
+        - generic [ref=e37]: 프롬프트로 응답 축소
+    - generic [ref=e38]: Task Budgets 베타로 토큰 지출을 통제하세요

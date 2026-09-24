@@ -1,0 +1,24 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#opus4.7 best practice"
+  - generic [ref=e8]: "01"
+  - generic [ref=e9]:
+    - generic [ref=e10]: "4.7"
+    - generic [ref=e12]: OPUS 4.7 공개
+    - heading "Claude Opus 4.7, 쓰는 법이 달라졌습니다" [level=1] [ref=e13]:
+      - text: Claude Opus 4.7,
+      - generic [ref=e14]: 쓰는 법이 달라졌습니다
+    - paragraph [ref=e15]: 2026.04.16 출시 · 베스트 프랙티스 5가지
+    - generic [ref=e16]:
+      - code [ref=e17]: claude-opus-4-7
+      - generic [ref=e18]: ·
+      - generic [ref=e19]: API
+      - generic [ref=e20]: ·
+      - generic [ref=e21]: Bedrock
+      - generic [ref=e22]: ·
+      - generic [ref=e23]: Vertex AI
+      - generic [ref=e24]: ·
+      - generic [ref=e25]: Foundry

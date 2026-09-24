@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>04 TIP 02 · effort 레벨</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .tip-title { margin-bottom: 56px; }
+  .level-bar {
+    background: var(--bg-elevated);
+    border: 1px solid var(--card-border);
+    border-radius: 22px;
+    padding: 32px 28px;
+  }
+  .level-track {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    position: relative;
+  }
+  .level {
+    padding: 26px 10px;
+    text-align: center;
+    border-radius: 14px;
+    border: 1px solid var(--card-border);
+    background: rgba(255,255,255,0.025);
+    position: relative;
+  }
+  .level .lv-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: -0.01em;
+  }
+  .level.xhigh {
+    background: var(--accent-strong);
+    border-color: var(--accent-border);
+  }
+  .level.xhigh .lv-name { color: var(--accent); }
+  .level.xhigh .new-tag {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    background: var(--accent);
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.06em;
+  }
+  .points {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .point {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 26px 28px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+  }
+  .point .ico {
+    font-size: 30px;
+    line-height: 1;
+    padding-top: 4px;
+    color: var(--accent);
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .point .text {
+    font-size: 28px;
+    font-weight: 600;
+    color: #E5E5E5;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .point .text b { color: var(--accent); font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#opus4.7 best practice</div>
+  </header>
+
+  <div class="page-number">04</div>
+
+  <section class="card-body">
+    <div class="eyebrow">TIP 02</div>
+    <h2 class="title-xl tip-title">
+      effort는 <span class="accent">high / xhigh</span>로<br>
+      시작하세요
+    </h2>
+
+    <div class="level-bar">
+      <div class="level-track">
+        <div class="level"><div class="lv-name">low</div></div>
+        <div class="level"><div class="lv-name">medium</div></div>
+        <div class="level"><div class="lv-name">high</div></div>
+        <div class="level xhigh">
+          <span class="new-tag">NEW</span>
+          <div class="lv-name">xhigh</div>
+        </div>
+        <div class="level"><div class="lv-name">max</div></div>
+      </div>
+    </div>
+
+    <div class="points">
+      <div class="point">
+        <div class="ico">›</div>
+        <div class="text"><b>xhigh</b> 신설 — 추론 깊이와 응답 지연을 더 섬세하게 조절</div>
+      </div>
+      <div class="point">
+        <div class="ico">›</div>
+        <div class="text">Claude Code 기본 effort 가 이미 <b>xhigh</b> 로 상향</div>
+      </div>
+    </div>
+
+    <div class="bottom-banner">
+      코딩 · 에이전트 작업은 high / xhigh로 시작하세요
+    </div>
+  </section>
+</div>
+</body>
+</html>

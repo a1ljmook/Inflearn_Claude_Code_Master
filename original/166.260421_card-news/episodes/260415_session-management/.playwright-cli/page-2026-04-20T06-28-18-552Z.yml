@@ -1,0 +1,16 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#claude-code #session"
+  - generic [ref=e8]: "08"
+  - generic [ref=e9]:
+    - heading "Claude Code 실전 팁, 놓치지 마세요" [level=2] [ref=e10]:
+      - text: Claude Code 실전 팁,
+      - text: 놓치지 마세요
+    - paragraph [ref=e11]:
+      - text: 저장하고 팔로우해두면
+      - text: 새로운 가이드를 가장 빠르게 받아볼 수 있어요
+    - generic [ref=e12]: 짐코딩 팔로우
+    - generic [ref=e13]: 클로드 코드 완벽 마스터 · 수강생 4,705명

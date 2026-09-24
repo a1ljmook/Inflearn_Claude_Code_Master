@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>클로드 코드 토큰값, 공식 플러그인 4개로</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #000000;
+    --fg: #ffffff;
+    --accent: #d4ff00;
+    --accent-dim: #84a300;
+    --muted: #888888;
+    --warn: #ff4444;
+    --good: #84ff00;
+    --info: #4aa3ff;
+    --card: #0e0e0e;
+    --border: #1f1f1f;
+    --font-sans: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'D2 Coding', 'Menlo', monospace;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    overflow: hidden;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+  }
+  body {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    position: relative;
+  }
+  .deck {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: clamp(2.5rem, 6vw, 6rem);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(2vh);
+    transition: opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1), transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .slide.left {
+    transform: translateY(-2vh);
+  }
+
+  /* Common typography */
+  .eyebrow {
+    font-size: clamp(0.875rem, 1vw, 1.125rem);
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: clamp(1.25rem, 2vw, 2rem);
+  }
+  h1.title {
+    font-size: clamp(3rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    text-align: center;
+    max-width: 22ch;
+  }
+  h2.headline {
+    font-size: clamp(2.25rem, 5.5vw, 5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    max-width: 18ch;
+    text-align: center;
+  }
+  h3.sub {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  p.lead {
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    font-weight: 400;
+    line-height: 1.55;
+    color: #cccccc;
+    max-width: 36ch;
+    text-align: center;
+    margin-top: clamp(1.5rem, 2.5vw, 2.5rem);
+  }
+  p.note {
+    font-size: clamp(0.95rem, 1.2vw, 1.125rem);
+    color: var(--muted);
+    margin-top: clamp(1.25rem, 2vw, 2rem);
+    max-width: 50ch;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .accent { color: var(--accent); }
+  .muted  { color: var(--muted); }
+  .warn   { color: var(--warn); }
+  .good   { color: var(--good); }
+
+  /* Mega number */
+  .mega {
+    font-size: clamp(5rem, 14vw, 14rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    color: var(--accent);
+  }
+  .mega-sub {
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    color: var(--muted);
+    margin-top: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Quote / callout */
+  .quote-card {
+    border-left: 4px solid var(--accent);
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 3rem);
+    background: var(--card);
+    border-radius: 0 12px 12px 0;
+    max-width: 56ch;
+    font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+    line-height: 1.45;
+    font-weight: 500;
+    color: #ededed;
+  }
+  .quote-card.warn-quote {
+    border-left-color: var(--warn);
+  }
+  .quote-card .pct {
+    color: var(--warn);
+    font-weight: 800;
+  }
+
+  /* Code / monospace */
+  .codeblock {
+    font-family: var(--font-mono);
+    font-size: clamp(0.95rem, 1.4vw, 1.4rem);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: clamp(1rem, 2vw, 1.75rem) clamp(1.25rem, 2.5vw, 2.25rem);
+    color: var(--accent);
+    line-height: 1.55;
+    max-width: 90vw;
+    white-space: pre;
+    overflow: hidden;
+  }
+  .codeblock.dim { color: #cccccc; }
+  .codeblock .comment { color: var(--muted); }
+  .inline-code {
+    font-family: var(--font-mono);
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 0.1em 0.4em;
+    border-radius: 6px;
+    font-size: 0.92em;
+    color: var(--accent);
+  }
+
+  /* Tables */
+  table.compare {
+    border-collapse: collapse;
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    max-width: 88vw;
+    width: min(960px, 88vw);
+  }
+  table.compare th, table.compare td {
+    padding: clamp(0.75rem, 1.4vw, 1.2rem) clamp(0.75rem, 1.6vw, 1.5rem);
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    line-height: 1.45;
+  }
+  table.compare th {
+    color: var(--accent);
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.85em;
+  }
+  table.compare td.label {
+    color: var(--muted);
+    font-weight: 600;
+    width: 22%;
+  }
+  table.compare td .mono {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+  }
+  table.compare tr:last-child td { border-bottom: none; }
+
+  /* Grid lists */
+  .grid-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1rem, 1.6vw, 1.5rem);
+    width: min(980px, 90vw);
+    margin-top: clamp(1.5rem, 2.5vw, 2.5rem);
+  }
+  .grid-list .item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: clamp(1rem, 1.8vw, 1.5rem) clamp(1.25rem, 2vw, 1.75rem);
+    font-size: clamp(1rem, 1.4vw, 1.3rem);
+    line-height: 1.5;
+  }
+  .grid-list .item b { color: var(--accent); display: block; margin-bottom: 0.35rem; font-size: 1.05em; }
+  .grid-list .item span { color: #bbbbbb; font-size: 0.9em; }
+
+  /* Step list */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.6rem, 1.2vw, 1.2rem);
+    margin-top: clamp(1.5rem, 2.5vw, 2.5rem);
+    max-width: 38ch;
+  }
+  .steps .step {
+    display: flex;
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+    align-items: baseline;
+    font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+  }
+  .steps .step .n {
+    color: var(--accent);
+    font-weight: 800;
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+    min-width: 2ch;
+  }
+  .steps .step .t { color: #dddddd; line-height: 1.4; }
+
+  /* Cycle diagram */
+  .cycle {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1vw, 0.8rem);
+    margin-top: clamp(1.5rem, 2vw, 2rem);
+    font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+    color: #cccccc;
+  }
+  .cycle .row { display: flex; align-items: baseline; gap: 0.75rem; }
+  .cycle .arrow { color: var(--muted); font-family: var(--font-mono); }
+  .cycle .bad   { color: var(--warn); font-weight: 700; }
+
+  /* Brand row */
+  .brand-row {
+    display: flex;
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: baseline;
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    color: var(--muted);
+    margin-top: clamp(2rem, 4vw, 4rem);
+  }
+  .brand-row .b { color: var(--fg); font-weight: 700; }
+
+  /* Hero divider */
+  .divider {
+    width: clamp(60px, 8vw, 100px);
+    height: 4px;
+    background: var(--accent);
+    margin: clamp(1.5rem, 2.5vw, 2.5rem) auto;
+    border-radius: 2px;
+  }
+
+  /* Hint footer */
+  .hint {
+    position: fixed;
+    bottom: clamp(0.75rem, 1.4vw, 1.5rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.7rem, 0.9vw, 0.875rem);
+    color: rgba(255,255,255,0.18);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+    transition: opacity 600ms ease;
+  }
+  .hint.fade { opacity: 0; }
+
+  /* Two-column comparison */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    width: min(960px, 90vw);
+    margin-top: clamp(1.5rem, 2.5vw, 2.5rem);
+  }
+  .two-col .col {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: clamp(1.25rem, 2vw, 1.75rem) clamp(1.5rem, 2.5vw, 2.25rem);
+  }
+  .two-col .col .title-tag {
+    font-family: var(--font-mono);
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .two-col .col p {
+    font-size: clamp(1rem, 1.4vw, 1.3rem);
+    line-height: 1.5;
+    color: #cccccc;
+  }
+  .two-col .col.bad .title-tag { color: var(--warn); }
+  .two-col .col.good .title-tag { color: var(--good); }
+
+  /* Big stat block */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 3vw, 3rem);
+    margin-top: clamp(2rem, 3.5vw, 3.5rem);
+    width: min(1100px, 90vw);
+  }
+  .stat-row .stat {
+    text-align: center;
+  }
+  .stat-row .stat .v {
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+  .stat-row .stat .l {
+    font-size: clamp(0.85rem, 1.1vw, 1.1rem);
+    color: var(--muted);
+    margin-top: 0.5rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Marker numerals for weapons */
+  .weapon-num {
+    font-family: var(--font-mono);
+    font-size: clamp(0.95rem, 1.2vw, 1.2rem);
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .weapon-name {
+    font-family: var(--font-mono);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    color: var(--fg);
+    letter-spacing: -0.02em;
+  }
+  .weapon-tag {
+    font-size: clamp(1.1rem, 1.7vw, 1.5rem);
+    color: var(--muted);
+    margin-top: clamp(1rem, 2vw, 2rem);
+    max-width: 30ch;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* CTA */
+  .cta-box {
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: clamp(1.5rem, 2.5vw, 2.25rem) clamp(2rem, 3.5vw, 3rem);
+    text-align: center;
+    margin-top: clamp(1.5rem, 2.5vw, 2.5rem);
+    max-width: 38ch;
+  }
+  .cta-box .url {
+    font-family: var(--font-mono);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  .cta-box .desc {
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    color: var(--muted);
+    margin-top: 0.75rem;
+  }
+
+  /* Small inline tag */
+  .tag-line {
+    font-size: clamp(1rem, 1.4vw, 1.3rem);
+    color: var(--muted);
+    margin-top: clamp(1rem, 1.6vw, 1.4rem);
+    line-height: 1.55;
+    max-width: 36ch;
+    text-align: center;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .slide {
+      transition: opacity 1ms linear;
+      transform: none !important;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .grid-list { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ============== 01 / 인트로 ============== -->
+<section class="slide" data-i="0">
+  <div class="eyebrow">짐코딩</div>
+  <h1 class="title">클로드 코드 <span class="accent">토큰값</span>,<br>공식 플러그인 <span class="accent">4개</span>로<br>한 번에 정리합니다</h1>
+  <div class="divider"></div>
+  <p class="note">Anthropic 공식 마켓플레이스에서 골랐어요</p>
+</section>
+
+<section class="slide" data-i="1">
+  <h2 class="headline">여러분 안녕하세요,<br>짐코딩입니다</h2>
+  <p class="lead">오늘은 <span class="accent">클로드 코드 토큰값</span>,<br>한 줄로 깎는 법을 정리합니다</p>
+</section>
+
+<section class="slide" data-i="2">
+  <div class="eyebrow">공식 마켓플레이스</div>
+  <h2 class="headline" style="font-family: var(--font-mono); font-size: clamp(1.75rem, 4vw, 3.25rem); letter-spacing: -0.01em;">anthropics/<br>claude-plugins-official</h2>
+  <div class="stat-row" style="grid-template-columns: 1fr 1fr; max-width: 720px;">
+    <div class="stat"><div class="v">★ 18,000+</div><div class="l">GitHub Stars</div></div>
+    <div class="stat"><div class="v">171</div><div class="l">등록 플러그인</div></div>
+  </div>
+  <p class="note">그중 <span class="accent">토큰 절약에 직결되는 4개</span>만 추렸어요</p>
+</section>
+
+<section class="slide" data-i="3">
+  <div class="eyebrow">오늘의 4가지 무기</div>
+  <div class="steps" style="max-width: 44ch;">
+    <div class="step"><span class="n">1.</span><span class="t"><b class="accent">session-report</b><br><span class="muted" style="font-size: 0.78em;">어디서 새는지 측정</span></span></div>
+    <div class="step"><span class="n">2.</span><span class="t"><b class="accent">claude-md-management</b><br><span class="muted" style="font-size: 0.78em;">매 요청 세금 깎기</span></span></div>
+    <div class="step"><span class="n">3.</span><span class="t"><b class="accent">serena</b><br><span class="muted" style="font-size: 0.78em;">코드 검색 의미 기반으로</span></span></div>
+    <div class="step"><span class="n">4.</span><span class="t"><b class="accent">hookify</b><br><span class="muted" style="font-size: 0.78em;">재시도 사이클 차단</span></span></div>
+  </div>
+</section>
+
+<section class="slide" data-i="4">
+  <p class="note" style="font-size: clamp(1rem, 1.4vw, 1.3rem);">설치는 모두 한 줄</p>
+  <div class="codeblock" style="margin-top: 1.5rem;">/plugin install &lt;이름&gt;@claude-plugins-official</div>
+  <p class="tag-line">자, 첫 번째 무기부터 봅시다</p>
+</section>
+
+<!-- ============== 무기 1 — session-report ============== -->
+<section class="slide" data-i="5">
+  <div class="weapon-num">무기 1</div>
+  <div class="weapon-name accent">session-report</div>
+  <div class="weapon-tag">클로드 코드 카드값 명세서</div>
+</section>
+
+<section class="slide" data-i="6">
+  <div class="eyebrow">한 마디로</div>
+  <h2 class="headline"><span class="accent">카드값 명세서</span>라고<br>보시면 돼요</h2>
+</section>
+
+<section class="slide" data-i="7">
+  <p class="lead" style="margin-top: 0; max-width: 32ch;">카드 명세서는 카페·주유소·배달앱<br>항목별로 얼마 썼는지 보여주잖아요?</p>
+  <div class="divider"></div>
+  <h3 class="sub" style="text-align: center; max-width: 24ch;">똑같이 <span class="accent">프로젝트별·스킬별·프롬프트별</span><br>토큰을 한 화면에 보여줍니다</h3>
+</section>
+
+<section class="slide" data-i="8">
+  <div class="eyebrow">원리는 간단해요</div>
+  <div class="steps" style="max-width: 36ch;">
+    <div class="step"><span class="n">1.</span><span class="t">클로드 코드가<br>모든 세션을 자동 기록</span></div>
+    <div class="step"><span class="n">2.</span><span class="t">session-report가 그 기록을<br>스캔해서 분석</span></div>
+    <div class="step"><span class="n">3.</span><span class="t">HTML 대시보드로<br>시각화해 줌</span></div>
+  </div>
+  <p class="note">AI가 알아서 빨간 경고 카드까지 채워줍니다</p>
+</section>
+
+<section class="slide" data-i="9">
+  <div class="eyebrow warn">AI가 자동 작성한 경고 카드</div>
+  <div class="quote-card warn-quote">
+    "이 프로젝트가 이번 주 토큰의<br><span class="pct">41%</span>를 먹었습니다"
+  </div>
+</section>
+
+<section class="slide" data-i="10">
+  <div class="eyebrow warn">또 다른 경고 카드</div>
+  <div class="quote-card warn-quote">
+    "이 프롬프트 하나가<br><span class="pct">4%</span> 넘게 사용했습니다"
+  </div>
+</section>
+
+<section class="slide" data-i="11">
+  <div class="eyebrow">상황 1</div>
+  <h2 class="headline"><span class="warn">한 달 비용 폭탄</span><br>맞았는데<br>어디가 문제인지 모를 때</h2>
+  <p class="note">인보이스에는 총액만 적혀 있죠. 한 번 돌리면 — <br><span class="accent">"아, 그 프로젝트 하나가 70%였네"</span> 바로 보입니다</p>
+</section>
+
+<section class="slide" data-i="12">
+  <div class="eyebrow">상황 2</div>
+  <h2 class="headline"><span class="accent">캐시</span>가 잘 작동하는지<br>모를 때</h2>
+  <p class="note">캐시는 토큰 비용을 0.1배까지 깎아주는데, 자꾸 깨지면 무용지물.<br>session-report가 <span class="accent">"100k+ 토큰이 캐시 없이 처리된 횟수"</span>를 뽑아줍니다</p>
+</section>
+
+<section class="slide" data-i="13">
+  <div class="eyebrow">상황 3</div>
+  <h2 class="headline">절약 작업<br><span class="accent">전후를 비교</span>하고 싶을 때</h2>
+  <p class="note">"CLAUDE.md를 다이어트했더니 정말 줄었나?"<br>측정 데이터가 있어야 답이 나옵니다</p>
+</section>
+
+<section class="slide" data-i="14">
+  <div class="eyebrow">짐코딩 회사 7일 데이터</div>
+  <div class="stat-row">
+    <div class="stat"><div class="v">10억+</div><div class="l">입력 토큰</div></div>
+    <div class="stat"><div class="v">78%</div><div class="l">한 프로젝트 점유</div></div>
+    <div class="stat"><div class="v">96.9%</div><div class="l">캐시 히트율</div></div>
+  </div>
+  <p class="note" style="margin-top: 3rem;">이런 숫자를 <span class="warn">모르고 쓰는 거</span>랑 <span class="accent">알고 쓰는 거</span>는 완전히 다릅니다</p>
+</section>
+
+<section class="slide" data-i="15">
+  <div class="eyebrow">왜 0번 무기인가</div>
+  <h2 class="headline">측정해야<br><span class="accent">절약을 시작</span>할 수 있어요</h2>
+  <p class="note">어디가 새는지 모르면 어디를 막아야 할지도 모릅니다</p>
+</section>
+
+<section class="slide" data-i="16">
+  <div class="eyebrow">사용법 — 한 줄</div>
+  <div class="codeblock" style="text-align: center;">/plugin install session-report@claude-plugins-official</div>
+  <p class="tag-line">설치 후 자연어로 <span class="accent">"지난 30일 세션 리포트 만들어줘"</span></p>
+</section>
+
+<!-- ============== 무기 2 — claude-md-management ============== -->
+<section class="slide" data-i="17">
+  <div class="weapon-num">무기 2</div>
+  <div class="weapon-name accent" style="font-size: clamp(1.75rem, 4.5vw, 3.5rem);">claude-md-management</div>
+  <div class="weapon-tag">CLAUDE.md 다이어트 도구</div>
+</section>
+
+<section class="slide" data-i="18">
+  <div class="eyebrow">먼저 알아야 할 것</div>
+  <h2 class="headline"><code class="inline-code" style="font-size: 0.85em;">CLAUDE.md</code>는<br><span class="accent">모든 요청에 자동</span>으로<br>따라붙어요</h2>
+  <p class="note">프로젝트 루트에 두는 <span class="accent">"AI한테 주는 메모장"</span></p>
+</section>
+
+<section class="slide" data-i="19">
+  <div class="eyebrow warn">매턴 세금</div>
+  <h2 class="headline" style="max-width: 24ch;">200줄 CLAUDE.md = <br>매 요청 <span class="warn">수천 토큰</span> 자동 처리</h2>
+  <p class="note muted">(추정 — 한국어 비중·줄당 글자에 따라 다름)<br>비대해질수록 매 요청 토큰이 늘어납니다</p>
+</section>
+
+<section class="slide" data-i="20">
+  <div class="eyebrow">두 가지 도구가 들어있어요</div>
+  <div class="two-col">
+    <div class="col">
+      <div class="title-tag">도구 A</div>
+      <h3 class="sub" style="font-size: clamp(1.1rem, 1.6vw, 1.5rem); margin-bottom: 0.6rem;"><code class="inline-code" style="font-size: 0.85em;">/revise-claude-md</code></h3>
+      <p>세션 끝에 한 번 — 회의록</p>
+    </div>
+    <div class="col">
+      <div class="title-tag">도구 B</div>
+      <h3 class="sub" style="font-size: clamp(1.1rem, 1.6vw, 1.5rem); margin-bottom: 0.6rem;"><code class="inline-code" style="font-size: 0.85em;">claude-md-improver</code></h3>
+      <p>주기적 — 분기별 감사관</p>
+    </div>
+  </div>
+  <p class="note">Anthropic의 <span class="accent">Isabella He</span>가 만든 공식 플러그인</p>
+</section>
+
+<section class="slide" data-i="21">
+  <div class="eyebrow">도구 A — <code class="inline-code" style="font-size: 0.85em;">/revise-claude-md</code></div>
+  <h2 class="headline"><span class="accent">회의록</span>이라고<br>생각하시면 됩니다</h2>
+  <p class="note">방금 끝낸 대화에서 <span class="accent">"오늘 새로 알게 된 것"</span>을<br>한 줄씩 추출해 CLAUDE.md 추가 후보로</p>
+</section>
+
+<section class="slide" data-i="22">
+  <div class="eyebrow">도구 B — <code class="inline-code" style="font-size: 0.85em;">claude-md-improver</code></div>
+  <h2 class="headline"><span class="accent">분기별 감사관</span>입니다</h2>
+  <p class="note">저장소 전체 + 모든 CLAUDE.md를<br><span class="accent">6개 기준으로 100점 채점</span></p>
+</section>
+
+<section class="slide" data-i="23">
+  <div class="eyebrow">6개 평가 기준 — 100점 만점</div>
+  <table class="compare">
+    <tr><td class="label">Commands/workflows</td><td class="accent">20점</td></tr>
+    <tr><td class="label">Architecture clarity</td><td class="accent">20점</td></tr>
+    <tr><td class="label">Non-obvious patterns</td><td class="accent">15점</td></tr>
+    <tr><td class="label">Conciseness</td><td class="accent">15점</td></tr>
+    <tr><td class="label">Currency</td><td class="accent">15점</td></tr>
+    <tr><td class="label">Actionability</td><td class="accent">15점</td></tr>
+  </table>
+</section>
+
+<section class="slide" data-i="24">
+  <div class="eyebrow">잡아내는 6가지 흔한 문제</div>
+  <div class="grid-list">
+    <div class="item"><b>Stale commands</b><span>더 이상 작동하지 않는 명령어</span></div>
+    <div class="item"><b>Missing dependencies</b><span>빠진 의존성</span></div>
+    <div class="item"><b>Outdated architecture</b><span>변경 미반영 설명</span></div>
+    <div class="item"><b>Missing env setup</b><span>누락된 환경 설정</span></div>
+    <div class="item"><b>Broken test commands</b><span>깨진 테스트 명령어</span></div>
+    <div class="item"><b>Undocumented gotchas</b><span>문서화 안 된 함정</span></div>
+  </div>
+</section>
+
+<section class="slide" data-i="25">
+  <div class="eyebrow">사용법 — 자연어로 한 번</div>
+  <div class="quote-card" style="border-left-color: var(--accent);">"내 CLAUDE.md 파일<br>감사해줘"</div>
+  <p class="note">호출하면 SKILL.md에 명시된 <span class="accent">5단계</span>로 진행돼요</p>
+</section>
+
+<section class="slide" data-i="25b">
+  <div class="eyebrow">improver의 5단계 흐름</div>
+  <div class="steps" style="max-width: 44ch;">
+    <div class="step"><span class="n">1.</span><span class="t"><b class="accent">Discovery</b> — 모든 CLAUDE.md 발견</span></div>
+    <div class="step"><span class="n">2.</span><span class="t"><b class="accent">Quality Assessment</b> — 6개 기준 채점</span></div>
+    <div class="step"><span class="n">3.</span><span class="t"><b class="accent">Quality Report</b> — 점수표 출력</span></div>
+    <div class="step"><span class="n">4.</span><span class="t"><b class="accent">Targeted Updates</b> — diff 작성 + 승인 대기</span></div>
+    <div class="step"><span class="n">5.</span><span class="t"><b class="accent">Apply Updates</b> — 승인 후 Edit 적용</span></div>
+  </div>
+</section>
+
+<section class="slide" data-i="26">
+  <div class="eyebrow">⚠ 안심 포인트</div>
+  <h2 class="headline">AI가 마음대로<br><span class="accent">갈아엎지 않습니다</span></h2>
+  <p class="note">SKILL.md에 명시 — <code class="inline-code" style="font-size: 0.85em;">"ask user for confirmation before updating"</code></p>
+</section>
+
+<section class="slide" data-i="27">
+  <div class="eyebrow">보너스 단축키</div>
+  <h2 class="headline">세션 중 <span class="accent" style="font-family: var(--font-mono);">#</span> 키</h2>
+  <p class="lead">즉시 학습 내용을<br>CLAUDE.md에 자동 반영</p>
+  <p class="note muted">평소엔 # 로 캡처, 주기적으로 improver로 감사 — 이게 가장 효율적</p>
+</section>
+
+<!-- ============== 무기 3 — serena ============== -->
+<section class="slide" data-i="28">
+  <div class="weapon-num">무기 3</div>
+  <div class="weapon-name accent">serena</div>
+  <div class="weapon-tag">글자가 아닌 의미를 찾는다</div>
+</section>
+
+<section class="slide" data-i="29">
+  <div class="eyebrow">한 마디로</div>
+  <h2 class="headline">클로드한테<br><span class="accent">IDE를 붙여주는 도구</span>예요</h2>
+</section>
+
+<section class="slide" data-i="30">
+  <div class="eyebrow warn">grep의 한계</div>
+  <h2 class="headline"><span class="warn">글자만 보고<br>의미는 모릅니다</span></h2>
+  <p class="note"><code class="inline-code" style="font-size: 0.85em;">login</code> 찾으면 변수명·주석·문자열 다 잡혀요</p>
+</section>
+
+<section class="slide" data-i="31">
+  <div class="eyebrow">VS Code에서 이거 아시죠?</div>
+  <h2 class="headline" style="font-size: clamp(1.75rem, 4vw, 3.25rem); max-width: 26ch;">함수 위에서<br><span class="accent">Cmd / Ctrl + 클릭</span><br>= 정의로 이동</h2>
+  <p class="note">우클릭하면 <span class="accent">"참조 찾기"</span>도 정확하게 작동하잖아요</p>
+</section>
+
+<section class="slide" data-i="32">
+  <div class="eyebrow">serena가 하는 일</div>
+  <h2 class="headline"><span class="accent">IDE의 똑똑한 검색 기능</span>을<br>클로드한테 그대로 붙여줍니다</h2>
+</section>
+
+<section class="slide" data-i="33">
+  <div class="eyebrow">grep vs serena</div>
+  <div class="two-col">
+    <div class="col bad">
+      <div class="title-tag">grep — 글자만</div>
+      <p><code class="inline-code" style="font-size: 0.85em;">login</code> 들어간<br>모든 줄을 다 잡아옴</p>
+    </div>
+    <div class="col good">
+      <div class="title-tag">serena — 의미만</div>
+      <p>그 함수가 진짜<br>정의된 곳·호출되는 곳만</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-i="34">
+  <div class="eyebrow">노출 도구 약 20+ 개</div>
+  <table class="compare">
+    <tr><td class="label">검색 (8)</td><td><span class="mono">find_symbol, symbol_overview, find_referencing_symbols, find_declaration ...</span></td></tr>
+    <tr><td class="label">리팩토링 (4)</td><td><span class="mono">rename, move, inline, propagate_deletions</span></td></tr>
+    <tr><td class="label">편집 (4)</td><td><span class="mono">replace_symbol_body, insert_after_symbol ...</span></td></tr>
+    <tr><td class="label">기본 (6)</td><td><span class="mono">search_for_pattern, read_file, list_dir, execute_shell_command ...</span></td></tr>
+  </table>
+  <p class="note">지원 언어 <span class="accent">46개</span> — TypeScript·Python·Go·Rust·Java·Swift·Kotlin·PHP 거의 다</p>
+</section>
+
+<section class="slide" data-i="35">
+  <div class="eyebrow">상황 1</div>
+  <h2 class="headline"><span class="warn">"전체 프로젝트 봐줘"</span>로<br>1M 컨텍스트가 통째로 차버릴 때</h2>
+  <p class="note">클로드의 Read는 파일 내용을 세션 끝까지 못 빼요.<br>serena는 <span class="accent">함수 단위로만</span> 가져와서 폭주를 원천 차단</p>
+</section>
+
+<section class="slide" data-i="36">
+  <div class="eyebrow">상황 2</div>
+  <h2 class="headline">"이 함수 어디서 쓰여?"<br><span class="warn">grep 폭주</span> 30개 파일</h2>
+  <p class="note">한 번 돌면 <span class="warn">1만 토큰이 그냥 사라져요</span>.<br>serena의 <code class="inline-code" style="font-size: 0.85em;">find_referencing_symbols</code>는 1회 호출에 정확한 호출 지점만</p>
+</section>
+
+<section class="slide" data-i="37">
+  <div class="eyebrow">상황 3 — 가장 임팩트 큰 케이스</div>
+  <div class="two-col">
+    <div class="col bad">
+      <div class="title-tag">Read 도구</div>
+      <p>1,000줄 파일 통째로 = <br><b style="color: var(--warn); font-size: 1.4em;">약 1만 토큰</b></p>
+    </div>
+    <div class="col good">
+      <div class="title-tag">serena find_symbol</div>
+      <p>그 함수 하나만 = <br><b style="color: var(--good); font-size: 1.4em;">약 200토큰</b></p>
+    </div>
+  </div>
+  <p class="note">이 차이가 누적되면 어마어마합니다</p>
+</section>
+
+<section class="slide" data-i="38">
+  <div class="eyebrow">상황 4</div>
+  <h2 class="headline">리팩토링할 때<br><span class="accent">rename 한 번</span>이면 끝</h2>
+  <p class="note">"AuthContext를 SessionContext로 이름 바꿔줘" — <br>grep으론 30개 파일 일일이, serena는 LSP가 의미 단위로 안전하게</p>
+</section>
+
+<section class="slide" data-i="39">
+  <div class="eyebrow">옛날엔 이랬습니다</div>
+  <h2 class="headline" style="max-width: 22ch;">MCP 서버 5개 깔면<br>매 메시지 <span class="warn">9만 토큰 추정</span></h2>
+  <p class="note muted">(한 측정 기준, 도구 정의가 매 턴 시스템 프롬프트에 박혔을 때)</p>
+</section>
+
+<section class="slide" data-i="40">
+  <div class="eyebrow good">지금은 — Anthropic이 정면 해결</div>
+  <h2 class="headline"><span class="accent">ToolSearch</span>가<br>기본 활성화</h2>
+  <div class="codeblock" style="margin-top: 1.5rem; font-size: clamp(0.9rem, 1.3vw, 1.2rem);">"Tool search is enabled by default"</div>
+  <p class="note">필요할 때만 도구를 3-5개씩 — Sonnet 4 / Opus 4 이상에서<br><span class="muted" style="font-size: 0.78em; font-family: var(--font-mono);">code.claude.com/docs/en/agent-sdk/tool-search</span></p>
+</section>
+
+<section class="slide" data-i="41">
+  <div class="eyebrow">설치 1단계</div>
+  <h2 class="headline">한 줄로 wrapper 등록</h2>
+  <div class="codeblock" style="margin-top: 1.5rem;">/plugin install serena@claude-plugins-official</div>
+  <p class="note muted">짧은 .mcp.json wrapper만 등록 — 본체는 uvx가 자동 fetch</p>
+</section>
+
+<section class="slide" data-i="42">
+  <div class="eyebrow warn">설치 2단계 — 진짜 전제 조건</div>
+  <h2 class="headline"><code class="inline-code" style="font-size: 0.8em;">uv</code> 패키지 매니저가<br>시스템에 깔려있어야 함</h2>
+  <p class="note muted">없으면 <code class="inline-code" style="font-size: 0.85em;">uvx not found</code> 에러로 <span class="warn">/mcp에서 failed</span>로 뜹니다</p>
+</section>
+
+<section class="slide" data-i="43">
+  <div class="eyebrow">uv 설치 — 한 줄</div>
+  <div class="codeblock"><span class="comment"># macOS</span>
+brew install uv
+
+<span class="comment"># Linux / Windows (PowerShell · WSL bash)</span>
+curl -LsSf https://astral.sh/uv/install.sh | sh</div>
+  <p class="note">설치 후 Claude Code 재시작. <span class="accent">Python은 uv가 알아서 관리</span>합니다</p>
+</section>
+
+<section class="slide" data-i="44">
+  <div class="eyebrow">설치 3단계 — 연결 확인</div>
+  <div class="codeblock" style="text-align: center;">/mcp</div>
+  <p class="lead"><code class="inline-code" style="font-size: 0.8em;">plugin:serena:serena</code>가 <span class="good">connected</span>로<br>표시되면 OK입니다</p>
+  <p class="note muted">failed면 <span class="accent">Reconnect</span> 한 번 시도 — 첫 호출 시 git fetch 시간 때문</p>
+</section>
+
+<!-- ============== 무기 4 — hookify ============== -->
+<section class="slide" data-i="45">
+  <div class="weapon-num">무기 4</div>
+  <div class="weapon-name accent">hookify</div>
+  <div class="weapon-tag">사고 치기 전에 멈춘다</div>
+</section>
+
+<section class="slide" data-i="46">
+  <div class="eyebrow">한 마디로</div>
+  <h2 class="headline">클로드가 <span class="accent">자주 하는 실수</span>를<br>사전에 막아주는 도구</h2>
+</section>
+
+<section class="slide" data-i="47">
+  <div class="eyebrow warn">토큰이 진짜로 새는 지점</div>
+  <div class="cycle">
+    <div class="row"><span class="bad">①</span> 클로드가 잘못 씀</div>
+    <div class="row"><span class="arrow">→</span> 여러분이 "왜 거기 썼어요?" 지적</div>
+    <div class="row"><span class="arrow">→</span> 클로드가 사과하고 정리</div>
+    <div class="row"><span class="arrow">→</span> 다시 시도</div>
+  </div>
+  <p class="note" style="margin-top: 2rem;">사이클 한 번 = <span class="warn">수천 토큰 사라짐</span> (추정)</p>
+</section>
+
+<section class="slide" data-i="48">
+  <h2 class="headline">hookify는 이 사이클을<br><span class="accent">시작도 하기 전에</span><br>끊어줍니다</h2>
+  <p class="note">마크다운 한 줄로 룰 → 클로드 도구 호출 직전 자동 검사</p>
+</section>
+
+<section class="slide" data-i="49">
+  <div class="eyebrow">비유 — 사무실 냉장고</div>
+  <div class="quote-card">
+    "음료 가져가지 마세요"<br>포스트잇을 붙여두면<br><span class="accent">누가 열기 직전에 보고 멈추는</span> 구조
+  </div>
+</section>
+
+<section class="slide" data-i="50">
+  <div class="eyebrow">사용법 — 자연어 한 줄</div>
+  <div class="codeblock" style="text-align: center;">/hookify node_modules 폴더에 파일 쓰지 마</div>
+  <p class="note">이 한 줄이면 <code class="inline-code" style="font-size: 0.85em;">.claude/hookify.no-node-modules.local.md</code> 자동 생성<br><span class="accent">다음 턴부터 즉시 적용</span> — 재시작 불필요</p>
+</section>
+
+<section class="slide" data-i="51">
+  <div class="eyebrow">자동 생성 룰 파일</div>
+  <div class="codeblock dim">---
+name: block-node-modules-write
+enabled: true
+event: file
+conditions:
+  - field: file_path
+    operator: regex_match
+    pattern: node_modules/
+action: block
+---
+🛑 node_modules에 파일 쓰지 마세요</div>
+</section>
+
+<section class="slide" data-i="52">
+  <div class="eyebrow">6개 sub-skill · command</div>
+  <table class="compare">
+    <tr><td class="label"><span class="mono">/hookify &lt;자연어&gt;</span></td><td>룰 파일 자동 생성</td></tr>
+    <tr><td class="label"><span class="mono">/hookify</span></td><td>최근 짜증난 패턴 자동 추출</td></tr>
+    <tr><td class="label"><span class="mono">/hookify:list</span></td><td>등록 룰 보기</td></tr>
+    <tr><td class="label"><span class="mono">/hookify:configure</span></td><td>enable/disable 인터랙티브</td></tr>
+    <tr><td class="label"><span class="mono">/hookify:help</span></td><td>사용법 도움말</td></tr>
+    <tr><td class="label"><span class="mono">writing-rules</span></td><td>룰 syntax · 정규식 가이드</td></tr>
+  </table>
+</section>
+
+<section class="slide" data-i="53">
+  <div class="eyebrow warn">주의 — 너무 광범위한 패턴</div>
+  <h2 class="headline" style="max-width: 22ch;"><code class="inline-code" style="font-size: 0.7em;">pattern: log</code> →<br><span class="warn">login · dialog · catalog</span>까지 매칭</h2>
+  <p class="note">정상 작업까지 막힐 수 있어요. <span class="accent">"Start simple, then add complexity"</span></p>
+</section>
+
+<!-- ============== 정리 ============== -->
+<section class="slide" data-i="54">
+  <div class="eyebrow">오늘의 4개 무기 정리</div>
+  <table class="compare">
+    <tr><th>무기</th><th>막는 누수</th><th>한 줄 사용법</th></tr>
+    <tr><td class="label accent">session-report</td><td>측정 — 어디서 새는지</td><td><span class="mono">"리포트 만들어줘"</span></td></tr>
+    <tr><td class="label accent">claude-md-management</td><td>CLAUDE.md 매턴 세금</td><td><span class="mono">"감사해줘"</span> + #</td></tr>
+    <tr><td class="label accent">serena</td><td>파일 통째 Read 폭주</td><td><span class="mono">"이 함수 어디서 쓰여?"</span></td></tr>
+    <tr><td class="label accent">hookify</td><td>재시도 사이클</td><td><span class="mono">/hookify &lt;룰&gt;</span></td></tr>
+  </table>
+</section>
+
+<section class="slide" data-i="55">
+  <div class="eyebrow">권장 진행 순서</div>
+  <div class="steps" style="max-width: 38ch;">
+    <div class="step"><span class="n">1.</span><span class="t"><b class="accent">session-report</b>로 측정</span></div>
+    <div class="step"><span class="n">2.</span><span class="t"><b class="accent">claude-md-management</b>로 CLAUDE.md 다이어트</span></div>
+    <div class="step"><span class="n">3.</span><span class="t"><b class="accent">serena</b>로 코드 검색 의미 기반 전환</span></div>
+    <div class="step"><span class="n">4.</span><span class="t"><b class="accent">hookify</b>로 실수 사이클 차단</span></div>
+  </div>
+  <p class="note">일주일 후 session-report 다시 — <span class="accent">차이가 보입니다</span></p>
+</section>
+
+<section class="slide" data-i="56">
+  <h2 class="headline" style="max-width: 22ch;">토큰을 아껴도<br><span class="accent">워크플로우</span>가 비효율적이면<br><span class="warn">절약한 토큰만 아까워져요</span></h2>
+</section>
+
+<section class="slide" data-i="57">
+  <div class="eyebrow">강의로 더 깊이</div>
+  <h2 class="headline">클로드 코드<br><span class="accent">완벽 마스터</span></h2>
+  <div class="stat-row" style="grid-template-columns: 1fr 1fr; max-width: 720px;">
+    <div class="stat"><div class="v">4,700+</div><div class="l">수강생</div></div>
+    <div class="stat"><div class="v">★ 4.9</div><div class="l">평점</div></div>
+  </div>
+  <div class="cta-box" style="margin-top: 2rem;">
+    <div class="url">gymcoding.co/vip</div>
+    <div class="desc">구독자 특가 · 강의 자료실에 CLAUDE.md 템플릿 제공</div>
+  </div>
+</section>
+
+<section class="slide" data-i="58">
+  <h1 class="title">좋아요 · 구독 · 알림<br><span class="accent">다음 영상 아실 거잖아요</span></h1>
+  <div class="divider"></div>
+  <p class="note">다음 편에서 만나요 👋</p>
+</section>
+
+</div>
+
+<div class="hint" id="hint">← / → · F: FULLSCREEN</div>
+
+<script>
+(function() {
+  'use strict';
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
+
+  // Initial state
+  slides[0].classList.add('active');
+
+  function go(idx) {
+    if (idx < 0 || idx >= total || idx === current) return;
+    const fromIdx = current;
+    current = idx;
+    slides[fromIdx].classList.remove('active');
+    if (idx > fromIdx) {
+      slides[fromIdx].classList.add('left');
+    }
+    slides[idx].classList.remove('left');
+    slides[idx].classList.add('active');
+    // Cleanup helper class so previous slides reset
+    setTimeout(() => {
+      slides.forEach((s, i) => {
+        if (i !== current) s.classList.remove('left');
+      });
+    }, 460);
+  }
+  function next() { go(current + 1); }
+  function prev() { go(current - 1); }
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    // Ignore if user is typing into an input
+    const tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'PageDown':
+      case ' ':
+        e.preventDefault();
+        next();
+        break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        e.preventDefault();
+        prev();
+        break;
+      case 'Home':
+        e.preventDefault();
+        go(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        go(total - 1);
+        break;
+      case 'f':
+      case 'F':
+        e.preventDefault();
+        toggleFullscreen();
+        break;
+    }
+  });
+
+  // Mouse wheel — debounced
+  let wheelLock = false;
+  window.addEventListener('wheel', (e) => {
+    if (wheelLock) return;
+    if (Math.abs(e.deltaY) < 30) return;
+    wheelLock = true;
+    if (e.deltaY > 0) next(); else prev();
+    setTimeout(() => { wheelLock = false; }, 600);
+  }, { passive: true });
+
+  // Touch swipe
+  let tStartX = 0, tStartY = 0;
+  window.addEventListener('touchstart', (e) => {
+    const t = e.touches[0];
+    tStartX = t.clientX;
+    tStartY = t.clientY;
+  }, { passive: true });
+  window.addEventListener('touchend', (e) => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - tStartX;
+    const dy = t.clientY - tStartY;
+    if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0) next(); else prev();
+  }, { passive: true });
+
+  // Fullscreen
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+    } else {
+      document.exitFullscreen?.();
+    }
+  }
+
+  // Hide hint after a few seconds
+  const hint = document.getElementById('hint');
+  setTimeout(() => { hint.classList.add('fade'); }, 4500);
+  document.addEventListener('mousemove', () => {
+    hint.classList.remove('fade');
+    clearTimeout(window.__hintT);
+    window.__hintT = setTimeout(() => hint.classList.add('fade'), 2500);
+  });
+})();
+</script>
+</body>
+</html>

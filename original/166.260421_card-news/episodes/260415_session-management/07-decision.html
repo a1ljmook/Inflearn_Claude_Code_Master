@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>07 상황별 선택 매트릭스</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .bench-title { margin-bottom: 44px; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .cell {
+    padding: 28px 26px;
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    background: var(--bg-elevated);
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .cell .sit {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+  }
+  .cell .pick {
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--accent);
+    font-feature-settings: "tnum";
+    margin: 14px 0 8px;
+  }
+  .cell .why {
+    font-size: 20px;
+    font-weight: 600;
+    color: #D4D4D4;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .cell.accent-cell {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#claude-code #session</div>
+  </header>
+
+  <div class="page-number">07</div>
+
+  <section class="card-body">
+    <div class="eyebrow">WHEN TO USE</div>
+    <h2 class="title-xl bench-title">
+      상황별 <span class="accent">선택</span><br>
+      한눈에 보기
+    </h2>
+
+    <div class="grid">
+      <div class="cell accent-cell">
+        <div class="sit">같은 작업, 맥락도 여전히 관련 있을 때</div>
+        <div class="pick">Continue</div>
+        <div class="why">모든 내용이 여전히 중요</div>
+      </div>
+      <div class="cell accent-cell">
+        <div class="sit">Claude가 잘못된 경로로 갔을 때</div>
+        <div class="pick">/rewind</div>
+        <div class="why">유용한 파일은 남기고 실패만 제거</div>
+      </div>
+      <div class="cell">
+        <div class="sit">세션이 디버깅으로 부풀어 올랐을 때</div>
+        <div class="pick">/compact</div>
+        <div class="why">모델이 중요한 것 결정</div>
+      </div>
+      <div class="cell">
+        <div class="sit">완전히 새로운 작업 시작할 때</div>
+        <div class="pick">/clear</div>
+        <div class="why">로트 0 · 관련성 내가 제어</div>
+      </div>
+      <div class="cell">
+        <div class="sit">중간 산출물 많은 작업 단계</div>
+        <div class="pick">Subagent</div>
+        <div class="why">노이즈는 자식에, 결과만 반환</div>
+      </div>
+      <div class="cell">
+        <div class="sit">자동 컴팩션이 임박했을 때</div>
+        <div class="pick">미리 /compact</div>
+        <div class="why">모델이 약해지기 전에 선제적으로</div>
+      </div>
+    </div>
+
+    <div class="bottom-banner">
+      매 턴이 분기점 — 의식적으로 선택하세요
+    </div>
+  </section>
+</div>
+</body>
+</html>

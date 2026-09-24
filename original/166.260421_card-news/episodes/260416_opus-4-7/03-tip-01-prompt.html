@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>03 TIP 01 · 프롬프트</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .tip-title { margin-bottom: 48px; }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 4px;
+  }
+  .compare .box { min-height: 420px; display: flex; flex-direction: column; }
+  .box-bad .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    font-size: 30px;
+    color: var(--bad-text);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.35;
+  }
+  .kv-list { margin-top: 4px; display: flex; flex-direction: column; gap: 18px; }
+  .kv { display: flex; gap: 16px; align-items: baseline; }
+  .kv .k {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--good-text);
+    min-width: 72px;
+  }
+  .kv .v {
+    font-size: 26px;
+    font-weight: 500;
+    color: #E5E5E5;
+    letter-spacing: -0.01em;
+  }
+  .kv .v code {
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 22px;
+    color: #D4D4D4;
+    background: rgba(255,255,255,0.06);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#opus4.7 best practice</div>
+  </header>
+
+  <div class="page-number">03</div>
+
+  <section class="card-body">
+    <div class="eyebrow">TIP 01</div>
+    <h2 class="title-xl tip-title">
+      프롬프트가 느슨하면<br>
+      결과가 <span class="accent">어긋납니다</span>
+    </h2>
+
+    <div class="compare">
+      <div class="box box-bad">
+        <span class="tag">BAD</span>
+        <div class="content">"로그인 기능 만들어줘"</div>
+      </div>
+      <div class="box box-good">
+        <span class="tag">GOOD</span>
+        <div class="kv-list">
+          <div class="kv"><span class="k">의도</span><span class="v">로그인 페이지 제작</span></div>
+          <div class="kv"><span class="k">조건</span><span class="v">OAuth2 + JWT</span></div>
+          <div class="kv"><span class="k">기준</span><span class="v">TS, 에러 핸들링</span></div>
+          <div class="kv"><span class="k">위치</span><span class="v"><code>src/auth/login.tsx</code></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-banner">
+      과거 프롬프트는 이제 재튜닝이 필요합니다
+    </div>
+  </section>
+</div>
+</body>
+</html>

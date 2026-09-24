@@ -1,0 +1,34 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#claude-code #session"
+  - generic [ref=e8]: "03"
+  - generic [ref=e9]:
+    - generic [ref=e10]: TIP 01
+    - heading "컨텍스트가 커지면 성능은 떨어집니다" [level=2] [ref=e11]:
+      - text: 컨텍스트가 커지면
+      - text: 성능은 떨어집니다
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: BAD
+        - generic [ref=e15]:
+          - text: "\"한 세션을 1M까지"
+          - text: 꽉 채워 쓴다"
+      - generic [ref=e16]:
+        - generic [ref=e17]: GOOD
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]: 증상
+            - generic [ref=e21]: 주의력이 분산
+          - generic [ref=e22]:
+            - generic [ref=e23]: 원인
+            - generic [ref=e24]: 오래된 내용이 노이즈
+          - generic [ref=e25]:
+            - generic [ref=e26]: 특징
+            - generic [ref=e27]: 1M 크기도 무력
+          - generic [ref=e28]:
+            - generic [ref=e29]: 해법
+            - generic [ref=e30]: 적극적 세션 분할
+    - generic [ref=e31]: Context Rot — 크기보다 '신선도'가 성능을 만듭니다

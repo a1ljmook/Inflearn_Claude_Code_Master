@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code로 PPT 만들기 — Round 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* ===========================================
+           RESET & BASE
+           =========================================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            height: 100%;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #e8e8e8;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        /* ===========================================
+           CSS CUSTOM PROPERTIES
+           =========================================== */
+        :root {
+            --bg: #000000;
+            --accent: #38bd84;
+            --accent-dim: rgba(56, 189, 132, 0.15);
+            --accent-glow: rgba(56, 189, 132, 0.3);
+            --text-primary: #e8e8e8;
+            --text-secondary: #888;
+            --text-dim: #555;
+            --border: #1a1a1a;
+
+            --font-mono: 'JetBrains Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+
+            --title-size: clamp(2rem, 6vw, 5rem);
+            --h2-size: clamp(1.5rem, 4vw, 3rem);
+            --h3-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            --body-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            --label-size: clamp(0.8rem, 1.4vw, 1.1rem);
+            --small-size: clamp(0.7rem, 1vw, 0.85rem);
+
+            --slide-padding: clamp(2rem, 5vw, 5rem);
+            --content-gap: clamp(1rem, 2vw, 2rem);
+            --element-gap: clamp(0.5rem, 1vw, 1rem);
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ===========================================
+           SLIDE BASE
+           =========================================== */
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: var(--slide-padding);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* ===========================================
+           GLOBAL BACKGROUND EFFECTS
+           =========================================== */
+
+        /* Scanline overlay on every slide */
+        .slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.005) 2px,
+                rgba(255, 255, 255, 0.005) 4px
+            );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Subtle grid */
+        .slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(56, 189, 132, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 132, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+        }
+
+        /* ===========================================
+           SLIDE NUMBER (hidden)
+           =========================================== */
+        .slide-number {
+            display: none;
+        }
+
+        /* ===========================================
+           ANIMATIONS
+           =========================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s var(--ease-out-expo),
+                        transform 0.7s var(--ease-out-expo);
+        }
+
+        .slide.visible .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal:nth-child(1) { transition-delay: 0.1s; }
+        .reveal:nth-child(2) { transition-delay: 0.2s; }
+        .reveal:nth-child(3) { transition-delay: 0.3s; }
+        .reveal:nth-child(4) { transition-delay: 0.4s; }
+        .reveal:nth-child(5) { transition-delay: 0.5s; }
+        .reveal:nth-child(6) { transition-delay: 0.6s; }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 10px var(--accent-dim); }
+            50% { box-shadow: 0 0 25px var(--accent-glow); }
+        }
+
+        /* ===========================================
+           REUSABLE COMPONENTS
+           =========================================== */
+
+        /* Terminal badge */
+        .terminal-badge {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--accent);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: var(--content-gap);
+        }
+
+        .terminal-badge::before {
+            content: '>';
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Section title */
+        .section-title {
+            font-family: var(--font-sans);
+            font-size: var(--title-size);
+            font-weight: 700;
+            line-height: 1.1;
+            text-align: center;
+        }
+
+        .section-title .accent { color: var(--accent); }
+
+        /* Accent line divider */
+        .accent-line {
+            width: 60px;
+            height: 2px;
+            background: var(--accent);
+            margin: var(--content-gap) auto;
+        }
+
+        /* Description text */
+        .desc {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            text-align: center;
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        /* Terminal window component */
+        .terminal-window {
+            background: #0a0a0a;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 100%;
+            max-width: 700px;
+            overflow: hidden;
+            margin-top: var(--content-gap);
+        }
+
+        .terminal-bar {
+            background: #111;
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.8rem, 1.2vw, 1rem);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .terminal-body {
+            padding: clamp(1rem, 2vw, 1.5rem);
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+        }
+
+        .prompt-line {
+            color: var(--text-dim);
+        }
+
+        .prompt-line .prompt {
+            color: var(--accent);
+        }
+
+        .prompt-line .cmd {
+            color: var(--text-primary);
+        }
+
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 1.1em;
+            background: var(--accent);
+            vertical-align: text-bottom;
+            animation: blink 1s step-end infinite;
+            margin-left: 2px;
+        }
+
+        /* Dark card */
+        .dark-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+        }
+
+        /* ===========================================
+           SLIDE 1: 전환 타이틀 — 플러그인 마켓플레이스
+           =========================================== */
+        .slide-marketplace-title .subtitle {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            margin-top: var(--content-gap);
+            text-align: center;
+        }
+
+        /* ===========================================
+           SLIDE 2: 개념 도식
+           =========================================== */
+        .slide-concept .concept-flow {
+            display: flex;
+            align-items: stretch;
+            gap: clamp(0.4rem, 1vw, 1rem);
+            margin-top: var(--content-gap);
+            flex-wrap: nowrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .slide-concept .concept-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem);
+            flex: 1;
+            min-width: 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: clamp(0.3rem, 0.5vw, 0.5rem);
+        }
+
+        .slide-concept .concept-card .card-label {
+            font-family: var(--font-mono);
+            font-size: var(--h3-size);
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .slide-concept .concept-card .card-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .slide-concept .concept-arrow {
+            color: var(--accent);
+            font-size: var(--h3-size);
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        /* ===========================================
+           SLIDE 3: 스킬 → 플러그인 변환
+           =========================================== */
+        .slide-plugin-convert .tree-line {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            white-space: pre;
+        }
+
+        .slide-plugin-convert .tree-line .dir {
+            color: var(--accent);
+        }
+
+        .slide-plugin-convert .tree-line .file {
+            color: var(--text-primary);
+        }
+
+        /* ===========================================
+           SLIDE 4: plugin.json 설명
+           =========================================== */
+        .slide-plugin-json .code-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1.2rem, 2.5vw, 2rem);
+            width: 100%;
+            max-width: 600px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-plugin-json .code-line {
+            font-family: var(--font-mono);
+            font-size: var(--body-size);
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .slide-plugin-json .code-line .key {
+            color: var(--accent);
+        }
+
+        .slide-plugin-json .code-line .val {
+            color: var(--text-primary);
+        }
+
+        /* ===========================================
+           SLIDE 5: marketplace.json + GitHub
+           =========================================== */
+        .slide-marketplace-reg .bottom-note {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--text-dim);
+            margin-top: var(--content-gap);
+            text-align: center;
+        }
+
+        /* ===========================================
+           SLIDE 6: 다른 프로젝트에서 설치
+           =========================================== */
+        .slide-install .success {
+            color: var(--accent);
+        }
+
+        /* ===========================================
+           SLIDE 7: 플러그인 장점 정리
+           =========================================== */
+        .slide-benefits .benefit-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--element-gap);
+            width: 100%;
+            max-width: 700px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-benefits .benefit-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+            display: flex;
+            align-items: center;
+            gap: clamp(0.8rem, 1.5vw, 1.2rem);
+        }
+
+        .slide-benefits .benefit-icon {
+            font-family: var(--font-mono);
+            font-size: var(--h3-size);
+            color: var(--accent);
+            flex-shrink: 0;
+            width: 2.5em;
+            text-align: center;
+        }
+
+        .slide-benefits .benefit-text .benefit-title {
+            font-family: var(--font-sans);
+            font-size: var(--body-size);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .slide-benefits .benefit-text .benefit-desc {
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+        }
+
+        /* ===========================================
+           SLIDE 8: 영상 요약
+           =========================================== */
+        .slide-summary .tag-row {
+            display: flex;
+            gap: clamp(0.4rem, 1vw, 0.8rem);
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-summary .tag-pill {
+            font-family: var(--font-mono);
+            font-size: var(--label-size);
+            color: var(--accent);
+            padding: clamp(0.4rem, 0.8vw, 0.6rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            border: 1px solid var(--accent-dim);
+            border-radius: 100px;
+            background: var(--accent-dim);
+        }
+
+        .slide-summary .summary-text {
+            font-size: var(--body-size);
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: var(--content-gap);
+            line-height: 1.7;
+            max-width: 600px;
+        }
+
+        /* ===========================================
+           SLIDE 9: 수강후기 기반 강의 홍보
+           =========================================== */
+        .slide-promo .review-cards {
+            display: flex;
+            flex-direction: column;
+            gap: var(--element-gap);
+            width: 100%;
+            max-width: 700px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-promo .review-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            padding: clamp(0.8rem, 1.5vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
+        }
+
+        .slide-promo .review-card .review-text {
+            font-size: var(--body-size);
+            color: var(--text-primary);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .slide-promo .review-card .review-author {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-dim);
+            margin-top: 0.4rem;
+        }
+
+        .slide-promo .promo-note {
+            font-size: var(--body-size);
+            color: var(--text-dim);
+            margin-top: var(--content-gap);
+            text-align: center;
+        }
+
+        /* ===========================================
+           SLIDE 10: 마무리 CTA
+           =========================================== */
+        .slide-cta .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: clamp(0.5rem, 1.5vw, 1.2rem);
+            width: 100%;
+            max-width: 500px;
+            margin-top: var(--content-gap);
+        }
+
+        .slide-cta .cta-card {
+            background: #080808;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: clamp(1rem, 2vw, 1.5rem);
+            text-align: center;
+            transition: border-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .slide-cta .cta-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .slide-cta .cta-card .cta-icon {
+            font-size: clamp(1.5rem, 3vw, 2.2rem);
+            margin-bottom: var(--element-gap);
+        }
+
+        .slide-cta .cta-card .cta-label {
+            font-family: var(--font-mono);
+            font-size: var(--small-size);
+            color: var(--text-secondary);
+        }
+
+        .slide-cta .cta-msg {
+            font-size: var(--body-size);
+            color: var(--text-dim);
+            margin-top: var(--content-gap);
+            text-align: center;
+        }
+
+        /* ===========================================
+           PROGRESS BAR
+           =========================================== */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--accent);
+            width: 0%;
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+
+        /* ===========================================
+           NAV DOTS (hidden)
+           =========================================== */
+        .nav-dots {
+            display: none;
+        }
+
+        /* ===========================================
+           RESPONSIVE
+           =========================================== */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1.5rem, 3vw, 3rem);
+                --content-gap: clamp(0.6rem, 1.5vw, 1.2rem);
+                --title-size: clamp(1.8rem, 5vw, 3.5rem);
+            }
+        }
+
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(1rem, 2.5vw, 2rem);
+                --content-gap: clamp(0.4rem, 1vw, 0.8rem);
+                --title-size: clamp(1.5rem, 4.5vw, 2.5rem);
+                --body-size: clamp(0.75rem, 1.2vw, 1rem);
+            }
+
+            .nav-dots { display: none; }
+        }
+
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.8rem, 2vw, 1.5rem);
+                --title-size: clamp(1.2rem, 4vw, 2rem);
+                --body-size: clamp(0.65rem, 1vw, 0.85rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .slide-concept .concept-flow {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .slide-concept .concept-arrow {
+                transform: rotate(90deg);
+            }
+
+            .slide-cta .cta-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                transition: opacity 0.3s ease;
+                transform: none;
+            }
+            html { scroll-behavior: auto; }
+            .cursor-blink, .terminal-badge::before {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress bar -->
+    <div class="progress-bar"></div>
+
+    <!-- Navigation dots -->
+    <nav class="nav-dots" aria-label="Slide navigation"></nav>
+
+    <!-- ============================================
+         SLIDE 1: 전환 타이틀 — 플러그인 마켓플레이스
+         ============================================ -->
+    <section class="slide slide-marketplace-title">
+        <span class="slide-number">01 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">여기서 끝이 아닙니다</div>
+
+            <h1 class="section-title reveal">
+                <span class="accent">플러그인</span> 마켓플레이스
+            </h1>
+
+            <p class="subtitle reveal">만든 스킬을 공유하고 재사용하기</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 2: 개념 도식 — 스킬 vs 플러그인 vs 마켓플레이스
+         ============================================ -->
+    <section class="slide slide-concept">
+        <span class="slide-number">02 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">개념 정리</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                스킬 &rarr; 플러그인 &rarr; 마켓플레이스
+            </h2>
+
+            <div class="concept-flow reveal">
+                <div class="concept-card">
+                    <div class="card-label">스킬</div>
+                    <div class="card-desc">업무 매뉴얼<br>이 프로젝트에서만 사용</div>
+                </div>
+                <div class="concept-arrow">&rarr;</div>
+                <div class="concept-card">
+                    <div class="card-label">플러그인</div>
+                    <div class="card-desc">스킬을 패키지로 묶음<br>재사용 가능</div>
+                </div>
+                <div class="concept-arrow">&rarr;</div>
+                <div class="concept-card">
+                    <div class="card-label">마켓플레이스</div>
+                    <div class="card-desc">플러그인 저장소<br>검색/설치</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 3: 스킬 → 플러그인 변환
+         ============================================ -->
+    <section class="slide slide-plugin-convert">
+        <span class="slide-number">03 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">플러그인 만들기</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                플러그인 변환은 <span class="accent">간단</span>
+            </h2>
+
+            <div class="terminal-window reveal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot" style="background: #ff5f57;"></div>
+                    <div class="terminal-dot" style="background: #febc2e;"></div>
+                    <div class="terminal-dot" style="background: #28c840;"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="tree-line"><span class="dir">web-slides-plugin/</span></div>
+                    <div class="tree-line">├── <span class="dir">.claude-plugin/</span></div>
+                    <div class="tree-line">│   └── <span class="file">plugin.json</span></div>
+                    <div class="tree-line">└── <span class="dir">skills/</span></div>
+                    <div class="tree-line">    └── <span class="dir">web-slides/</span></div>
+                    <div class="tree-line">        └── <span class="file">SKILL.md</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 4: plugin.json 설명
+         ============================================ -->
+    <section class="slide slide-plugin-json">
+        <span class="slide-number">04 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">plugin.json</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                플러그인의 <span class="accent">신분증</span>
+            </h2>
+
+            <div class="code-card reveal">
+                <div class="code-line">{</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">"name"</span>: <span class="val">"web-slides"</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">"description"</span>: <span class="val">"웹 PPT 생성 스킬"</span>,</div>
+                <div class="code-line">&nbsp;&nbsp;<span class="key">"version"</span>: <span class="val">"1.0.0"</span></div>
+                <div class="code-line">}</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 5: marketplace.json + GitHub 업로드
+         ============================================ -->
+    <section class="slide slide-marketplace-reg">
+        <span class="slide-number">05 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">마켓플레이스 등록</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                <span class="accent">marketplace.json</span> 작성
+            </h2>
+
+            <p class="desc reveal">마켓플레이스 이름, 소유자, 플러그인 목록을 정의</p>
+
+            <div class="terminal-window reveal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot" style="background: #ff5f57;"></div>
+                    <div class="terminal-dot" style="background: #febc2e;"></div>
+                    <div class="terminal-dot" style="background: #28c840;"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="code-line" style="font-family: var(--font-mono); font-size: var(--body-size); color: var(--text-secondary); line-height: 1.8;">
+                        {<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">"name"</span>: <span style="color: var(--text-primary);">"my-marketplace"</span>,<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">"owner"</span>: <span style="color: var(--text-primary);">"gymcoding"</span>,<br>
+                        &nbsp;&nbsp;<span style="color: var(--accent);">"plugins"</span>: [<span style="color: var(--text-primary);">"web-slides"</span>]<br>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <p class="bottom-note reveal">GitHub에 올리면 끝</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 6: 다른 프로젝트에서 설치
+         ============================================ -->
+    <section class="slide slide-install">
+        <span class="slide-number">06 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">설치</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                다른 프로젝트에서 <span class="accent">바로</span> 설치
+            </h2>
+
+            <div class="terminal-window reveal">
+                <div class="terminal-bar">
+                    <div class="terminal-dot" style="background: #ff5f57;"></div>
+                    <div class="terminal-dot" style="background: #febc2e;"></div>
+                    <div class="terminal-dot" style="background: #28c840;"></div>
+                </div>
+                <div class="terminal-body">
+                    <div class="prompt-line">
+                        <span class="prompt">&gt; </span>
+                        <span class="cmd">/plugin marketplace add [GitHub URL]</span>
+                    </div>
+                    <br>
+                    <div class="prompt-line">
+                        <span class="prompt">&gt; </span>
+                        <span class="cmd">/plugin install web-slides</span>
+                    </div>
+                    <br>
+                    <div class="prompt-line">
+                        <span class="success">&#10003; 설치 완료</span>
+                        <span class="cursor-blink"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 7: 플러그인 장점 정리
+         ============================================ -->
+    <section class="slide slide-benefits">
+        <span class="slide-number">07 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">플러그인의 장점</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                한 번 만들면 <span class="accent">어디서든</span>
+            </h2>
+
+            <div class="benefit-list">
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon">&#9854;</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">재사용</div>
+                        <div class="benefit-desc">어디서든 설치해서 사용</div>
+                    </div>
+                </div>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon">&#8635;</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">자동 업데이트</div>
+                        <div class="benefit-desc">GitHub push &rarr; 자동 반영</div>
+                    </div>
+                </div>
+                <div class="benefit-card reveal">
+                    <div class="benefit-icon">&#9881;</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">팀 공유</div>
+                        <div class="benefit-desc">링크 하나로 팀 전체 배포</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 8: 영상 요약
+         ============================================ -->
+    <section class="slide slide-summary">
+        <span class="slide-number">08 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">정리</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                오늘 한 것들
+            </h2>
+
+            <div class="tag-row reveal">
+                <span class="tag-pill">skill-creator</span>
+                <span class="tag-pill">병렬 에이전트</span>
+                <span class="tag-pill">플러그인</span>
+                <span class="tag-pill">마켓플레이스</span>
+            </div>
+
+            <p class="summary-text reveal">
+                skill-creator로 스킬을 만들고, 병렬 에이전트로 빠르게 작업하고,<br>
+                플러그인과 마켓플레이스로 공유까지 완성했습니다.
+            </p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 9: 수강후기 기반 강의 홍보
+         ============================================ -->
+    <section class="slide slide-promo">
+        <span class="slide-number">09 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">더 배우고 싶다면</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                클로드 코드 <span class="accent">완벽 마스터</span>
+            </h2>
+
+            <div class="review-cards">
+                <div class="review-card reveal">
+                    <div class="review-text">"실무에서 바로 쓸 수 있어서 좋았습니다. 강의 구성이 체계적이에요."</div>
+                    <div class="review-author">&#9733; &#9733; &#9733; &#9733; &#9733; &mdash; 수강생 A</div>
+                </div>
+                <div class="review-card reveal">
+                    <div class="review-text">"Claude Code 활용법을 이렇게 깊이 다룬 강의는 처음입니다."</div>
+                    <div class="review-author">&#9733; &#9733; &#9733; &#9733; &#9733; &mdash; 수강생 B</div>
+                </div>
+                <div class="review-card reveal">
+                    <div class="review-text">"스킬과 플러그인 파트만으로도 강의값 충분히 합니다."</div>
+                    <div class="review-author">&#9733; &#9733; &#9733; &#9733; &#9733; &mdash; 수강생 C</div>
+                </div>
+            </div>
+
+            <p class="promo-note reveal">설명란에 강의 링크 남겨놨습니다</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+         SLIDE 10: 마무리 CTA
+         ============================================ -->
+    <section class="slide slide-cta">
+        <span class="slide-number">10 / 10</span>
+        <div class="slide-content">
+            <div class="terminal-badge reveal">감사합니다</div>
+
+            <h2 class="section-title reveal" style="font-size: var(--h2-size);">
+                도움이 되셨다면
+            </h2>
+
+            <div class="cta-grid">
+                <div class="cta-card reveal">
+                    <div class="cta-icon">&#128077;</div>
+                    <div class="cta-label">좋아요</div>
+                </div>
+                <div class="cta-card reveal">
+                    <div class="cta-icon">&#128172;</div>
+                    <div class="cta-label">댓글</div>
+                </div>
+            </div>
+
+            <p class="cta-msg reveal">궁금한 점은 댓글로 남겨주세요</p>
+        </div>
+    </section>
+
+    <!-- ============================================
+       JAVASCRIPT — Navigation & Animations
+       ============================================ -->
+    <script>
+        class SlidePresentation {
+            constructor() {
+                this.slides = document.querySelectorAll('.slide');
+                this.progressBar = document.querySelector('.progress-bar');
+                this.navContainer = document.querySelector('.nav-dots');
+                this.currentSlide = 0;
+
+                this.createNavDots();
+                this.setupIntersectionObserver();
+                this.setupKeyboardNav();
+                this.setupScrollTracking();
+            }
+
+            createNavDots() {
+                this.slides.forEach((_, i) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('nav-dot');
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        this.slides[i].scrollIntoView({ behavior: 'smooth' });
+                    });
+                    this.navContainer.appendChild(dot);
+                });
+                this.navDots = document.querySelectorAll('.nav-dot');
+            }
+
+            setupIntersectionObserver() {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            const index = Array.from(this.slides).indexOf(entry.target);
+                            this.currentSlide = index;
+                            this.updateNav(index);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                this.slides.forEach(slide => observer.observe(slide));
+            }
+
+            setupKeyboardNav() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide + 1);
+                    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.goToSlide(this.currentSlide - 1);
+                    } else if (e.key === 'f' || e.key === 'F') {
+                        this.toggleFullscreen();
+                    }
+                });
+            }
+
+            setupScrollTracking() {
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.scrollY;
+                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                    this.progressBar.style.width = progress + '%';
+                });
+            }
+
+            goToSlide(index) {
+                if (index >= 0 && index < this.slides.length) {
+                    this.slides[index].scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+
+            toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+
+            updateNav(index) {
+                this.navDots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlidePresentation();
+        });
+    </script>
+</body>
+</html>

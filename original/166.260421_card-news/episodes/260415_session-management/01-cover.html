@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>01 Cover · 1M 컨텍스트 세션 관리</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .cover-hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+  .cover-mark {
+    position: absolute;
+    top: -20px;
+    right: -30px;
+    font-size: 380px;
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.08em;
+    color: rgba(255, 107, 53, 0.08);
+    font-feature-settings: "tnum";
+    user-select: none;
+  }
+  .cover-badge {
+    align-self: flex-start;
+    margin-bottom: 48px;
+  }
+  .cover-title {
+    font-size: 100px;
+    font-weight: 800;
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+  }
+  .cover-title .line-2 { display: block; }
+  .cover-sub {
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-top: 36px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  .cover-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 56px;
+    font-size: 22px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.01em;
+  }
+  .cover-meta code {
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    padding: 6px 12px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    color: #D4D4D4;
+    font-size: 20px;
+  }
+  .cover-meta .dot { color: rgba(255,255,255,0.2); }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#claude-code #session</div>
+  </header>
+
+  <div class="page-number">01</div>
+
+  <section class="cover-hero">
+    <div class="cover-mark">1M</div>
+    <div class="cover-badge"><span class="badge">CLAUDE CODE 실전</span></div>
+    <h1 class="cover-title">
+      1M 컨텍스트,
+      <span class="line-2">제대로 <span class="accent">쓰는 법</span></span>
+    </h1>
+    <p class="cover-sub">2026.04.15 Anthropic 공식 가이드 · 세션 관리 5가지</p>
+
+    <div class="cover-meta">
+      <code>/rewind</code>
+      <span class="dot">·</span>
+      <code>/clear</code>
+      <span class="dot">·</span>
+      <code>/compact</code>
+      <span class="dot">·</span>
+      <span>Subagents</span>
+      <span class="dot">·</span>
+      <span>Continue</span>
+    </div>
+  </section>
+</div>
+</body>
+</html>

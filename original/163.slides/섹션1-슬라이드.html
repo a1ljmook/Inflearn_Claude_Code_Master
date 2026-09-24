@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>섹션 1 — 전략 1: .claude/rules/ 상황별 업무 지침서</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #FFFFFF;
+            --text-sub: #D5D5D5;
+            --text-dim: #AAAAAA;
+            --accent: #FFD100;
+            --accent-dim: rgba(255, 209, 0, 0.12);
+            --surface: #161616;
+            --border: #333333;
+            --font-main: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --title: clamp(3.2rem, 10vw, 8rem);
+            --h2: clamp(2.5rem, 6.5vw, 5rem);
+            --h3: clamp(1.4rem, 3vw, 2rem);
+            --body: clamp(1.25rem, 2.5vw, 1.7rem);
+            --small: clamp(1.15rem, 2vw, 1.5rem);
+            --label: clamp(1.3rem, 2.5vw, 1.7rem);
+            --mono: clamp(1.15rem, 2vw, 1.5rem);
+            --pad: clamp(2rem, 5vw, 6rem);
+            --gap: clamp(1.2rem, 3vw, 3rem);
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; height: 100%; overflow-x: hidden; }
+        body { font-family: var(--font-main); background: var(--bg); color: var(--text); height: 100%; overflow-x: hidden; -webkit-font-smoothing: antialiased; font-weight: 500; }
+
+        .slide {
+            width: 100vw; height: 100vh; height: 100dvh;
+            overflow: hidden; scroll-snap-align: start;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: var(--pad); position: relative; text-align: center;
+            contain: layout style paint;
+            outline: none;
+        }
+        .slide-content {
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            max-height: 100%; overflow: hidden; max-width: 1100px; width: 100%;
+        }
+
+        .mega { font-size: var(--title); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
+        h2 { font-size: var(--h2); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; }
+        h3 { font-size: var(--h3); font-weight: 700; line-height: 1.25; }
+        p, li { font-size: var(--body); line-height: 1.65; font-weight: 400; }
+        .accent { color: var(--accent); }
+        .sub { color: var(--text-sub); }
+        .dim { color: var(--text-dim); }
+        .label { font-family: var(--font-mono); font-size: var(--label); letter-spacing: 0.03em; color: var(--accent); text-transform: uppercase; font-weight: 800; }
+
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: clamp(1.2rem, 2.5vw, 2rem); text-align: center; }
+        .card-hot { border-top: 3px solid var(--accent); }
+        .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(0.8rem, 2vw, 1.5rem); width: 100%; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: clamp(0.8rem, 2vw, 1.5rem); width: 100%; }
+        .tag { display: inline-block; font-family: var(--font-mono); font-size: var(--small); padding: 0.2em 0.7em; background: var(--accent-dim); color: var(--accent); border-radius: 6px; font-weight: 800; }
+
+        .code { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: clamp(1rem, 2vw, 1.6rem); font-family: var(--font-mono); font-size: var(--mono); line-height: 1.75; color: #D4D4D8; text-align: left; width: 100%; max-width: 750px; }
+        .code .c { color: #B0B0B0; }
+        .code .k { color: var(--accent); }
+        .code .f { color: #60A5FA; }
+        .code .s { color: #A5D6A7; }
+        .code .err { color: #FF6B6B; }
+
+        .num-big { font-size: clamp(3.5rem, 10vw, 8rem); font-weight: 900; line-height: 1; letter-spacing: -0.03em; }
+        .num-label { font-size: var(--body); color: var(--text-sub); margin-top: 0.6em; font-weight: 500; }
+        .comparison { display: flex; justify-content: center; align-items: center; gap: clamp(2rem, 5vw, 4rem); width: 100%; text-align: center; }
+        .arrow { font-size: clamp(2rem, 4vw, 3rem); color: var(--accent); font-weight: 900; }
+
+        .quote-bar { border-left: 4px solid var(--accent); padding-left: clamp(1rem, 2.5vw, 2rem); text-align: left; max-width: 1100px; }
+        .quote-bar p { font-size: clamp(1.8rem, 3.8vw, 3.0rem); font-weight: 700; line-height: 1.45; }
+        .quote-bar .attr { font-size: var(--body); color: var(--text-sub); margin-top: var(--gap); font-weight: 400; }
+
+        /* Split 비교 */
+        .split-table { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2.5vw, 2rem); width: 100%; }
+        .split-col { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: clamp(1rem, 2vw, 1.8rem); text-align: left; }
+        .split-col h3 { margin-bottom: 0.8em; }
+        .split-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.4em 0; border-bottom: 1px solid var(--border); }
+        .split-row:last-child { border-bottom: none; }
+        .split-row .name { font-size: var(--small); font-weight: 600; }
+        .split-row .val { font-family: var(--font-mono); font-size: var(--small); color: var(--accent); font-weight: 700; }
+        .split-row .val-dim { font-family: var(--font-mono); font-size: var(--small); color: var(--text-dim); font-weight: 700; }
+
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); will-change: transform, opacity; }
+        .slide.visible .reveal { opacity: 1; transform: translateY(0); will-change: auto; }
+        .d1 { transition-delay: 0.06s; } .d2 { transition-delay: 0.14s; } .d3 { transition-delay: 0.22s; } .d4 { transition-delay: 0.30s; }
+
+        @media (max-height: 700px) {
+            :root { --title: clamp(2.5rem, 8vw, 5rem); --h2: clamp(2rem, 5.5vw, 3.5rem); --pad: clamp(1.5rem, 4vw, 3rem); --gap: clamp(0.8rem, 2vw, 1.5rem); }
+        }
+        @media (max-height: 600px) {
+            :root { --title: clamp(2rem, 7vw, 3.5rem); --h2: clamp(1.6rem, 4.5vw, 2.5rem); --pad: clamp(1rem, 3vw, 2rem); --gap: clamp(0.5rem, 1.2vw, 0.8rem); }
+        }
+        @media (max-height: 500px) {
+            :root { --title: clamp(1.5rem, 5vw, 2.5rem); --h2: clamp(1.2rem, 3.5vw, 2rem); --pad: clamp(0.5rem, 2vw, 1.2rem); --gap: clamp(0.4rem, 1vw, 0.6rem); }
+        }
+        @media (max-width: 768px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .comparison { flex-direction: column; }
+            .arrow { transform: rotate(90deg); }
+            .split-table { grid-template-columns: 1fr; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+        }
+
+        /* aria-live 알림 영역 */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="slide-announce" class="sr-only" aria-live="polite"></div>
+
+    <!-- 1. 섹션 타이틀 -->
+    <section class="slide" id="s1" tabindex="-1" role="region" aria-label="슬라이드 1: 전략 1 타이틀">
+        <div class="slide-content">
+            <p class="label reveal d1">전략 1</p>
+            <h1 class="mega reveal d2" style="margin-top: 0.3em;">
+                .claude/rules/<br><span class="accent">상황별 업무 지침서</span>
+            </h1>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">
+                특정 파일 작업할 때만 규칙 자동 로드
+            </p>
+        </div>
+    </section>
+
+    <!-- 2. 맥도날드 비유 -->
+    <section class="slide" id="s2" tabindex="-1" role="region" aria-label="슬라이드 2: 맥도날드 비유">
+        <div class="slide-content">
+            <h2 class="reveal d1">맥도날드 <span class="accent">매뉴얼</span></h2>
+            <div class="grid-3 reveal d2" style="margin-top: var(--gap);">
+                <div class="card card-hot">
+                    <h3>주방 직원</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">주방 매뉴얼</p>
+                </div>
+                <div class="card card-hot">
+                    <h3>카운터 직원</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">카운터 매뉴얼</p>
+                </div>
+                <div class="card card-hot">
+                    <h3>배달 직원</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">배달 매뉴얼</p>
+                </div>
+            </div>
+            <p class="reveal d3" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">
+                각자 <span class="accent">자기 매뉴얼</span>만 본다
+            </p>
+        </div>
+    </section>
+
+    <!-- 3. .claude/rules/ = 직무별 매뉴얼 -->
+    <section class="slide" id="s3" tabindex="-1" role="region" aria-label="슬라이드 3: .claude/rules 개념">
+        <div class="slide-content">
+            <p class="label reveal d1">.claude/rules/</p>
+            <h1 class="mega reveal d2" style="margin-top: 0.3em;">
+                <span class="accent">주제별 파일</span>로<br>쪼개기
+            </h1>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">
+                CLAUDE.md 하나에 다 넣는 대신
+            </p>
+        </div>
+    </section>
+
+    <!-- 4. 조건 설정 개념 -->
+    <section class="slide" id="s4" tabindex="-1" role="region" aria-label="슬라이드 4: 조건 설정 개념">
+        <div class="slide-content">
+            <h2 class="reveal d1">파일 맨 위에<br><span class="accent">조건 설정</span></h2>
+            <div class="quote-bar reveal d2" style="margin-top: var(--gap);">
+                <p style="font-size: var(--h3);">"이 규칙은 <span class="accent">이런 파일</span>에만 적용해줘"<br>라고 표지에 써놓는 것</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 폴더 구조 시각화 -->
+    <section class="slide" id="s5" tabindex="-1" role="region" aria-label="슬라이드 5: 폴더 구조 시각화">
+        <div class="slide-content">
+            <h2 class="reveal d1">조건부 <span class="accent">자동 로딩</span></h2>
+            <div class="code reveal d2" style="margin-top: var(--gap);">
+                <span class="c">.claude/rules/</span><br>
+                <span class="c">├──</span> <span class="f">code-style.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">← 조건 없음 → 항상 로드</span><br>
+                <span class="c">├──</span> <span class="f">testing.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← 테스트 파일만</span><br>
+                <span class="c">├──</span> <span class="c">frontend/</span><br>
+                <span class="c">│&nbsp;&nbsp; └──</span> <span class="f">react.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← 화면 파일만</span><br>
+                <span class="c">└──</span> <span class="c">backend/</span><br>
+                <span class="c">&nbsp;&nbsp;&nbsp; └──</span> <span class="f">api-design.md</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← API 파일만</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 동작 원리 요약 -->
+    <section class="slide" id="s6" tabindex="-1" role="region" aria-label="슬라이드 6: 동작 원리 요약">
+        <div class="slide-content">
+            <h2 class="reveal d1"><span class="accent">필요한 규칙</span>만 로드</h2>
+            <div class="grid-2 reveal d2" style="margin-top: var(--gap);">
+                <div class="card card-hot">
+                    <span class="tag">테스트 파일 작업</span>
+                    <p style="font-size: var(--small); margin-top: 0.8em;">testing.md 로드</p>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag">API 파일 작업</span>
+                    <p style="font-size: var(--small); margin-top: 0.8em;">api-design.md 로드</p>
+                </div>
+            </div>
+            <p class="reveal d3" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">
+                불필요한 규칙은 <span class="accent">아예 로드되지 않는다</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- 7. 문법 — 올바른 사용법 -->
+    <section class="slide" id="s7" tabindex="-1" role="region" aria-label="슬라이드 7: 올바른 문법">
+        <div class="slide-content">
+            <p class="label reveal d1">문법</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">이렇게 <span class="accent">쓰세요</span></h2>
+            <div class="code reveal d3" style="margin-top: var(--gap);">
+                <span class="c">---</span><br>
+                <span class="k">globs:</span> <span class="s">src/api/**/*.ts, src/routes/**/*.ts</span><br>
+                <span class="c">---</span><br>
+                <br>
+                <span class="c"># API 개발 규칙</span><br>
+                <span class="c">- 모든 화면에서 입력값 확인 필수</span><br>
+                <span class="c">- 에러가 나면 정해진 형식으로 응답</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. 프론트매터 설명 -->
+    <section class="slide" id="s8" tabindex="-1" role="region" aria-label="슬라이드 8: 프론트매터 설명">
+        <div class="slide-content">
+            <h2 class="reveal d1"><span class="accent">프론트매터</span>란?</h2>
+            <div class="quote-bar reveal d2" style="margin-top: var(--gap);">
+                <p style="font-size: var(--h3);">마크다운 파일 맨 앞에 <span class="accent">---</span> 로 감싼<br>설정 영역</p>
+            </div>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--body);">
+                <span class="accent" style="font-family: var(--font-mono);">globs:</span> 뒤에 적용할 파일 패턴을 써주면 끝
+            </p>
+        </div>
+    </section>
+
+    <!-- 9. 주의사항 — 올바른 형식 vs 잘못된 형식 -->
+    <section class="slide" id="s9" tabindex="-1" role="region" aria-label="슬라이드 9: 주의사항">
+        <div class="slide-content">
+            <h2 class="reveal d1">주의할 <span class="accent">포인트</span></h2>
+            <div class="split-table reveal d2" style="margin-top: var(--gap);">
+                <div class="split-col" style="border-top: 3px solid var(--accent);">
+                    <h3 style="color: var(--accent);">정상 동작</h3>
+                    <div class="split-row">
+                        <span class="name" style="font-family: var(--font-mono);">globs:</span>
+                        <span class="val">쉼표로 나열</span>
+                    </div>
+                    <div style="padding: 0.6em 0;">
+                        <code style="font-family: var(--font-mono); font-size: var(--small); color: var(--accent);">globs: **/*.ts, **/*.tsx</code>
+                    </div>
+                </div>
+                <div class="split-col">
+                    <h3 class="sub">오류 보고</h3>
+                    <div class="split-row">
+                        <span class="name" style="font-family: var(--font-mono);">paths:</span>
+                        <span class="val-dim">YAML 배열</span>
+                    </div>
+                    <div style="padding: 0.6em 0;">
+                        <span style="font-family: var(--font-mono); font-size: var(--small); color: var(--text-dim);">공식 문서에 있지만 버그</span>
+                    </div>
+                </div>
+            </div>
+            <p class="reveal d3 dim" style="margin-top: var(--gap); font-size: var(--small);">
+                출처: Anthropic 공식 문서 — Rules files
+            </p>
+        </div>
+    </section>
+
+    <!-- 10. 팁 — 새 파일 생성 시 -->
+    <section class="slide" id="s10" tabindex="-1" role="region" aria-label="슬라이드 10: 새 파일 생성 팁">
+        <div class="slide-content">
+            <span class="tag reveal d1">TIP</span>
+            <h2 class="reveal d2" style="margin-top: 0.5em;">새 파일 생성 시<br><span class="accent">rules 미로드</span></h2>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--body);">
+                아직 파일이 없으니 조건에 매칭이 안 된다
+            </p>
+            <p class="reveal d4" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">
+                파일 생성 규칙은 <span class="accent">CLAUDE.md에도</span> 적어두기
+            </p>
+        </div>
+    </section>
+
+    <!-- 11. trigger.dev 소개 -->
+    <section class="slide" id="s11" tabindex="-1" role="region" aria-label="슬라이드 11: trigger.dev 소개">
+        <div class="slide-content">
+            <p class="label reveal d1">실사례 1</p>
+            <h1 class="mega reveal d2" style="margin-top: 0.3em;">
+                trigger.dev
+            </h1>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">
+                반복 작업 자동 실행 플랫폼 · <span class="accent">14K</span> Stars
+            </p>
+        </div>
+    </section>
+
+    <!-- 12. trigger.dev 폴더 구조 -->
+    <section class="slide" id="s12" tabindex="-1" role="region" aria-label="슬라이드 12: trigger.dev 폴더 구조">
+        <div class="slide-content">
+            <h2 class="reveal d1">trigger.dev <span class="accent">rules</span> 구조</h2>
+            <div class="code reveal d2" style="margin-top: var(--gap);">
+                <span class="c">trigger.dev/.claude/rules/</span><br>
+                <span class="c">├──</span> <span class="f">database-safety.md</span> &nbsp;&nbsp;<span class="c">← DB 관련 파일</span><br>
+                <span class="c">├──</span> <span class="f">docs-writing.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← 문서 파일</span><br>
+                <span class="c">├──</span> <span class="f">legacy-v3-code.md</span> &nbsp;&nbsp;&nbsp;<span class="c">← 옛날 버전 코드</span><br>
+                <span class="c">├──</span> <span class="f">sdk-packages.md</span> &nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← 개발 도구 모음</span><br>
+                <span class="c">└──</span> <span class="f">server-apps.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← 서버 관련 파일</span>
+            </div>
+            <p class="reveal d3 dim" style="margin-top: var(--gap); font-size: var(--small);">
+                출처: trigger.dev GitHub 저장소
+            </p>
+        </div>
+    </section>
+
+    <!-- 13. trigger.dev 역할 상세 -->
+    <section class="slide" id="s13" tabindex="-1" role="region" aria-label="슬라이드 13: trigger.dev 규칙 역할">
+        <div class="slide-content">
+            <h2 class="reveal d1">각 규칙의 <span class="accent">역할</span></h2>
+            <div class="grid-3 reveal d2" style="margin-top: var(--gap);">
+                <div class="card card-hot">
+                    <span class="tag">database-safety</span>
+                    <p style="font-size: var(--small); margin-top: 0.8em;">DB 파일 건드릴 때<br><span class="accent" style="font-weight: 700;">안전 규칙 자동 로드</span></p>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag">legacy-v3-code</span>
+                    <p style="font-size: var(--small); margin-top: 0.8em;">옛날 코드 건드릴 때<br><span class="accent" style="font-weight: 700;">"절대 수정 금지"</span></p>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag">sdk-packages</span>
+                    <p style="font-size: var(--small); margin-top: 0.8em;">배포 코드 건드릴 때<br><span class="accent" style="font-weight: 700;">변경 기록 필수</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. 핵심 패턴 — 안전장치 -->
+    <section class="slide" id="s14" tabindex="-1" role="region" aria-label="슬라이드 14: 안전장치 패턴">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"위험한 작업에 대한<br><span class="accent">안전장치</span>를 자동으로 거는 것"</p>
+                <p class="attr">DB 삭제 실수, 건드리면 안 되는 코드 수정을 방지</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. CockroachDB 소개 -->
+    <section class="slide" id="s15" tabindex="-1" role="region" aria-label="슬라이드 15: CockroachDB 소개">
+        <div class="slide-content">
+            <p class="label reveal d1">실사례 2</p>
+            <h1 class="mega reveal d2" style="margin-top: 0.3em;">
+                CockroachDB
+            </h1>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">
+                대용량 분산 데이터베이스 · <span class="accent">32K</span> Stars
+            </p>
+        </div>
+    </section>
+
+    <!-- 16. CockroachDB 개인정보 보호 규칙 -->
+    <section class="slide" id="s16" tabindex="-1" role="region" aria-label="슬라이드 16: CockroachDB 개인정보 보호 규칙">
+        <div class="slide-content">
+            <h2 class="reveal d1"><span class="accent">개인정보 보호</span> 자동 적용</h2>
+            <div class="comparison reveal d2" style="margin-top: var(--gap);">
+                <div>
+                    <div class="code" style="max-width: 100%; text-align: center; padding: 1em 1.5em;">
+                        <span style="color: #D4D4D8;">user: </span><span class="err">john@email.com</span>
+                    </div>
+                    <p class="num-label">원본 — 개인정보 노출</p>
+                </div>
+                <div class="arrow">→</div>
+                <div>
+                    <div class="code" style="max-width: 100%; text-align: center; padding: 1em 1.5em;">
+                        <span style="color: #D4D4D8;">user: </span><span class="k">&#x2039;x&#x203A;</span>
+                    </div>
+                    <p class="num-label">보호 — 가려진 상태</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 17. CockroachDB 핵심 -->
+    <section class="slide" id="s17" tabindex="-1" role="region" aria-label="슬라이드 17: CockroachDB 핵심 포인트">
+        <div class="slide-content">
+            <h2 class="reveal d1">Go 파일 건드릴 <span class="accent">때마다</span></h2>
+            <p class="reveal d2" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">
+                개인정보 보호 규칙이 <span class="accent">자동으로</span> 뜬다
+            </p>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--body);">
+                로그에 개인정보가 노출되는 실수를 원천 차단
+            </p>
+            <p class="reveal d4 dim" style="margin-top: var(--gap); font-size: var(--small);">
+                출처: CockroachDB GitHub 저장소
+            </p>
+        </div>
+    </section>
+
+    <!-- 18. 두 사례의 공통 패턴 -->
+    <section class="slide" id="s18" tabindex="-1" role="region" aria-label="슬라이드 18: 공통 핵심 패턴">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"<span class="accent">절대 놓치면 안 되는 규칙</span>을<br>해당 파일을 건드릴 때만<br>자동으로 띄워주는 것"</p>
+                <p class="attr">.claude/rules/ 조건부 규칙의 핵심 패턴</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 19. 쇼핑몰 실전 구성 타이틀 -->
+    <section class="slide" id="s19" tabindex="-1" role="region" aria-label="슬라이드 19: 실전 구성 패턴 타이틀">
+        <div class="slide-content">
+            <p class="label reveal d1">실전 구성</p>
+            <h1 class="mega reveal d2" style="margin-top: 0.3em;">
+                쇼핑몰<br><span class="accent">프로젝트</span>
+            </h1>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">
+                상품 목록 · 결제 API · 테스트 코드
+            </p>
+        </div>
+    </section>
+
+    <!-- 20. 쇼핑몰 폴더 구조 -->
+    <section class="slide" id="s20" tabindex="-1" role="region" aria-label="슬라이드 20: 쇼핑몰 rules 구조">
+        <div class="slide-content">
+            <h2 class="reveal d1">쇼핑몰 <span class="accent">rules</span> 구성</h2>
+            <div class="code reveal d2" style="margin-top: var(--gap);">
+                <span class="c">.claude/rules/</span><br>
+                <span class="c">├──</span> <span class="f">code-style.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="k">← 항상 로드</span><br>
+                <span class="c">├──</span> <span class="f">react-components.md</span> &nbsp;&nbsp;&nbsp;<span class="c">← components/**</span><br>
+                <span class="c">├──</span> <span class="f">api-design.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← api/**</span><br>
+                <span class="c">├──</span> <span class="f">database.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← db/**</span><br>
+                <span class="c">└──</span> <span class="f">testing.md</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="c">← *.test.ts</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 21. 쇼핑몰 동작 예시 -->
+    <section class="slide" id="s21" tabindex="-1" role="region" aria-label="슬라이드 21: 쇼핑몰 동작 예시">
+        <div class="slide-content">
+            <h2 class="reveal d1">작업별 <span class="accent">자동 선택</span></h2>
+            <div class="grid-2 reveal d2" style="margin-top: var(--gap);">
+                <div class="card card-hot">
+                    <span class="tag">상품 목록 화면</span>
+                    <p style="font-size: var(--small); margin-top: 0.8em;">
+                        <span class="accent" style="font-weight: 700;">code-style</span> + <span class="accent" style="font-weight: 700;">react-components</span>
+                    </p>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.3em;">만 로드</p>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag">결제 API</span>
+                    <p style="font-size: var(--small); margin-top: 0.8em;">
+                        <span class="accent" style="font-weight: 700;">code-style</span> + <span class="accent" style="font-weight: 700;">api-design</span>
+                    </p>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.3em;">만 로드</p>
+                </div>
+            </div>
+            <p class="reveal d3" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">
+                각자 <span class="accent">자기 업무 매뉴얼</span>만 펼쳐본다
+            </p>
+        </div>
+    </section>
+
+    <!-- 22. 전략 1 정리 -->
+    <section class="slide" id="s22" tabindex="-1" role="region" aria-label="슬라이드 22: 전략 1 정리">
+        <div class="slide-content">
+            <p class="label reveal d1">전략 1 정리</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">프론트매터 <span class="accent">조건</span>으로<br>자동 로드</h2>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--body);">
+                단순히 쪼개는 게 아니라<br><span style="color: var(--text); font-weight: 700;">불필요한 규칙이 Claude의 주의를 뺏지 않게</span> 하는 것
+            </p>
+            <p class="reveal d4" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">
+                중요한 규칙에 <span class="accent">온전히 집중</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- 23. 오늘 당장 해볼 것 -->
+    <section class="slide" id="s23" tabindex="-1" role="region" aria-label="슬라이드 23: 오늘 당장 해볼 것">
+        <div class="slide-content">
+            <span class="tag reveal d1">오늘 당장 해볼 것</span>
+            <h2 class="reveal d2" style="margin-top: 0.5em;">CLAUDE.md에서<br><span class="accent">파일 종류별 규칙</span> 찾기</h2>
+            <div class="code reveal d3" style="margin-top: var(--gap); text-align: center;">
+                <span class="c">테스트 규칙, CSS 규칙, API 규칙...</span><br>
+                <span class="c">섞여 있다면?</span><br><br>
+                <span class="k">.claude/rules/</span> <span class="s">로 분리</span><br>
+                <span class="k">globs:</span> <span class="s">조건 설정</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 24. 2부 예고 -->
+    <section class="slide" id="s24" tabindex="-1" role="region" aria-label="슬라이드 24: 2부 예고">
+        <div class="slide-content">
+            <p class="label reveal d1">2부 예고</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">나머지 <span class="accent">2가지</span> 전략</h2>
+            <div class="grid-2 reveal d3" style="margin-top: var(--gap);">
+                <div class="card card-hot">
+                    <span class="tag">전략 2</span>
+                    <h3 style="margin-top: 0.5em;">하위 CLAUDE.md</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">폴더별 매뉴얼</p>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag">전략 3</span>
+                    <h3 style="margin-top: 0.5em;">상위 CLAUDE.md</h3>
+                    <p class="sub" style="font-size: var(--small); margin-top: 0.5em;">회사→팀→프로젝트 계층</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 25. 감사합니다 -->
+    <section class="slide" id="s25" tabindex="-1" role="region" aria-label="슬라이드 25: 감사합니다">
+        <div class="slide-content">
+            <h1 class="mega reveal d1">감사합니다</h1>
+            <p class="reveal d2 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 500;">
+                <span class="accent">좋아요</span> · <span class="accent">구독</span> · <span class="accent">알림 설정</span>
+            </p>
+            <p class="reveal d3" style="margin-top: var(--gap); font-size: var(--body); font-weight: 700;">
+                2부에서 나머지 전략을 다룹니다
+            </p>
+        </div>
+    </section>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const announce = document.getElementById('slide-announce');
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.35 });
+        slides.forEach(s => obs.observe(s));
+        if (slides[0]) slides[0].classList.add('visible');
+
+        let cur = 0, busy = false, touchY = 0;
+        const go = i => {
+            if (i < 0 || i >= slides.length || busy) return;
+            busy = true; cur = i;
+            slides[i].scrollIntoView({ behavior: 'smooth' });
+            slides[i].focus({ preventScroll: true });
+            announce.textContent = slides[i].getAttribute('aria-label') || '';
+            setTimeout(() => busy = false, 600);
+        };
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'f' || e.key === 'F') {
+                if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); }
+                return;
+            }
+            if (['ArrowDown','ArrowRight',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(cur+1); }
+            else if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key)) { e.preventDefault(); go(cur-1); }
+        });
+
+        document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', e => { const d = touchY - e.changedTouches[0].clientY; if (Math.abs(d) > 50) go(d > 0 ? cur+1 : cur-1); }, { passive: true });
+
+        let lastW = 0;
+        document.addEventListener('wheel', e => {
+            const n = Date.now(); if (n - lastW < 800 || Math.abs(e.deltaY) < 30) return;
+            lastW = n; go(e.deltaY > 0 ? cur+1 : cur-1);
+        }, { passive: true });
+    </script>
+</body>
+</html>

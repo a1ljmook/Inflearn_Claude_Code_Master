@@ -1,0 +1,36 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#claude-code #session"
+  - generic [ref=e8]: "05"
+  - generic [ref=e9]:
+    - generic [ref=e10]: TIP 03
+    - heading "실수는 수정 말고 /rewind 하세요" [level=2] [ref=e11]:
+      - text: 실수는 수정 말고
+      - text: /rewind 하세요
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: BAD
+        - generic [ref=e15]:
+          - text: "\"그거 말고 B 방식으로"
+          - text: 다시 해줘"
+          - text: 실패한 시도가
+          - text: 컨텍스트에 그대로
+      - generic [ref=e16]:
+        - generic [ref=e17]: GOOD
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]: 단축키
+            - code [ref=e22]: Esc Esc
+          - generic [ref=e23]:
+            - generic [ref=e24]: 동작
+            - generic [ref=e25]: 이전 메시지로 점프
+          - generic [ref=e26]:
+            - generic [ref=e27]: 효과
+            - generic [ref=e28]: 실패 경로만 삭제
+          - generic [ref=e29]:
+            - generic [ref=e30]: 유지
+            - generic [ref=e31]: 읽어둔 파일은 남음
+    - generic [ref=e32]: 실패한 경로는 지우고, 유용한 정보만 남기세요

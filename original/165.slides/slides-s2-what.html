@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>섹션 2: What — 하네스 엔지니어링이 정확히 뭔데?</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #FFFFFF;
+            --text-sub: #D5D5D5;
+            --text-dim: #AAAAAA;
+            --accent: #FFD100;
+            --accent-dim: rgba(255, 209, 0, 0.12);
+            --surface: #161616;
+            --border: #333333;
+            --font-main: 'Pretendard Variable', 'Pretendard', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --title: clamp(3.2rem, 10vw, 8rem);
+            --h2: clamp(2.5rem, 6.5vw, 5rem);
+            --h3: clamp(1.4rem, 3vw, 3rem);
+            --body: clamp(1.25rem, 2.5vw, 2.2rem);
+            --small: clamp(1.15rem, 2vw, 2rem);
+            --label: clamp(1.3rem, 2.5vw, 1.7rem);
+            --mono: clamp(1.15rem, 2vw, 1.8rem);
+            --pad: clamp(2rem, 5vw, 6rem);
+            --gap: clamp(1.2rem, 3vw, 3rem);
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; height: 100%; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; }
+        html::-webkit-scrollbar { display: none; }
+        *, *:focus, *:focus-visible, *:focus-within { outline: 0 !important; box-shadow: none !important; }
+        body { font-family: var(--font-main); background: var(--bg); color: var(--text); height: 100%; overflow-x: hidden; -webkit-font-smoothing: antialiased; font-weight: 500; }
+
+        .slide {
+            width: 100vw; height: 100vh; height: 100dvh;
+            overflow: hidden; scroll-snap-align: start;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: var(--pad); position: relative; text-align: center;
+            contain: layout style paint;
+        }
+        .slide-content {
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            max-height: 100%; overflow: hidden; max-width: 1100px; width: 100%;
+        }
+
+        .mega { font-size: var(--title); font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; }
+        h2 { font-size: var(--h2); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; }
+        h3 { font-size: var(--h3); font-weight: 700; line-height: 1.25; }
+        p, li { font-size: var(--body); line-height: 1.65; font-weight: 400; }
+        .accent { color: var(--accent); }
+        .sub { color: var(--text-sub); }
+        .label { font-family: var(--font-mono); font-size: var(--label); letter-spacing: 0.03em; color: var(--accent); text-transform: uppercase; font-weight: 800; }
+
+        .comparison { display: flex; justify-content: center; align-items: center; gap: clamp(2rem, 5vw, 4rem); width: 100%; text-align: center; }
+        .arrow { font-size: clamp(2rem, 4vw, 3rem); color: var(--accent); font-weight: 900; }
+
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: clamp(1.2rem, 2.5vw, 2rem); text-align: center; }
+        .card-hot { border-top: 3px solid var(--accent); }
+        .tag { display: inline-block; font-family: var(--font-mono); font-size: var(--small); padding: 0.2em 0.7em; background: var(--accent-dim); color: var(--accent); border-radius: 6px; font-weight: 800; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: clamp(0.8rem, 2vw, 1.5rem); width: 100%; }
+
+        .quote-bar { border-left: 4px solid var(--accent); padding-left: clamp(1rem, 2.5vw, 2rem); text-align: left; max-width: 1100px; }
+        .quote-bar p { font-size: clamp(1.8rem, 3.8vw, 3.0rem); font-weight: 700; line-height: 1.45; }
+        .quote-bar .attr { font-size: var(--body); color: var(--text-sub); margin-top: var(--gap); font-weight: 400; }
+
+        .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); will-change: transform, opacity; }
+        .slide.visible .reveal { opacity: 1; transform: translateY(0); will-change: auto; }
+        .d1 { transition-delay: 0.06s; } .d2 { transition-delay: 0.14s; } .d3 { transition-delay: 0.22s; } .d4 { transition-delay: 0.30s; }
+
+        .lucide { width: 1em; height: 1em; }
+        .icon-xl { font-size: clamp(3rem, 7vw, 5rem); color: var(--accent); }
+        .icon-lg { font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--accent); }
+        .icon-md { font-size: clamp(1.4rem, 2.5vw, 1.8rem); color: var(--accent); }
+        .icon-circle {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.45em; border-radius: 50%; background: var(--accent-dim); color: var(--accent); flex-shrink: 0;
+        }
+        .icon-text {
+            display: flex; align-items: center; gap: clamp(0.8rem, 2vw, 1.5rem); text-align: left; width: 100%;
+        }
+
+        @media (max-height: 700px) { :root { --title: clamp(2.5rem, 8vw, 5rem); --h2: clamp(2rem, 5.5vw, 3.5rem); --h3: clamp(1.2rem, 2.5vw, 2rem); --body: clamp(1.1rem, 2vw, 1.5rem); --small: clamp(1rem, 1.8vw, 1.3rem); --pad: clamp(1.5rem, 4vw, 3rem); --gap: clamp(0.8rem, 2vw, 1.5rem); } }
+        @media (max-height: 600px) { :root { --title: clamp(2rem, 7vw, 3.5rem); --h2: clamp(1.6rem, 4.5vw, 2.5rem); --h3: clamp(1rem, 2vw, 1.5rem); --body: clamp(1rem, 1.8vw, 1.3rem); --small: clamp(0.9rem, 1.5vw, 1.1rem); --pad: clamp(1rem, 3vw, 2rem); --gap: clamp(0.5rem, 1.2vw, 0.8rem); } }
+        @media (max-height: 500px) { :root { --title: clamp(1.5rem, 5vw, 2.5rem); --h2: clamp(1.2rem, 3.5vw, 2rem); --h3: clamp(0.9rem, 1.8vw, 1.3rem); --body: clamp(0.85rem, 1.5vw, 1.1rem); --small: clamp(0.8rem, 1.2vw, 1rem); --pad: clamp(0.5rem, 2vw, 1.2rem); --gap: clamp(0.4rem, 1vw, 0.6rem); } }
+        @media (max-width: 768px) { .comparison { flex-direction: column; } .arrow { transform: rotate(90deg); } .grid-3 { grid-template-columns: 1fr; } }
+        @media (prefers-reduced-motion: reduce) { .reveal { transition: opacity 0.3s ease; transform: none; } }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 섹션 타이틀 — 하네스 엔지니어링이 정확히 뭔데? -->
+    <section class="slide" id="s1" role="region" aria-label="슬라이드 1: 하네스 엔지니어링이 정확히 뭔데">
+        <div class="slide-content">
+            <p class="label reveal d1">WHAT</p>
+            <h1 class="mega reveal d2" style="margin-top: 0.3em;">
+                하네스 엔지니어링이<br>정확히 <span class="accent">뭔데?</span>
+            </h1>
+        </div>
+    </section>
+
+    <!-- 2. 한 마디 정의 — AI 환경 설계 -->
+    <section class="slide" id="s2" role="region" aria-label="슬라이드 2: AI 환경 설계">
+        <div class="slide-content">
+            <div class="icon-circle icon-xl reveal d1">
+                <i data-lucide="settings"></i>
+            </div>
+            <h2 class="reveal d2" style="margin-top: var(--gap);">
+                AI가 일을 잘 할 수 있도록<br><span class="accent">환경</span>을 설계하는 것
+            </h2>
+        </div>
+    </section>
+
+    <!-- 3. 하네스 어원 — 말의 마구 -->
+    <section class="slide" id="s3" role="region" aria-label="슬라이드 3: 하네스 어원">
+        <div class="slide-content">
+            <div class="icon-circle icon-xl reveal d1">
+                <i data-lucide="target"></i>
+            </div>
+            <h2 class="reveal d2" style="margin-top: var(--gap);">
+                Harness = <span class="accent">마구</span>
+            </h2>
+            <p class="reveal d3 sub" style="margin-top: 0.5em; font-size: var(--h3); font-weight: 500;">
+                방향을 잡아주는 장비
+            </p>
+        </div>
+    </section>
+
+    <!-- 4. 공식 문서 인용 -->
+    <section class="slide" id="s4" role="region" aria-label="슬라이드 4: 공식 문서 인용">
+        <div class="slide-content">
+            <div class="quote-bar reveal d1">
+                <p>"Claude Code serves as the <span class="accent">agentic harness</span> around Claude"</p>
+                <p class="attr">— Claude Code 공식 문서</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 클로드 코드 → 클로드를 감싸는 하네스 -->
+    <section class="slide" id="s5" role="region" aria-label="슬라이드 5: 클로드 코드가 클로드를 감싸는 하네스">
+        <div class="slide-content">
+            <p class="label reveal d1">HARNESS</p>
+            <div class="comparison reveal d2" style="margin-top: var(--gap);">
+                <div>
+                    <h2>클로드 코드</h2>
+                    <p class="sub" style="margin-top: 0.4em;">도구</p>
+                </div>
+                <div class="arrow">→</div>
+                <div>
+                    <h2>클로드</h2>
+                    <p class="sub" style="margin-top: 0.4em;">AI 모델</p>
+                </div>
+            </div>
+            <p class="reveal d3 sub" style="margin-top: var(--gap); font-size: var(--h3); font-weight: 700;">
+                모델을 <span class="accent">감싸는</span> 하네스
+            </p>
+        </div>
+    </section>
+
+    <!-- 6. AI 모델 자체는 프로젝트를 모른다 -->
+    <section class="slide" id="s6" role="region" aria-label="슬라이드 6: AI 모델은 프로젝트를 모른다">
+        <div class="slide-content">
+            <div class="icon-xl reveal d1" style="color: #EF4444;">
+                <i data-lucide="circle-x"></i>
+            </div>
+            <h2 class="reveal d2" style="margin-top: var(--gap);">
+                AI 모델 자체는<br>여러분의 <span class="accent">프로젝트를 모른다</span>
+            </h2>
+        </div>
+    </section>
+
+    <!-- 7. 클로드 코드 안에서 실행하면? -->
+    <section class="slide" id="s7" role="region" aria-label="슬라이드 7: 클로드 코드 안에서 실행하면">
+        <div class="slide-content">
+            <h2 class="reveal d1">클로드 코드 안에서 <span class="accent">실행</span>하면?</h2>
+            <div class="grid-3 reveal d2" style="margin-top: var(--gap);">
+                <div class="card card-hot">
+                    <span class="tag" style="display: inline-flex; align-items: center; gap: 0.4em;"><i data-lucide="file-code"></i> 규칙</span>
+                    <h3 style="margin-top: 0.5em;">규칙 읽기</h3>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag" style="display: inline-flex; align-items: center; gap: 0.4em;"><i data-lucide="code"></i> 코드</span>
+                    <h3 style="margin-top: 0.5em;">파일 수정</h3>
+                </div>
+                <div class="card card-hot">
+                    <span class="tag" style="display: inline-flex; align-items: center; gap: 0.4em;"><i data-lucide="terminal"></i> CLI</span>
+                    <h3 style="margin-top: 0.5em;">터미널 실행</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. 클로드 코드 = 하네스 -->
+    <section class="slide" id="s8" role="region" aria-label="슬라이드 8: 클로드 코드는 하네스">
+        <div class="slide-content">
+            <div class="icon-circle icon-xl reveal d1">
+                <i data-lucide="layers"></i>
+            </div>
+            <h2 class="reveal d2" style="margin-top: var(--gap);">
+                클로드 코드 = <span class="accent">하네스</span>
+            </h2>
+            <p class="reveal d3 sub" style="margin-top: 0.5em; font-size: var(--h3); font-weight: 500;">
+                AI가 일할 수 있는 환경을 만들어주는 것
+            </p>
+        </div>
+    </section>
+
+    <!-- 9. 하네스 틀은 있다 — 어떻게 채울 것인가? -->
+    <section class="slide" id="s9" role="region" aria-label="슬라이드 9: 하네스 틀을 어떻게 채울 것인가">
+        <div class="slide-content">
+            <div class="icon-circle icon-xl reveal d1">
+                <i data-lucide="puzzle"></i>
+            </div>
+            <h2 class="reveal d2" style="margin-top: var(--gap);">
+                하네스 <span class="accent">틀</span>은 있다
+            </h2>
+            <p class="reveal d3 sub" style="margin-top: 0.5em; font-size: var(--h3); font-weight: 500;">
+                어떻게 <span class="accent">채울 것인가?</span>
+            </p>
+        </div>
+    </section>
+
+    <!-- 10. Mitchell Hashimoto 소개 -->
+    <section class="slide" id="s10" role="region" aria-label="슬라이드 10: Mitchell Hashimoto">
+        <div class="slide-content">
+            <p class="label reveal d1">ORIGIN</p>
+            <h2 class="reveal d2" style="margin-top: 0.3em;">
+                Mitchell <span class="accent">Hashimoto</span>
+            </h2>
+            <p class="reveal d3 sub" style="margin-top: 0.5em; font-size: var(--h3); font-weight: 500;">
+                HashiCorp 공동 창립자
+            </p>
+            <p class="reveal d4 sub" style="margin-top: 0.3em; font-size: var(--body);">
+                "하네스 엔지니어링" 명명자
+            </p>
+        </div>
+    </section>
+
+    <!-- 11. 실수 → 환경 수정 → 반복 방지 -->
+    <section class="slide" id="s11" role="region" aria-label="슬라이드 11: 실수 발생 환경 수정 반복 방지">
+        <div class="slide-content">
+            <h2 class="reveal d1">하네스 엔지니어링의 <span class="accent">핵심</span></h2>
+            <ol style="list-style: none; display: flex; flex-direction: column; gap: var(--gap); margin-top: var(--gap); width: 100%; max-width: 800px;">
+                <li class="reveal d2" style="display: flex; align-items: center; gap: 1.5rem;">
+                    <span style="font-family: var(--font-mono); font-size: var(--h3); color: #EF4444; min-width: 2ch; font-weight: 900;">01</span>
+                    <span style="font-size: var(--body);">실수 발생</span>
+                </li>
+                <li class="reveal d3" style="display: flex; align-items: center; gap: 1.5rem;">
+                    <span style="font-family: var(--font-mono); font-size: var(--h3); color: var(--accent); min-width: 2ch; font-weight: 900;">02</span>
+                    <span style="font-size: var(--body);"><span class="accent">환경</span>을 고친다</span>
+                </li>
+                <li class="reveal d4" style="display: flex; align-items: center; gap: 1.5rem;">
+                    <span style="font-family: var(--font-mono); font-size: var(--h3); color: #3FB950; min-width: 2ch; font-weight: 900;">03</span>
+                    <span style="font-size: var(--body);">같은 실수가 <span class="accent">반복되지 않는다</span></span>
+                </li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- 12. 핵심 정의 — 뭘 해라가 아니라, 어떤 환경에서 일해라 -->
+    <section class="slide" id="s12" role="region" aria-label="슬라이드 12: 핵심 정의">
+        <div class="slide-content">
+            <div class="icon-circle icon-xl reveal d1">
+                <i data-lucide="lightbulb"></i>
+            </div>
+            <h2 class="reveal d2" style="margin-top: var(--gap);">
+                <span style="color: var(--text-dim);">"뭘 해라"</span>가 아니라<br><span class="accent">"어떤 환경에서 일해라"</span>
+            </h2>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>lucide.createIcons();</script>
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.35 });
+        slides.forEach(s => obs.observe(s));
+        if (slides[0]) slides[0].classList.add('visible');
+        let cur = 0, busy = false, touchY = 0;
+        const go = i => { if (i < 0 || i >= slides.length || busy) return; busy = true; cur = i; slides[i].scrollIntoView({ behavior: 'smooth' }); setTimeout(() => busy = false, 600); };
+        document.addEventListener('keydown', e => {
+            if (e.key === 'f' || e.key === 'F') { if (!document.fullscreenElement) { document.documentElement.requestFullscreen(); } else { document.exitFullscreen(); } return; }
+            if (['ArrowDown','ArrowRight',' ','PageDown'].includes(e.key)) { e.preventDefault(); go(cur+1); } else if (['ArrowUp','ArrowLeft','PageUp'].includes(e.key)) { e.preventDefault(); go(cur-1); }
+        });
+        document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+        document.addEventListener('touchend', e => { const d = touchY - e.changedTouches[0].clientY; if (Math.abs(d) > 50) go(d > 0 ? cur+1 : cur-1); }, { passive: true });
+        let lastW = 0; document.addEventListener('wheel', e => { const n = Date.now(); if (n - lastW < 800) return; lastW = n; go(e.deltaY > 0 ? cur+1 : cur-1); }, { passive: true });
+    </script>
+</body>
+</html>

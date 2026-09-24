@@ -1,0 +1,32 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#opus4.7 best practice"
+  - generic [ref=e8]: "03"
+  - generic [ref=e9]:
+    - generic [ref=e10]: TIP 01
+    - heading "프롬프트가 느슨하면 결과가 어긋납니다" [level=2] [ref=e11]:
+      - text: 프롬프트가 느슨하면
+      - text: 결과가 어긋납니다
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: BAD
+        - generic [ref=e15]: "\"로그인 기능 만들어줘\""
+      - generic [ref=e16]:
+        - generic [ref=e17]: GOOD
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]: 의도
+            - generic [ref=e21]: 로그인 페이지 제작
+          - generic [ref=e22]:
+            - generic [ref=e23]: 조건
+            - generic [ref=e24]: OAuth2 + JWT
+          - generic [ref=e25]:
+            - generic [ref=e26]: 기준
+            - generic [ref=e27]: TS, 에러 핸들링
+          - generic [ref=e28]:
+            - generic [ref=e29]: 위치
+            - code [ref=e31]: src/auth/login.tsx
+    - generic [ref=e32]: 과거 프롬프트는 이제 재튜닝이 필요합니다

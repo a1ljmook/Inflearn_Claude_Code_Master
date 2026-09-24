@@ -1,0 +1,26 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#opus4.7 best practice"
+  - generic [ref=e8]: "06"
+  - generic [ref=e9]:
+    - generic [ref=e10]: TIP 04
+    - heading "Claude Code 신기능 2가지" [level=2] [ref=e11]:
+      - text: Claude Code
+      - text: 신기능 2가지
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]:
+          - generic [ref=e15]: SLASH
+          - generic [ref=e16]: /ultrareview
+        - generic [ref=e17]: 숙련된 리뷰어가 잡을 만한 버그·설계 이슈를 전담 플래깅하는 리뷰 세션
+        - generic [ref=e18]: · Pro / Max 사용자 3회 무료 제공
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: MODE
+          - generic [ref=e22]: Auto mode
+        - generic [ref=e23]: Claude가 사용자 대신 결정을 내려 더 긴 작업을 중단 없이 실행
+        - generic [ref=e24]: · Max 사용자로 확대 적용
+    - generic [ref=e25]: Pro · Max 유저라면 /ultrareview 3회 무료부터

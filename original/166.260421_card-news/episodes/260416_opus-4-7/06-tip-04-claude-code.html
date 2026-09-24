@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>06 TIP 04 · Claude Code 신기능</title>
+<link rel="stylesheet" href="../../styles/card.css">
+<style>
+  .tip-title { margin-bottom: 48px; }
+  .feat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .feat {
+    padding: 36px;
+    border-radius: 22px;
+    border: 1px solid var(--card-border);
+    background: var(--bg-elevated);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .feat .head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  .feat .tag {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+  }
+  .feat .cmd {
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  .feat .name {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .feat .desc {
+    font-size: 26px;
+    font-weight: 500;
+    color: #D4D4D4;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+  }
+  .feat .meta {
+    margin-top: 8px;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--good-text);
+    letter-spacing: -0.01em;
+  }
+  .feat.primary {
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <header class="card-header">
+    <div class="card-header-left">
+      <img src="../../logo.svg" class="logo" alt="짐코딩">
+      <span class="label">클로드 코드 완벽 마스터</span>
+    </div>
+    <div class="card-header-right">#opus4.7 best practice</div>
+  </header>
+
+  <div class="page-number">06</div>
+
+  <section class="card-body">
+    <div class="eyebrow">TIP 04</div>
+    <h2 class="title-xl tip-title">
+      Claude Code<br>
+      <span class="accent">신기능</span> 2가지
+    </h2>
+
+    <div class="feat-list">
+      <div class="feat primary">
+        <div class="head">
+          <span class="tag">SLASH</span>
+          <span class="cmd">/ultrareview</span>
+        </div>
+        <div class="desc">숙련된 리뷰어가 잡을 만한 버그·설계 이슈를 전담 플래깅하는 리뷰 세션</div>
+        <div class="meta">· Pro / Max 사용자 3회 무료 제공</div>
+      </div>
+
+      <div class="feat">
+        <div class="head">
+          <span class="tag">MODE</span>
+          <span class="name">Auto mode</span>
+        </div>
+        <div class="desc">Claude가 사용자 대신 결정을 내려 더 긴 작업을 중단 없이 실행</div>
+        <div class="meta">· Max 사용자로 확대 적용</div>
+      </div>
+    </div>
+
+    <div class="bottom-banner">
+      Pro · Max 유저라면 /ultrareview 3회 무료부터
+    </div>
+  </section>
+</div>
+</body>
+</html>

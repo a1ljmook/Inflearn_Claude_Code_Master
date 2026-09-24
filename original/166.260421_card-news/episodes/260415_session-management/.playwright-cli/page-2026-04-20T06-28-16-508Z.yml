@@ -1,0 +1,24 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#claude-code #session"
+  - generic [ref=e8]: "01"
+  - generic [ref=e9]:
+    - generic [ref=e10]: 1M
+    - generic [ref=e12]: CLAUDE CODE 실전
+    - heading "1M 컨텍스트, 제대로 쓰는 법" [level=1] [ref=e13]:
+      - text: 1M 컨텍스트,
+      - generic [ref=e14]: 제대로 쓰는 법
+    - paragraph [ref=e15]: 2026.04.15 Anthropic 공식 가이드 · 세션 관리 5가지
+    - generic [ref=e16]:
+      - code [ref=e17]: /rewind
+      - generic [ref=e18]: ·
+      - code [ref=e19]: /clear
+      - generic [ref=e20]: ·
+      - code [ref=e21]: /compact
+      - generic [ref=e22]: ·
+      - generic [ref=e23]: Subagents
+      - generic [ref=e24]: ·
+      - generic [ref=e25]: Continue

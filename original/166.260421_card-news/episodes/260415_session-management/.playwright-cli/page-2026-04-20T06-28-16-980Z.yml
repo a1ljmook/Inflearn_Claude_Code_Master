@@ -1,0 +1,29 @@
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - img "짐코딩" [ref=e5]
+      - generic [ref=e6]: 클로드 코드 완벽 마스터
+    - generic [ref=e7]: "#claude-code #session"
+  - generic [ref=e8]: "02"
+  - generic [ref=e9]:
+    - generic [ref=e10]: PROBLEM
+    - heading "Claude Code 세션, 이렇게 쓰고 있나요?" [level=2] [ref=e11]:
+      - text: Claude Code 세션,
+      - text: 이렇게 쓰고 있나요?
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - generic [ref=e14]: "1"
+        - generic [ref=e15]:
+          - generic [ref=e16]: 한 세션으로 끝까지 밀어붙인다
+          - generic [ref=e17]: 컨텍스트가 커질수록 모델이 점점 헤맵니다
+      - generic [ref=e18]:
+        - generic [ref=e19]: "2"
+        - generic [ref=e20]:
+          - generic [ref=e21]: 자동 컴팩션에만 맡긴다
+          - generic [ref=e22]: 모델이 가장 혼란스러울 때 요약돼 손실 발생
+      - generic [ref=e23]:
+        - generic [ref=e24]: "3"
+        - generic [ref=e25]:
+          - generic [ref=e26]: 실수는 수정 메시지로 덮는다
+          - generic [ref=e27]: 실패한 시도가 컨텍스트를 계속 오염시킵니다
+    - generic [ref=e28]: 1M 컨텍스트, 크다고 무조건 좋은 게 아닙니다
