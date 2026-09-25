@@ -1,8 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "plansDirectory": ".claude/plans/",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "ENABLE_TOOL_SEARCH": "true"
+  },
   "permissions": {
-    "defaultMode": "plan",
     "allow": [
       "WebSearch",
       "mcp__context7",
@@ -16,7 +18,8 @@
       "Read(./.env.*)",
       "Bash(rm -rf *)",
       "Bash(git push --force *)"
-    ]
+    ],
+    "defaultMode": "plan"
   },
   "enabledMcpjsonServers": [
     "context7"
@@ -57,12 +60,13 @@
     ]
   },
   "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
+    "skill-creator@claude-plugins-official": true,
+    "session-report@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "serena@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true
   },
   "outputStyle": "Intermediate Developer",
-  "teammateMode": "auto",
-  "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "ENABLE_TOOL_SEARCH": "true"
-  }
+  "plansDirectory": ".claude/plans/",
+  "teammateMode": "auto"
 }
